@@ -1,7 +1,7 @@
 import {JSONSerializable} from "../JSONSerializable";
 import {JSONDeserializable} from "../JSONDeserializable";
 
-export class User implements JSONDeserializable, JSONSerializable {
+export class User  implements JSONSerializable, JSONDeserializable {
     username: string;
     password: string;
 
@@ -11,19 +11,26 @@ export class User implements JSONDeserializable, JSONSerializable {
     }
 
     public static fromJSON(json: string): User {
+        let user = new User("", "");
+        user.deserialize(json);
+        return user;
+    }
 
-        return new;
+    toJSON() {
+        return {
+            username: this.username,
+            password: this.password
+        };
     }
 
     deserialize(json: string): void {
-        // deserialization logic here
-        // this.username = ...
-        // this.password = ...
+        let jsonObject = JSON.parse(json);
+        this.username = jsonObject.username;
+        this.password = jsonObject.password;
     }
 
     serialize(): string {
-
-        return "";
+        return JSON.stringify(this);
     }
 
 

@@ -1,5 +1,6 @@
 import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
+import {ExperimentResult} from "../results/ExperimentResult";
 
 export class Experiment implements JSONSerializable, JSONDeserializable {
     id: number | null;
@@ -9,7 +10,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     groundTruth: File | null;
     odm: string;                //ODM class
     subspaceLogic: string | null;//SubspaceLogic class
-    experimentResult: string | null; //ExperimentResult class
+    experimentResult: ExperimentResult | null; //ExperimentResult class
 
     constructor(name: string,
                 datasetName: string | null,

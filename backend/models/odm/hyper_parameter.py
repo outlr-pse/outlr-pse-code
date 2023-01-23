@@ -1,9 +1,10 @@
 from models.base import Base
-from sqlalchemy import Column, Integer, Text
+from models.json_serializable import Serializable
+from sqlalchemy import ForeignKey, Column, Integer, Text
 from sqlalchemy.orm import relationship
 
 
-class HyperParameter(Base):
+class HyperParameter(Base, Serializable):
     __tablename__ = 'hyper_parameter'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text)
@@ -15,3 +16,4 @@ class HyperParameter(Base):
             "id": self.id,
             "name": self.name
         }
+

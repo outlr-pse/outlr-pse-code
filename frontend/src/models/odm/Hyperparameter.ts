@@ -21,6 +21,7 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
         };
     }
 
+    //TODO: maybe den standart string type verändert wobei der eigentlich sofort überschrieben wird
     public static fromJSON(json: string): Hyperparameter {
         let hyperparameter = new Hyperparameter("", "", HyperparameterType.STRING);
         hyperparameter.deserialize(json);

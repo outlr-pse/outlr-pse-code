@@ -1,4 +1,4 @@
-import { User } from "../src/models/user/User";
+import { User } from "../../../src/models/user/User";
 
 describe('User', () => {
     let user: User;

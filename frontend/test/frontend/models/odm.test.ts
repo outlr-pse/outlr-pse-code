@@ -1,6 +1,6 @@
-import { Hyperparameter} from '../src/models/odm/Hyperparameter';
-import { ODM } from '../src/models/odm/ODM';
-import {HyperparameterType} from "../src/models/odm/HyperparameterType";
+import { Hyperparameter} from '../../../src/models/odm/Hyperparameter';
+import { ODM } from '../../../src/models/odm/ODM';
+import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
 
 describe('ODM', () => {
     let odm: ODM;

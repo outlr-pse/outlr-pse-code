@@ -1,5 +1,5 @@
-import {Hyperparameter} from "../src/models/odm/Hyperparameter";
-import {HyperparameterType} from "../src/models/odm/HyperparameterType";
+import {Hyperparameter} from "../../../src/models/odm/Hyperparameter";
+import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
 
 
 describe('Hyperparameter', () => {

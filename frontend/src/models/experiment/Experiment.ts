@@ -1,6 +1,7 @@
 import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 import {ExperimentResult} from "../results/ExperimentResult";
+import {ODM} from "../odm/ODM";
 
 export class Experiment implements JSONSerializable, JSONDeserializable {
     id: number | null;
@@ -8,15 +9,15 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     datasetName: string | null;
     dataset: File | null;
     groundTruth: File | null;
-    odm: string;                //ODM class
+    odm: ODM;
     subspaceLogic: string | null;//SubspaceLogic class
-    experimentResult: ExperimentResult | null; //ExperimentResult class
+    experimentResult: ExperimentResult | null;
 
     constructor(name: string,
                 datasetName: string | null,
                 dataset: File | null,
                 groundTruth: File | null,
-                odm: string,
+                odm: ODM,
                 subspaceLogic: string) {
         this.id = null;
         this.name = name;
@@ -39,11 +40,11 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
             subspaceLogic: this.subspaceLogic,
             experimentResult: this.experimentResult
         };
-        //TODO: CORRECT JSON LAYOUT
+
     }
 
     public static fromJSON(json: string): Experiment {
-        let experiment = new Experiment("", "", null, null, "", "");
+        let experiment = new Experiment("", "", null, null, new ODM("", []), "");
         experiment.deserialize(json);
         return experiment;
     }

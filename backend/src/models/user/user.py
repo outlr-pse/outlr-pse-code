@@ -1,23 +1,21 @@
 from models.base import Base
-from models.json_serializable import Serializable, Deserializable
 from sqlalchemy import Column, Integer, String
 
 
-class User(Base, Serializable, Deserializable):
+class User(Base):
     __tablename__ = "user"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, unique=True)
+    name = Column(String, unique=True)
     password = Column(String)
 
     def to_json(self) -> dict:
         return {
             "id": self.id,
-            "username": self.username
+            "name": self.name
         }
 
     @classmethod
     def from_json(cls, json: dict):
         return cls(
-            id=json["id"],
-            username=json["username"]
+            name=json["name"]
         )

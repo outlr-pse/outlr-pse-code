@@ -1,10 +1,9 @@
 from models.base import Base
-from models.json_serializable import Serializable
 from sqlalchemy import Column, Integer, Text
 from sqlalchemy.orm import relationship
 
 
-class ODM(Base, Serializable):
+class ODM(Base):
     __tablename__ = 'odm'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text)

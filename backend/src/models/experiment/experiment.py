@@ -1,11 +1,10 @@
 from models.base import Base
-from models.json_serializable import Serializable, Deserializable
 from sqlalchemy import Column, Integer, Text, JSON
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
 
 
-class Experiment(Base, Serializable, Deserializable):
+class Experiment(Base):
     __tablename__ = 'experiments'
     id = Column(Integer, primary_key=True, autoincrement=True)
     user = relationship("User", uselist=False)

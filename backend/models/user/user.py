@@ -8,8 +8,7 @@ class User(Base):
     username = Column(String, unique=True)
     password = Column(String)
 
-    # The json representation of the object
-    def __dict__(self):
+    def to_json(self) -> dict:
         return {
             "id": self.id,
             "username": self.username

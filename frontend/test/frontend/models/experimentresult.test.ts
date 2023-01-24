@@ -11,7 +11,7 @@ describe('ExperimentResult', () => {
     beforeEach(() => {
         executionDate = new Date();
         outlier = new Outlier(1, [subspace]);
-        subspace = new Subspace('exampleName', [1, 2, 3]);
+        subspace = new Subspace(1,'exampleName', [1, 2, 3]);
         experimentResult = new ExperimentResult(1, 0.5, executionDate, 100, [subspace], [outlier]);
     });
 

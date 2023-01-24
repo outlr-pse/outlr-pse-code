@@ -3,13 +3,15 @@ import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
 export class Subspace implements JSONDeserializable, JSONSerializable {
+    id: number | null;
     name: string | null;
     columns: number[];
     outliers: Outlier[] | null;
     rocCurve: Record<any, any>[] | null;
 
-    constructor(name: string | null,
+    constructor(id: number, name: string | null,
                 columns: number[]) {
+        this.id = id;
         this.name = name;
         this.columns = columns;
         this.outliers = null;
@@ -19,6 +21,7 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
 
     toJSON() {
         return {
+            id: this.id,
             name: this.name,
             columns: this.columns,
             outliers: this.outliers,
@@ -27,7 +30,7 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
     }
 
     public static fromJSON(json: string): Subspace {
-        let subspace = new Subspace(null, []);
+        let subspace = new Subspace(0, null, []);
         subspace.deserialize(json);
         return subspace;
     }
@@ -37,8 +40,12 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
         let jsonObject = JSON.parse(json);
         this.name = jsonObject.name;
         this.columns = jsonObject.columns;
-        this.outliers = jsonObject.outliers;
         this.rocCurve = jsonObject.rocCurve;
+        let outlierArray = []
+        for (let outlier of jsonObject.outliers){
+            outlierArray.push(Outlier.fromJSON(outlier, [this]));
+        }
+        this.outliers = outlierArray;
     }
 
     serialize(): string {

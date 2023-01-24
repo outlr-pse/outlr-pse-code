@@ -3,12 +3,12 @@ from flask import Blueprint, Response
 experiment_api = Blueprint('experiment', __name__, url_prefix='/experiment')
 
 
-@experiment_api.route('/validate-dataset', methods=['GET'])
+@experiment_api.route('/validate-dataset', methods=['POST'])
 def validate_dataset():
     return Response(status=501)
 
 
-@experiment_api.route('/validate-ground-truth', methods=['GET'])
+@experiment_api.route('/validate-ground-truth', methods=['POST'])
 def validate_ground_truth():
     return Response(status=501)
 
@@ -23,7 +23,7 @@ def get_all():
     return Response(status=501)
 
 
-@experiment_api.route('/create', methods=['GET'])
+@experiment_api.route('/create', methods=['POST'])
 def create():
     return Response(status=501)
 

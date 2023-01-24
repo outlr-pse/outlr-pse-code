@@ -8,7 +8,7 @@ def login():
     return Response(status=501)
 
 
-@user_management_api.route('/login', methods=['POST'])
+@user_management_api.route('/register', methods=['POST'])
 def register():
     return Response(status=501)
 

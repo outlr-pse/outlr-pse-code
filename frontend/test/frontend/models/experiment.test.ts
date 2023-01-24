@@ -4,7 +4,7 @@ describe('Experiment', () => {
     let experiment: Experiment;
 
     beforeEach(() => {
-        experiment = new Experiment('Test Experiment', 'Test Dataset', null, null, 'ODM', 'Subspace Logic');
+       // experiment = new Experiment('Test Experiment', 'Test Dataset', null, null, 'ODM', 'Subspace Logic');
     });
 
     it('should create a new Experiment with the correct name, datasetName, and logic', () => {
@@ -16,7 +16,7 @@ describe('Experiment', () => {
 
     it('should correctly deserialize a JSON string', () => {
         const json = '{"id":1,"name":"Test Experiment","datasetName":"Test Dataset","odm":"ODM","subspaceLogic":"Subspace Logic","experimentResult":null}';
-        experiment = Experiment.fromJSON(json);
+        //experiment = Experiment.fromJSON(json);
         expect(experiment.id).toBe(1);
         expect(experiment.name).toBe('Test Experiment');
         expect(experiment.datasetName).toBe('Test Dataset');

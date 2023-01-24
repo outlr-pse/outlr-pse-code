@@ -2,6 +2,7 @@ import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 import {ExperimentResult} from "../results/ExperimentResult";
 import {ODM} from "../odm/ODM";
+import {SubspaceLogic} from "../subspacelogic/SubspaceLogic";
 
 export class Experiment implements JSONSerializable, JSONDeserializable {
     id: number | null;
@@ -10,7 +11,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     dataset: File | null;
     groundTruth: File | null;
     odm: ODM;
-    subspaceLogic: string | null;//SubspaceLogic class
+    subspaceLogic: SubspaceLogic | null;
     experimentResult: ExperimentResult | null;
 
     constructor(name: string,
@@ -18,7 +19,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
                 dataset: File | null,
                 groundTruth: File | null,
                 odm: ODM,
-                subspaceLogic: string) {
+                subspaceLogic: SubspaceLogic) {
         this.id = null;
         this.name = name;
         this.datasetName = datasetName;
@@ -43,11 +44,11 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
 
     }
 
-    public static fromJSON(json: string): Experiment {
-        let experiment = new Experiment("", "", null, null, new ODM("", []), "");
-        experiment.deserialize(json);
-        return experiment;
-    }
+    // public static fromJSON(json: string): Experiment {
+    //     let experiment = new Experiment("", "", null, null, new ODM("", []), new SubspaceLogic(""));
+    //     experiment.deserialize(json);
+    //     return experiment;
+    // }
 
     deserialize(json: string): void {
         let jsonObject = JSON.parse(json);

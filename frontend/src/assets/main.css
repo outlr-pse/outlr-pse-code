@@ -1,5 +1,5 @@
 /* styles which have to be applied to the whole page*/
-@import './constants.css';
+@import './fonts.css';
 @import './constants.css';
 
 :root {
@@ -7,7 +7,7 @@
   letter-spacing: 0.02em;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 500;
+  font-weight: normal;
 
   color-scheme: light dark;
   color: var(--color-text);

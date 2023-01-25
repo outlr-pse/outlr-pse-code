@@ -5,22 +5,22 @@ user_management_api = Blueprint('user_management', __name__, url_prefix='/user')
 
 
 @user_management_api.route('/login', methods=['POST'])
-def login():
+def login() -> Response:
     return Response(status=501)
 
 
 @user_management_api.route('/register', methods=['POST'])
-def register():
+def register() -> Response:
     return Response(status=501)
 
 
 @user_management_api.route('/logout', methods=['POST'])
 @jwt_required()
-def logout():
+def logout() -> Response:
     return Response(status=501)
 
 
 @user_management_api.route('/check-token', methods=['POST'])
 @jwt_required()
-def check_token():
-    return 'Token is valid'
+def check_token() -> Response:
+    return Response('Token is valid')

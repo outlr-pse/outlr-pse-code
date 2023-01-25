@@ -6,11 +6,11 @@ odm_api = Blueprint('odm', __name__, url_prefix='/odm')
 
 @odm_api.route('/get-all', methods=['GET'])
 @jwt_required()
-def get_all():
+def get_all() -> Response:
     return Response(status=501)
 
 
 @odm_api.route('/get-parameters/<int:odm_id>', methods=['GET'])
 @jwt_required()
-def get_parameters(odm_id: int):
+def get_parameters(odm_id: int) -> Response:
     return Response(status=501)

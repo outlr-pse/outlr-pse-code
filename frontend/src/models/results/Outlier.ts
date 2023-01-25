@@ -1,5 +1,8 @@
 import {Subspace} from "./Subspace";
 
+/**
+ * This class represents an outlier.
+ */
 export class Outlier {
     index: number;
     subspaces: Subspace[];
@@ -9,7 +12,10 @@ export class Outlier {
         this.subspaces = subspaces;
     }
 
-
+    /**
+     * This method returns the outlier as a JSON object.
+     * It is called by the JSON.stringify() method.
+     */
     toJSON() {
         let subspaceIds = [];
         for (let subspace of this.subspaces){
@@ -21,6 +27,11 @@ export class Outlier {
         };
     }
 
+    /**
+     * This method creates an outlier from a JSON string.
+     * @param json
+     * @param subspaces
+     */
     public static fromJSON(json: string, subspaces: Subspace[]): Outlier {
         let outlier = new Outlier(0, []);
         outlier.deserialize(json, subspaces);

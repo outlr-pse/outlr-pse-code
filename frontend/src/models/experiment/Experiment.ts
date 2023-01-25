@@ -4,6 +4,9 @@ import {ExperimentResult} from "../results/ExperimentResult";
 import {ODM} from "../odm/ODM";
 import {SubspaceLogic} from "../subspacelogic/SubspaceLogic";
 
+/**
+ * This class represents an experiment.
+ */
 export class Experiment implements JSONSerializable, JSONDeserializable {
     id: number | null;
     name: string;
@@ -30,6 +33,10 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         this.experimentResult = null;
     }
 
+    /**
+     * This method returns the experiment as a JSON object.
+     * It is called by the JSON.stringify() method.
+     */
     toJSON() {
         return {
             id: this.id,
@@ -44,6 +51,10 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
 
     }
 
+    // /**
+    //  * This method creates an experiment from a JSON string.
+    //  * @param json
+    //  */
     // public static fromJSON(json: string): Experiment {
     //     let experiment = new Experiment("", "", null, null, new ODM("", []), new SubspaceLogic(""));
     //     experiment.deserialize(json);

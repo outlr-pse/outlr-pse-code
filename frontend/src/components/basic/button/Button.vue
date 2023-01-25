@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ButtonType } from './ButtonType'
+import {Icon} from "../Icon";
 
 export default defineComponent({
     props: {
@@ -18,7 +19,7 @@ export default defineComponent({
         required: false
       },
       startIcon:{
-        type: ImageBitmapRenderingContext,
+        type: Object as () => Icon,
         required: false
       }
     },

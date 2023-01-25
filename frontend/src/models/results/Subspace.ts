@@ -2,6 +2,9 @@ import {Outlier} from "./Outlier";
 import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
+/**
+ * This class represents a subspace.
+ */
 export class Subspace implements JSONDeserializable, JSONSerializable {
     id: number | null;
     name: string | null;
@@ -19,6 +22,10 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
 
     }
 
+    /**
+     * This method returns the subspace as a JSON object.
+     * It is called by the JSON.stringify() method.
+     */
     toJSON() {
         return {
             id: this.id,
@@ -29,6 +36,10 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
         };
     }
 
+    /**
+     * This method creates a subspace from a JSON string.
+     * @param json
+     */
     public static fromJSON(json: string): Subspace {
         let subspace = new Subspace(0, null, []);
         subspace.deserialize(json);

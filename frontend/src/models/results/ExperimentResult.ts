@@ -3,6 +3,9 @@ import {JSONSerializable} from "../JSONSerializable";
 import {Subspace} from "./Subspace";
 import {Outlier} from "./Outlier";
 
+/**
+ * This class represents an experiment result.
+ */
 export class ExperimentResult implements JSONDeserializable, JSONSerializable {
     id: number;
     accuracy: number;
@@ -24,6 +27,11 @@ export class ExperimentResult implements JSONDeserializable, JSONSerializable {
         this.subspaces = subspaces;
         this.outliers = outliers;
     }
+
+    /**
+     * This method returns the experiment result as a JSON object.
+     * It is called by the JSON.stringify() method.
+     */
     toJSON() {
         return {
             id: this.id,
@@ -34,6 +42,11 @@ export class ExperimentResult implements JSONDeserializable, JSONSerializable {
             outliers: this.outliers
         };
     }
+
+    /**
+     * This method creates an experiment result from a JSON string.
+     * @param json
+     */
     public static fromJSON(json: string): ExperimentResult {
         let experimentResult = new ExperimentResult(0, 0, new Date(), 0, [], []);
         experimentResult.deserialize(json);

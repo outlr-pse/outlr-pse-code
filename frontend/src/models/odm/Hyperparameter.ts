@@ -2,6 +2,9 @@ import {HyperparameterType} from "./HyperparameterType";
 import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
+/**
+ * This class represents a hyperparameter.
+ */
 export class Hyperparameter implements JSONSerializable, JSONDeserializable{
     name: string;
     value: string;
@@ -13,6 +16,10 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
         this.type = type;
     }
 
+    /**
+     * This method returns the hyperparameter as a JSON object.
+     * It is called by the JSON.stringify() method.
+     */
     toJSON() {
         return {
             name: this.name,
@@ -21,7 +28,10 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
         };
     }
 
-    //TODO: maybe den standart string type verändert wobei der eigentlich sofort überschrieben wird
+    /**
+     * This method creates a hyperparameter from a JSON string.
+     * @param json
+     */
     public static fromJSON(json: string): Hyperparameter {
         let hyperparameter = new Hyperparameter("", "", HyperparameterType.STRING);
         hyperparameter.deserialize(json);

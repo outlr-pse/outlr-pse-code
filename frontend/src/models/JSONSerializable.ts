@@ -1,9 +1,9 @@
 /**
- * Interface for objects that can be serialized to JSON
+ * This interface provides the functionality of serializing an object to JSON
  */
 export interface JSONSerializable {
     /**
-     * This method returns the object as a JSON object.
+     * Serialize object. Returns json as a string.
      */
     serialize(): string;
 

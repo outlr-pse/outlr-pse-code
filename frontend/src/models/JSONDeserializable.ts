@@ -1,9 +1,9 @@
 /**
- * Interface for deserializing JSON data.
+ * This interface provides the functionality of deserializing an object from JSON.
  */
 export  interface JSONDeserializable {
     /**
-     * This method creates an object from a JSON string.
+     * Deserialize from JSON. This overrides the current object.
      * @param json
      */
     deserialize(json: string): void;

@@ -1,7 +1,7 @@
 import { LanguageService } from './language/LanguageService'
 import { createI18n } from 'vue-i18n'
 import { createApp } from 'vue'
-import './style.css'
+import './assets/main.css'
 import App from './App.vue'
 
 const languageService = new LanguageService()

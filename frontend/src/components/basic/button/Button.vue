@@ -1,5 +1,18 @@
 <template>
-  <button :class="buttonType" :style="style" @click="onClick">{{ text }} </button>
+  <button :class="buttonType" :style="style" @click="onClick">
+    <div v-if="IconProvided" style="padding: 20px ">
+      <div style="display: inline-grid; grid-template-rows: auto auto; padding: 10px;">
+        <div> {{ text }}</div>
+        <div>
+          <img :src="startIcon">
+        </div>
+    </div>
+    </div>
+    <div v-else>
+      {{ text }}
+    </div>
+
+  </button>
 </template>
 
 <script lang="ts">
@@ -14,12 +27,12 @@ export default defineComponent({
         required: false
       },
       buttonType:{
-        type: Object as () => ButtonType,
+        type: String as () => ButtonType,
         default: 'default',
         required: false
       },
       startIcon:{
-        type: Object as () => Icon,
+        type: String as () => Icon,
         required: false
       },
       size:{
@@ -31,6 +44,11 @@ export default defineComponent({
         type: String,
         required: false,
       },
+      textSize:{
+        type: Object as () => [Number, Number],
+        required: false,
+        default: [20, 500],
+      }
     },
   methods: {
     onClick(){
@@ -44,15 +62,17 @@ export default defineComponent({
         width: this.size[0] + 'px',
         height: this.size[1] + 'px',
         backgroundColor: this.color,
+        fontSize: this.textSize[0] != null ? this.textSize[0] + 'px' : '20px',
+        fontWeight: this.textSize[1] != null ? this.textSize[1] : 500,
       }
+    },
+    IconProvided(){
+      return this.startIcon != undefined;
     }
-
   }
 })
 </script>
 
 <style scoped>
 @import "./button.css";
-
-
 </style>

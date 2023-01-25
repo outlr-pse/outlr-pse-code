@@ -20,7 +20,7 @@ def logout():
     return Response(status=501)
 
 
-@user_management_api.route('/check_token', methods=['POST'])
+@user_management_api.route('/check-token', methods=['POST'])
 @jwt_required()
 def check_token():
     return 'Token is valid'

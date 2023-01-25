@@ -15,12 +15,12 @@ def register():
 
 
 @user_management_api.route('/logout', methods=['POST'])
-@jwt_required
+@jwt_required()
 def logout():
     return Response(status=501)
 
 
 @user_management_api.route('/check_token', methods=['POST'])
-@jwt_required
+@jwt_required()
 def check_token():
     return 'Token is valid'

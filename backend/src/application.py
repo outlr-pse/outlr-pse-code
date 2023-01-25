@@ -8,4 +8,5 @@ def start_api() -> None:
 
 
 if __name__ == '__main__':
+    collect_odms()
     start_api()

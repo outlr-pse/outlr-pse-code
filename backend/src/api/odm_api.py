@@ -10,7 +10,7 @@ def get_all():
     return Response(status=501)
 
 
-@odm_api.route('/get-parameters', methods=['GET'])
+@odm_api.route('/get-parameters/<int:odm_id>', methods=['GET'])
 @jwt_required()
-def get_parameters():
+def get_parameters(odm_id: int):
     return Response(status=501)

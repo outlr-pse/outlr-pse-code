@@ -16,9 +16,9 @@ def validate_ground_truth():
     return Response(status=501)
 
 
-@experiment_api.route('/get-result', methods=['GET'])
+@experiment_api.route('/get-result/<int:exp_id>', methods=['GET'])
 @jwt_required()
-def get_result():
+def get_result(exp_id: int):
     return Response(status=501)
 
 
@@ -34,7 +34,7 @@ def create():
     return Response(status=501)
 
 
-@experiment_api.route('/download-result', methods=['GET'])
+@experiment_api.route('/download-result/<int:exp_id>', methods=['GET'])
 @jwt_required()
-def download_result():
+def download_result(exp_id: int):
     return Response(status=501)

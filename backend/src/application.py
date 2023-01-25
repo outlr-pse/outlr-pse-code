@@ -1,3 +1,9 @@
+"""The entry point of the backend.
+
+First collects all odms, then starts the api.
+"""
+
+
 def collect_odms() -> None:
     pass
 

@@ -2,6 +2,7 @@
 
 All blueprints from the sub-routes get registered to Flask.
 JWT auth is set up with JWTManager.
+Defines the /status API endpoint.
 The api can be run with the start() method.
 """
 

@@ -1,3 +1,12 @@
+"""Defines the /user API endpoint.
+
+Endpoints defined:
+    /user/login
+    /user/register
+    /user/logout
+    /user/check-token
+"""
+
 from flask import Blueprint, Response
 from flask_jwt_extended import jwt_required
 

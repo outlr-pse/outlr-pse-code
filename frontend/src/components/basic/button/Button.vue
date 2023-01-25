@@ -1,5 +1,5 @@
 <template>
-  <button :class="buttonType" @click="onClick">{{ text }} </button>
+  <button :class="buttonType" :style="style" @click="onClick">{{ text }} </button>
 </template>
 
 <script lang="ts">
@@ -21,18 +21,38 @@ export default defineComponent({
       startIcon:{
         type: Object as () => Icon,
         required: false
-      }
+      },
+      size:{
+        type: Object as () => [Number, Number],
+        required: false,
+        default: [100, 50],
+      },
+      color:{
+        type: String,
+        required: false,
+      },
     },
   methods: {
     onClick(){
       if(this.buttonType === ButtonType.DISABLED) return;
       this.$emit('buttonClick')
-      console.log(this.buttonType)
     }
+  },
+  computed: {
+    style(){
+      return {
+        width: this.size[0] + 'px',
+        height: this.size[1] + 'px',
+        backgroundColor: this.color,
+      }
+    }
+
   }
 })
 </script>
 
 <style scoped>
 @import "./button.css";
+
+
 </style>

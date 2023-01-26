@@ -22,10 +22,23 @@ stages:          # List of stages for jobs, and their order of execution
   - deploy
 
 build-job:       # This job runs in the build stage, which runs first.
+  image: node:6
   stage: build
   script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
+    - npm install --progress=false
+    - npm run build
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist
+
+unit test:
+  image: node:6
+  stage: test
+  script:
+    - npm install --progress=false
+    - npm run unit
+
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.

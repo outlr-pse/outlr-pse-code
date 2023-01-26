@@ -52,11 +52,7 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
         this.name = jsonObject.name;
         this.columns = jsonObject.columns;
         this.rocCurve = jsonObject.rocCurve;
-        let outlierArray = []
-        for (let outlier of jsonObject.outliers){
-            outlierArray.push(Outlier.fromJSON(outlier, [this]));
-        }
-        this.outliers = outlierArray;
+        this.outliers = jsonObject.outliers;
     }
 
     serialize(): string {

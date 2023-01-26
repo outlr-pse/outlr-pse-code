@@ -22,14 +22,14 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
                 dataset: File | null,
                 groundTruth: File | null,
                 odm: ODM,
-                subspaceLogic: SubspaceLogic) {
+                subspaceLogic?: SubspaceLogic) {
         this.id = null;
         this.name = name;
         this.datasetName = datasetName;
         this.dataset = dataset;
         this.groundTruth = groundTruth;
         this.odm = odm;
-        this.subspaceLogic = subspaceLogic;
+        this.subspaceLogic = subspaceLogic != undefined ? subspaceLogic : null;
         this.experimentResult = null;
     }
 
@@ -51,15 +51,15 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
 
     }
 
-    // /**
-    //  * This method creates an experiment from a JSON string.
-    //  * @param json
-    //  */
-    // public static fromJSON(json: string): Experiment {
-    //     let experiment = new Experiment("", "", null, null, new ODM("", []), new SubspaceLogic(""));
-    //     experiment.deserialize(json);
-    //     return experiment;
-    // }
+     /**
+      * This method creates an experiment from a JSON string.
+      * @param json
+      */
+     public static fromJSON(json: string): Experiment {
+         let experiment = new Experiment("", "", null, null, new ODM("", []));
+         experiment.deserialize(json);
+         return experiment;
+     }
 
     deserialize(json: string): void {
         let jsonObject = JSON.parse(json);

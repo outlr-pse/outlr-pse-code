@@ -1,6 +1,7 @@
 import { Subspace } from '../../../src/models/results/Subspace';
 import { Outlier } from '../../../src/models/results/Outlier';
 import { ExperimentResult } from '../../../src/models/results/ExperimentResult';
+import  experimentResultJson  from './experimentResult.json';
 
 describe('ExperimentResult', () => {
     let experimentResult: ExperimentResult;
@@ -26,11 +27,11 @@ describe('ExperimentResult', () => {
         });
     });
 
-    // test('fromJSON', () => {
-    //     const json = '{"id":1,"accuracy":0.5,"executionDate":"'+ executionDate.toJSON()+'","executionTime":100,"subspaces":[{"name":"exampleName","columns":[1,2,3],"outliers":null,"rocCurve":null}],"outliers":[{"index":1,"subspaces":null}]}';
-    //     const deserializedExperimentResult = ExperimentResult.fromJSON(json);
-    //     expect(deserializedExperimentResult).toEqual(experimentResult);
-    // });
+    test('fromJSON', () => {
+        const json = experimentResultJson;
+        const deserializedExperimentResult = ExperimentResult.fromJSON(json);
+        expect(deserializedExperimentResult).toEqual(experimentResult);
+     });
     //
     // test('deserialize', () => {
     //     const json = '{"id":2,"accuracy":0.8,"executionDate":"'+ executionDate.toJSON()+'","executionTime":200,"subspaces":[{"name":"exampleName","columns":[1,2,3],"outliers":null,"rocCurve":null}],"outliers":[{"index":1,"subspaces":null}]}';

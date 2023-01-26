@@ -1,6 +1,6 @@
 import { Outlier } from '../../../src/models/results/Outlier';
 import { Subspace } from '../../../src/models/results/Subspace';
-import subspaceJson from "../models/subspace.json";
+import { subspaceJson } from "../models/subspace.json";
 
 describe('Subspace', () => {
     let subspace: Subspace;

@@ -33,13 +33,20 @@ export class ExperimentResult implements JSONDeserializable, JSONSerializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
+        let outlierIndices = [];
+        if(this.outliers != null){
+            for(let outlier of this.outliers){
+                outlierIndices.push(outlier.index);
+            }
+        }
+
         return {
             id: this.id,
             accuracy: this.accuracy,
             executionDate: this.executionDate,
             executionTime: this.executionTime,
             subspaces: this.subspaces,
-            outliers: this.outliers
+            outliers: outlierIndices
         };
     }
 
@@ -61,7 +68,7 @@ export class ExperimentResult implements JSONDeserializable, JSONSerializable {
         }
         this.id = jsonObject.id;
         this.accuracy = jsonObject.accuracy;
-        this.executionDate = jsonObject.executionDate;
+        this.executionDate = new Date(jsonObject.executionDate);
         this.executionTime = jsonObject.executionTime;
         for (let subspace of jsonObject.subspaces){
             let outlierIndices = subspace.outliers;
@@ -72,7 +79,7 @@ export class ExperimentResult implements JSONDeserializable, JSONSerializable {
                 subspace.outliers.push(outlier);
             }
         }
-        this.subspaces = jsonObject.subspaces;
+        this.subspaces =   jsonObject.subspaces;
 
         this.outliers = Array.from(OutlierMap.values());
     }

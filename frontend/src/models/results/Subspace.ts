@@ -27,11 +27,17 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
+        let outlierIndices = [];
+        if(this.outliers != null){
+            for(let outlier of this.outliers){
+                outlierIndices.push(outlier.index);
+            }
+        }
         return {
             id: this.id,
             name: this.name,
             columns: this.columns,
-            outliers: this.outliers,
+            outliers: outlierIndices,
             rocCurve: this.rocCurve
         };
     }

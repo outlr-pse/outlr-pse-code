@@ -1,0 +1,10 @@
+{
+  "id":1,
+  "name":"exampleName",
+  "columns":[1,2,3],
+  "outliers":[1,2,3,7,9],
+  "rocCurve":[
+    {"x":1,"y":0.5}
+  ]
+}
+

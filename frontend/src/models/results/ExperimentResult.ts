@@ -7,7 +7,7 @@ import {Outlier} from "./Outlier";
  */
 export class ExperimentResult implements JSONSerializable {
     id: number;
-    accuracy: number;
+    accuracy: number | null;
     executionDate: Date;
     executionTime: number;
     subspaces: Subspace[];

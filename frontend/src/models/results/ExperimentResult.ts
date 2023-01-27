@@ -12,19 +12,22 @@ export class ExperimentResult implements JSONSerializable {
     executionTime: number;
     subspaces: Subspace[];
     outliers: Outlier[];
+    resultSpace: Subspace | undefined
 
     constructor(id: number,
                 accuracy: number,
                 executionDate: Date,
                 executionTime: number,
                 subspaces: Subspace[],
-                outliers: Outlier[]) {
+                outliers: Outlier[],
+                resultSpace?: Subspace) {
         this.id = id;
         this.accuracy = accuracy;
         this.executionDate = executionDate;
         this.executionTime = executionTime;
         this.subspaces = subspaces;
         this.outliers = outliers;
+        this.resultSpace = resultSpace;
     }
 
     /**
@@ -32,19 +35,12 @@ export class ExperimentResult implements JSONSerializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
-        let outlierIndices = [];
-        if (this.outliers != null) {
-            for (let outlier of this.outliers) {
-                outlierIndices.push(outlier.index);
-            }
-        }
         return {
             id: this.id,
             accuracy: this.accuracy,
             executionDate: this.executionDate,
             executionTime: this.executionTime,
-            // subspaces: this.subspaces,
-            // outliers: outlierIndices
+            resultSpace: this.resultSpace
         };
     }
     serialize(): string {
@@ -64,6 +60,9 @@ export class ExperimentResult implements JSONSerializable {
             new Date(jsonObject.executionDate),
             jsonObject.executionTime,
             Array.from(subspaceMap.values()),
-            Array.from(outlierMap.values()));
+            Array.from(outlierMap.values()),
+            Subspace.fromJSONObject(jsonObject.resultSpace, outlierMap)
+    );
+
     }
 }

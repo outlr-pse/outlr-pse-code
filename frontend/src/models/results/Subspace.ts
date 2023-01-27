@@ -56,11 +56,11 @@ export class Subspace implements JSONSerializable {
         newSubspace.outliers = [];
         for (let jsonOutlier of jsonObject.outliers) {
             let outlier = null;
-            if (outlierMap.has(jsonOutlier.index)) {
-                outlier = outlierMap.get(jsonOutlier.index) as Outlier;
+            if (outlierMap.has(jsonOutlier)) {
+                outlier = outlierMap.get(jsonOutlier) as Outlier;
             } else {
-                outlier = new Outlier(jsonOutlier.index, []);
-                outlierMap.set(jsonOutlier.index, outlier);
+                outlier = new Outlier(jsonOutlier, []);
+                outlierMap.set(jsonOutlier, outlier);
             }
             outlier.subspaces.push(newSubspace);
             newSubspace.outliers.push(outlier);

@@ -58,7 +58,7 @@ describe('Experiment', () => {
         experiment.experimentResult = new ExperimentResult(
             1,
             1,
-            new Date(),
+            new Date(2000000000000),
             20,
             [subspace1, subspace2],
             outliers,

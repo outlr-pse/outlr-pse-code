@@ -1,11 +1,10 @@
 import {Outlier} from "./Outlier";
-import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
 /**
  * This class represents a subspace.
  */
-export class Subspace implements JSONDeserializable, JSONSerializable {
+export class Subspace implements JSONSerializable {
     id: number | null;
     name: string | null;
     columns: number[];
@@ -17,7 +16,7 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
         this.id = id;
         this.name = name;
         this.columns = columns;
-        this.outliers = null;
+        this.outliers = [];
         this.rocCurve = null;
 
     }
@@ -28,8 +27,8 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
      */
     toJSON() {
         let outlierIndices = [];
-        if(this.outliers != null){
-            for(let outlier of this.outliers){
+        if (this.outliers != null) {
+            for (let outlier of this.outliers) {
                 outlierIndices.push(outlier.index);
             }
         }
@@ -41,27 +40,31 @@ export class Subspace implements JSONDeserializable, JSONSerializable {
             rocCurve: this.rocCurve
         };
     }
-
-    /**
-     * This method creates a subspace from a JSON string.
-     * @param json
-     */
-    public static fromJSON(json: string): Subspace {
-        let subspace = new Subspace(0, null, []);
-        subspace.deserialize(json);
-        return subspace;
-    }
-
-
-    deserialize(json: string): void {
-        let jsonObject = JSON.parse(json);
-        this.name = jsonObject.name;
-        this.columns = jsonObject.columns;
-        this.rocCurve = jsonObject.rocCurve;
-        this.outliers = jsonObject.outliers;
-    }
-
     serialize(): string {
         return JSON.stringify(this);
+    }
+
+    /**
+     * This method creates a subspace from a JSON object.
+     * @param jsonObject The JSON object.
+     * @param outlierMap The map of outliers to check if outlier already exist.
+     * After the subspace is created, the outliers are added to the outlier map.
+     */
+    static fromJSONObject(jsonObject: any, outlierMap: Map<number, Outlier>): Subspace {
+        let newSubspace = new Subspace(jsonObject.id, jsonObject.name, jsonObject.columns);
+        newSubspace.rocCurve = jsonObject.rocCurve;
+        newSubspace.outliers = [];
+        for (let jsonOutlier of jsonObject.outliers) {
+            let outlier = null;
+            if (outlierMap.has(jsonOutlier.index)) {
+                outlier = outlierMap.get(jsonOutlier.index) as Outlier;
+            } else {
+                outlier = new Outlier(jsonOutlier.index, []);
+                outlierMap.set(jsonOutlier.index, outlier);
+            }
+            outlier.subspaces.push(newSubspace);
+            newSubspace.outliers.push(outlier);
+        }
+        return newSubspace;
     }
 }

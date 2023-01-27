@@ -1,5 +1,7 @@
 import {Operator} from "./Operator"
 import {SubspaceLogic} from "./SubspaceLogic";
+import {Subspace} from "../results/Subspace";
+import {Outlier} from "../results/Outlier";
 
 /**
  * This class represents an operation in the {@link SubspaceLogic}
@@ -25,11 +27,16 @@ export class Operation implements SubspaceLogic {
     /**
      * Reads an Operation from a JSON object
      * Expects the jsonObject to a valid representation of an Operation
-     * @param jsonObject JSON as an object. This is what {@link JSON.parse} returns
+     * @param jsonObject JSON as an object. This is what {@param subspaceMap
+        @param outlierMap
+        @link JSON.parse} returns
      * @throws Throws when the given JSON object is not a valid SubspaceLogic
      */
-    public static fromJSONObject(jsonObject: any): Operation {
-        return new Operation(jsonObject.operator, jsonObject.operands.map(SubspaceLogic.fromJSONObject))
+    public static fromJSONObject(jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): Operation {
+        return new Operation(jsonObject.operator, jsonObject.operands.map(
+            (subspaceLogicJson: any) => SubspaceLogic.fromJSONObject(subspaceLogicJson, subspaceMap, outlierMap))
+        );
+
     }
 
     /**
@@ -47,7 +54,6 @@ export class Operation implements SubspaceLogic {
     serialize(): string {
         return JSON.stringify(this);
     }
-
 
 
 }

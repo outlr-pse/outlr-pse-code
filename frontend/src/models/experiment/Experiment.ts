@@ -3,6 +3,8 @@ import {JSONSerializable} from "../JSONSerializable";
 import {ExperimentResult} from "../results/ExperimentResult";
 import {ODM} from "../odm/ODM";
 import {SubspaceLogic} from "../subspacelogic/SubspaceLogic";
+import {Subspace} from "../results/Subspace";
+import {Outlier} from "../results/Outlier";
 
 /**
  * This class represents an experiment.
@@ -69,8 +71,12 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         this.dataset = jsonObject.dataset;
         this.groundTruth = jsonObject.groundTruth;
         this.odm = jsonObject.odm;
-        this.subspaceLogic = jsonObject.subspaceLogic;
-        this.experimentResult = jsonObject.experimentResult;
+
+        let subspaceMap = new Map<number, Subspace>();
+        let outlierMap = new Map<number, Outlier>();
+
+        this.subspaceLogic = SubspaceLogic.fromJSONObject(jsonObject.subspaceLogic, subspaceMap, outlierMap);
+        this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experimentResult, subspaceMap, outlierMap);
 
     }
 

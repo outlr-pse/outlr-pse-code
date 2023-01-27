@@ -5,6 +5,7 @@ JWT auth is set up with JWTManager.
 Defines the /status API endpoint.
 The api can be run with the start() method.
 """
+from functools import wraps
 
 from flask import Flask, jsonify
 from flask.wrappers import Response
@@ -18,7 +19,24 @@ app.register_blueprint(experiment_api)
 app.register_blueprint(user_management_api)
 app.register_blueprint(odm_api)
 
-JWTManager(app)
+# probably irrelevant
+mock_authenticated: bool = True
+
+
+def mock_jwt_required():
+    def wrapper(fn):
+        @wraps(fn)
+        def decorator(*args, **kwargs):
+            if not mock_authenticated:
+                return jsonify(msg="access token not provided or invalid"), 403
+            return fn(*args, **kwargs)
+
+        return decorator
+
+    return wrapper
+# probably irrelevant
+
+# JWTManager(app)
 
 
 @app.route('/status', methods=['GET'])

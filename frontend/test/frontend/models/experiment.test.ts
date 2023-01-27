@@ -55,6 +55,10 @@ describe('Experiment', () => {
         subspace1.outliers = [outliers[0], outliers[1], outliers[2], outliers[4], outliers[5]]
         subspace2.outliers = [outliers[1], outliers[3], outliers[4], outliers[6]]
 
+        let resultSpace = new Subspace(0, "resultSpace", []);
+        resultSpace.outliers = outliers;
+
+
         experiment.experimentResult = new ExperimentResult(
             1,
             1,
@@ -63,6 +67,8 @@ describe('Experiment', () => {
             [subspace1, subspace2],
             outliers,
         )
+
+        experiment.experimentResult.resultSpace = resultSpace;
 
     });
 

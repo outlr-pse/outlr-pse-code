@@ -50,8 +50,8 @@ export class ExperimentResult implements JSONSerializable {
     /**
      * This method creates an experiment result from a JSON object.
      * @param jsonObject The JSON object.
-     * @param subspaceMap The map of subspaces added to the experiment result.
-     * @param outlierMap The map of outliers added to the experiment result.
+     * @param subspaceMap The map of all subspaces that the experiment holds.
+     * @param outlierMap The map of  all outliers that the experiment holds.
      */
     static fromJSONObject(jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): ExperimentResult {
         return new ExperimentResult(

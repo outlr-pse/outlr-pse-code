@@ -68,8 +68,6 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         this.id = jsonObject.id;
         this.name = jsonObject.name;
         this.datasetName = jsonObject.datasetName;
-        this.dataset = jsonObject.dataset;
-        this.groundTruth = jsonObject.groundTruth;
         this.odm = jsonObject.odm;
 
         let subspaceMap = new Map<number, Subspace>();

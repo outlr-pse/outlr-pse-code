@@ -1,17 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {defineComponent, ref} from 'vue'
 import {Languages} from "../../language/Languages";
 import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
 import BaseTable from "../basic/BaseTable.vue";
+import Dropdown from "../basic/Dropdown.vue";
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
+
+function consoleLog(log: any) {
+  console.log(log)
+}
+
 </script>
 
 
+
 <template>
+
+
+  <Dropdown hint="Select an ODM" value="LUNAR" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'FUCKOFF', 'NYA', 'AMOUNT', 'RADISH']" label="Select ODM " @onValueSelected="consoleLog" />
 
   <Button text="Click me" @buttonClick="count++" :button-type="ButtonType.DEFAULT"/>
 

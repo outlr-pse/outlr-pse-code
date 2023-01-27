@@ -13,4 +13,3 @@ class TestUser(unittest.TestCase):
         user.id = 0
         user_json["id"] = user.id
         self.assertEqual(user.to_json(), user_json)
-

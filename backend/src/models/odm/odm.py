@@ -14,4 +14,3 @@ class ODM(Base):
             'id': self.id,
             'name': self.name
         }
-

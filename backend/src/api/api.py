@@ -14,22 +14,13 @@ from api.odm_api import odm_api
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
-app.register_blueprint(experiment_api)
-app.register_blueprint(user_management_api)
-app.register_blueprint(odm_api)
+app.register_blueprint(experiment_api, url_prefix='/api/experiment')
+app.register_blueprint(user_management_api, url_prefix='/api/user')
+app.register_blueprint(odm_api, url_prefix='/api/odm')
 
 JWTManager(app)
 
 
-@app.route('/status', methods=['GET'])
+@app.route('/api/status', methods=['GET'])
 def status() -> Response:
     return jsonify({'status': 'running'})
-
-
-def start() -> None:
-    """Starts the API.
-
-    Currently on localhost port 5000 in debug mode. Will be changed in the future.
-    """
-    # todo: change host, debug (and port if necessary)
-    app.run(host='localhost', port=5000, debug=True)

@@ -27,16 +27,37 @@ before_script:
   - docker info
   - docker-compose --version
 
-build-job:
-  stage: build
-  image: docker:19-dind
-  script:
-    - echo "Hello, $GITLAB_USER_LOGIN!"
-    - cd frontend
-    - docker build -t outlr-web .
-#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-#    - docker push registry.gitlab.com/my-group/my-project/my-image:latest
+#build-job:
+#  stage: build
+#  image: docker:19-dind
+#  script:
+#    - echo "Hello, $GITLAB_USER_LOGIN!"
+#    - cd frontend
+#    - docker build -t outlr-web .
+##    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+##    - docker push registry.gitlab.com/my-group/my-project/my-image:latest
 
+build:docker:
+  image: docker:20-dind
+  variables:
+    # using "docker" as the host is only possible if you alias the service below
+    DOCKER_HOST: tcp://docker:2375
+    # could be wrong here but although Docker defaults to overlay2,
+    # Docker-in-Docker (DIND) does not according to the following GitLab doc:
+    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+  services:
+    - name: docker:20-dind
+      alias: docker
+      # in our experience although you'd assume this would be sufficient, this did
+      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
+      # to an empty string, and I would call that beyond mildly infuriating.
+      command: ["--tls=false"]
+  script:
+    - cd frontend
+    - docker build -t testfront .
+    - docker run -p 8080:8080 --rm --name frontend testfront
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).

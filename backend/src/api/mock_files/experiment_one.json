@@ -1,0 +1,187 @@
+{
+    "id": 5,
+    "name": "Example Experiment",
+    "datasetName": "Test Dataset",
+    "dataset": null,
+    "groundTruth": null,
+    "odm": {
+      "name": "COPOD",
+      "hyperparameters": [{
+          "name": "contamination",
+          "value": 0.1,
+          "type": "numeric"
+      },
+      {
+        "name": "n_jobs",
+        "value": -1,
+        "type": "integer"
+      }]
+    },
+    "subspaceLogic": {
+      "operation": {
+        "operator": "or",
+        "operands": [
+          {
+            "operation": {
+              "operator": "and",
+              "operands": [
+                {
+                  "literal": {
+                    "subspace": {
+                      "id":1,
+                      "name":"S1",
+                      "columns":[2,3],
+                      "outliers":[9,10,15,28,34],
+                      "rocCurve": null
+                    }
+                  }
+                },
+                {
+                  "literal": {
+                    "subspace": {
+                        "id":2,
+                        "name":"S2",
+                        "columns":[0,1,2,3],
+                        "outliers":[1,7,9,10,15,28,34],
+                        "rocCurve": null
+                      }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "operation": {
+              "operator": "and",
+              "operands": [
+                {
+                  "literal": {
+                    "subspace": {
+                        "id":2,
+                        "name":"S2",
+                        "columns":[0,1,2,3],
+                        "outliers":[1,7,9,10,15,28,34],
+                        "rocCurve": null
+                      }
+                  }
+                },
+                {
+                  "literal": {
+                    "subspace": {
+                      "id":3,
+                      "name":"S3",
+                      "columns":[3,4,5],
+                      "outliers":[10,11,17,35],
+                      "rocCurve": null
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "operation": {
+              "operator": "and",
+              "operands": [
+                {
+                  "operation": {
+                    "operator": "and",
+                    "operands": [
+                      {
+                        "literal": {
+                          "subspace": {
+                            "id":1,
+                            "name":"S1",
+                            "columns":[2,3],
+                            "outliers":[9,10,15,28,34],
+                            "rocCurve": null
+                          }
+                        }
+                      },
+                      {
+                        "literal": {
+                          "subspace": {
+                              "id":2,
+                              "name":"S2",
+                              "columns":[0,1,2,3],
+                              "outliers":[1,7,9,10,15,28,34],
+                              "rocCurve": null
+                            }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "operation": {
+                    "operator": "and",
+                    "operands": [
+                      {
+                        "literal": {
+                          "subspace": {
+                              "id":2,
+                              "name":"S2",
+                              "columns":[0,1,2,3],
+                              "outliers":[1,7,9,10,15,28,34],
+                              "rocCurve": null
+                            }
+                        }
+                      },
+                      {
+                        "literal": {
+                          "subspace": {
+                            "id":3,
+                            "name":"S3",
+                            "columns":[3,4,5],
+                            "outliers":[10,11,17,35],
+                            "rocCurve": null
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "experimentResult": {
+      "id": 0,
+      "accuracy": 0.65,
+      "executionDate": "2023-01-27T00:20:17.102Z",
+      "executionTime": 20,
+      "outliers" : [1,7,9,10,15,28,34,35],
+      "subspaces": [
+        {
+           "id":1,
+            "name":"S1",
+            "columns":[2,3],
+            "outliers":[9,10,15,28,34],
+            "rocCurve": null
+        },
+        {
+           "id":2,
+            "name":"S2",
+            "columns":[0,1,2,3],
+            "outliers":[1,7,9,10,15,28,34],
+            "rocCurve": null
+        },
+        {
+            "id":3,
+            "name":"S3",
+            "columns":[3,4,5],
+            "outliers":[10,11,17,35],
+            "rocCurve": null
+        }
+      ],
+      "resultSpace": {
+          "id":13,
+          "name":"ResultSpace",
+          "columns":[],
+          "outliers":[9,10,15,28,34],
+          "rocCurve": null
+        }
+    }
+}

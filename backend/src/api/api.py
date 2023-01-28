@@ -19,23 +19,6 @@ app.register_blueprint(experiment_api)
 app.register_blueprint(user_management_api)
 app.register_blueprint(odm_api)
 
-# probably irrelevant
-mock_authenticated: bool = True
-
-
-def mock_jwt_required():
-    def wrapper(fn):
-        @wraps(fn)
-        def decorator(*args, **kwargs):
-            if not mock_authenticated:
-                return jsonify(msg="access token not provided or invalid"), 403
-            return fn(*args, **kwargs)
-
-        return decorator
-
-    return wrapper
-# probably irrelevant
-
 # JWTManager(app)
 
 

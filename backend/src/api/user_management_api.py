@@ -10,8 +10,6 @@ Endpoints defined:
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 
-from api.api import mock_jwt_required
-
 user_management_api = Blueprint('user_management', __name__, url_prefix='/user')
 
 
@@ -28,12 +26,12 @@ def register() -> Response:
 
 
 @user_management_api.route('/logout', methods=['POST'])
-@mock_jwt_required()
+#@jwt_required()
 def logout() -> Response:
     return jsonify(message="Token deleted", status=200)
 
 
 @user_management_api.route('/check-token', methods=['POST'])
-@mock_jwt_required()
+#@jwt_required()
 def check_token() -> Response:
     return jsonify(message="Token is valid", status=200)

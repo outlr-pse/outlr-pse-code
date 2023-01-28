@@ -113,7 +113,7 @@ export default defineComponent({
 }
 
 .custom-dropdown button {
-  width: 30vw;
+  width: 20vw;
   height: 7vh;
   padding: 10px;
   border: none;

@@ -28,7 +28,7 @@ export default defineComponent({
       },
       buttonType:{
         type: String as () => ButtonType,
-        default: 'default',
+        default: ButtonType.DEFAULT,
         required: false
       },
       startIcon:{

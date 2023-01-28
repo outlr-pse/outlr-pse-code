@@ -2,7 +2,7 @@
   <div class="custom-dropdown">
     <button @click="openDropdown">
       <div class="buttonValue">
-          {{ selectedOption }} <img :src="arrowDirection">
+        {{ selectedOption }} <img :src="arrowDirection">
       </div>
     </button>
     <ul v-if="isOpen" class="custom-dropdown-options">
@@ -25,7 +25,7 @@ export default defineComponent({
   data() {
     return {
       isOpen: false,
-      selectedOption: this.value != null? this.value : this.hint,
+      selectedOption: this.value != null ? this.value : this.hint,
       arrowDirection: Icon.EXPAND_RIGHT
     }
   },
@@ -51,11 +51,29 @@ export default defineComponent({
       this.arrowDirection = this.isOpen ? Icon.EXPAND_DOWN : Icon.EXPAND_RIGHT;
     },
     selectOption(option: string) {
+      this.selectedOption = option;
       this.$emit("onValueSelected", option);
       this.isOpen = false;
       this.arrowDirection = Icon.EXPAND_RIGHT;
     }
   },
+  //TODO: CHATGPT sagt dass das ein memory leak erzeugen könnte muss man vielleicht beobachten
+  mounted() {
+    document.addEventListener("click", (event) => {
+      if (!this.$el.contains(event.target)) {
+        this.isOpen = false;
+        this.arrowDirection = Icon.EXPAND_RIGHT;
+      }
+    });
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", (event) => {
+      if (!this.$el.contains(event.target)) {
+        this.isOpen = false;
+        this.arrowDirection = Icon.EXPAND_RIGHT;
+      }
+    });
+  }
 });
 </script>
 
@@ -78,6 +96,7 @@ export default defineComponent({
   text-align: start;
   font-size: 2.5vh;
 }
+
 .buttonValue {
   display: flex;
   justify-content: space-between;
@@ -96,12 +115,15 @@ export default defineComponent({
   border-radius: 8px;
   border: thin solid var(--color-stroke);
   background-color: var(--color-background);
+  overflow: auto;
+  max-height: 40vh;
 }
 
 .custom-dropdown-options li {
   padding: 6px;
   text-align: start;
 }
+
 .custom-dropdown-options li:hover {
   background-color: var(--color-stroke);
   cursor: default;

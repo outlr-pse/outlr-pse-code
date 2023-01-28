@@ -125,7 +125,8 @@ export default defineComponent({
 }
 
 .custom-dropdown-options li:hover {
-  background-color: var(--color-stroke);
+  background-color: var(--color-selected);
+  color: var(--color-background);
   cursor: default;
 }
 </style>

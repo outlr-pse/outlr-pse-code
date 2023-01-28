@@ -21,7 +21,7 @@ function consoleLog(log: any) {
 
 <template>
 
-  <DropdownV2 hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH', 'A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A']" @onValueSelected="consoleLog" />
+  <DropdownV2 hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH']" @onValueSelected="consoleLog" />
   <Dropdown hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH', 'A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A']" @onValueSelected="consoleLog" />
   <Button text="Click me" @buttonClick="count++" :button-type="ButtonType.DEFAULT"/>
 

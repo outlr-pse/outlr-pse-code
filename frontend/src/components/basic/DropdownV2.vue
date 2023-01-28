@@ -116,7 +116,7 @@ export default defineComponent({
   border: thin solid var(--color-stroke);
   background-color: var(--color-background);
   overflow: auto;
-  max-height: 40vh;
+  max-height: 45vh;
 }
 
 .custom-dropdown-options li {

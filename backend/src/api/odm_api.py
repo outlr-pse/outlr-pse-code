@@ -1,14 +1,14 @@
-"""Defines the /odm API endpoint.
+"""Defines the odm API endpoint.
 
 Endpoints defined:
-    /odm/get-all
-    /odm/get-parameters/<odm_id>
+    /get-all
+    /get-parameters/<odm_id>
 """
 
 from flask import Blueprint, Response
 from flask_jwt_extended import jwt_required
 
-odm_api = Blueprint('odm', __name__, url_prefix='/odm')
+odm_api = Blueprint('odm', __name__)
 
 
 @odm_api.route('/get-all', methods=['GET'])

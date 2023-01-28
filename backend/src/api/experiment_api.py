@@ -1,18 +1,18 @@
-"""Defines the /experiment API endpoints.
+"""Defines the experiment API endpoints.
 
 Endpoints defined:
-    /experiment/validate-dataset
-    /experiment/validate-ground-truth
-    /experiment/get-result/<exp_id>
-    /experiment/get-all
-    /experiment/create
-    /experiment/download-result/<exp_id>
+    /validate-dataset
+    /validate-ground-truth
+    /get-result/<exp_id>
+    /get-all
+    /create
+    /download-result/<exp_id>
 """
 
 from flask import Blueprint, Response
 from flask_jwt_extended import jwt_required
 
-experiment_api = Blueprint('experiment', __name__, url_prefix='/experiment')
+experiment_api = Blueprint('experiment', __name__)
 
 
 @experiment_api.route('/validate-dataset', methods=['POST'])

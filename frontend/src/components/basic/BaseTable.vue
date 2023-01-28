@@ -1,5 +1,5 @@
 <template>
-  <ScollLayout :horizontal-scroll-bar="true" :vertical-scroll-bar="true">
+  <ScollLayout :horizontal-scroll-bar="true" :vertical-scroll-bar="true" style="height: 15vh; width: 20vw">
     <table :style="style">
     <thead>
       <slot name="header"></slot>

@@ -5,6 +5,7 @@ import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
 import BaseTable from "../basic/BaseTable.vue";
 import {Icon} from "../basic/Icon";
+import DashboardTable from "./dashboard/components/DashboardTable.vue";
 
 defineProps<{ msg: string }>()
 
@@ -13,6 +14,8 @@ const count = ref(0)
 
 
 <template>
+
+  <DashboardTable/>
 
   <Button text="Run experiment" :button-type="ButtonType.ACTIVE" :size="[421, 78]" :text-size="[30, 600]"/>
   <Button text="Create experiment" :button-type="ButtonType.ACTIVE" :size="[188, 45]" :text-size="[15, 900]"/>

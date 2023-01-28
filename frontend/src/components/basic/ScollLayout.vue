@@ -1,5 +1,5 @@
 <template>
-  <div class="scroll-layout">
+  <div class="scroll-layout" :style="style">
     <slot></slot>
   </div>
 </template>
@@ -18,6 +18,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
       required: false
+    },
+    style:{
+      type: Object as () => CSSStyleDeclaration,
+      required: false,
     }
   }
 
@@ -27,8 +31,6 @@ export default defineComponent({
 <style scoped>
 .scroll-layout{
   overflow: hidden;
-  height: 100%;
-  width: 100%;
 }
 .scroll-layout::-webkit-scrollbar {
   width: 0px;

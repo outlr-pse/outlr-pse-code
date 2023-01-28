@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import {defineComponent, ref} from 'vue'
+import {ref} from 'vue'
 import {Languages} from "../../language/Languages";
 import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
-import BaseTable from "../basic/BaseTable.vue";
-import DropdownV2 from "../basic/DropdownV2.vue";
 import Dropdown from "../basic/Dropdown.vue";
 
 defineProps<{ msg: string }>()
@@ -21,8 +19,7 @@ function consoleLog(log: any) {
 
 <template>
 
-  <DropdownV2 hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH']" @onValueSelected="consoleLog" />
-  <Dropdown  hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH', 'A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A','A', 'A', 'A','A','A','A','A','A','A']" @onValueSelected="consoleLog" />
+  <Dropdown hint="Select an ODM" :options="['LUNAR', 'ROSE', 'PLANT', 'RESCUE', 'LILIE', 'NYA', 'AMOUNT', 'RADISH']" @onValueSelected="consoleLog" />
   <Button text="Click me" @buttonClick="count++" :button-type="ButtonType.DEFAULT"/>
 
   <h1>{{ $t('message.greeting') }}, {{$t('message.name')}}</h1>

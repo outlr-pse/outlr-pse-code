@@ -1,19 +1,37 @@
 <template>
-  <div class="dropdown">
-    <!--  <label v-if="label != null" style="text-align: start; padding-left: 5px; padding-right: 5px;">{{ label }}</label> -->
-    <select :value="value" @change="selectionChange" class="selectItem">
-        <option value="" disabled selected hidden="">{{ hint }}</option>
-        <option v-for="option in options">{{ option }}</option>
-    </select>
+  <div class="custom-dropdown">
+    <button @click="openDropdown">
+      <div class="buttonValue" :style="buttonStyle">
+        {{ selectedOption }} <img :src="arrowDirection">
+      </div>
+    </button>
+    <ul v-if="isOpen" class="custom-dropdown-options">
+      <li v-for="option in options" @click="selectOption(option)">{{ option }}</li>
+    </ul>
   </div>
-
 
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
+import {Icon} from "./Icon";
 
 export default defineComponent({
+  computed: {
+    Icon() {
+      return Icon
+    }
+  },
+  data() {
+    return {
+      isOpen: false,
+      selectedOption: "",
+      arrowDirection: Icon.EXPAND_RIGHT,
+      buttonStyle: {
+        color: "var(--color-stroke)"
+      }
+    }
+  },
   props: {
     hint: {
       type: String,
@@ -27,35 +45,113 @@ export default defineComponent({
     value: {
       type: String,
       required: false,
-      default: "",
+      default: null,
     },
   },
   methods: {
-    selectionChange(event: any) {
-      this.$emit("onValueSelected", event.target.value);
+    openDropdown() {
+      this.isOpen = !this.isOpen;
+      this.arrowDirection = this.isOpen ? Icon.EXPAND_DOWN : Icon.EXPAND_RIGHT;
     },
+    selectOption(option: string) {
+      this.selectedOption = option;
+      this.$emit("onValueSelected", option);
+      this.isOpen = false;
+      this.arrowDirection = Icon.EXPAND_RIGHT;
+    }
   },
+  mounted() {
+    if(this.value != null){
+      this.selectedOption = this.value;
+      this.buttonStyle = {
+        color: "var(--color-text)"
+      }
+    } else {
+      this.selectedOption = this.hint;
+    }
+
+
+    document.addEventListener("click", (event) => {
+      if (!this.$el.contains(event.target)) {
+        this.isOpen = false;
+        this.arrowDirection = Icon.EXPAND_RIGHT;
+      }
+    });
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", (event) => {
+      if (!this.$el.contains(event.target)) {
+        this.isOpen = false;
+        this.arrowDirection = Icon.EXPAND_RIGHT;
+      }
+    });
+  },
+  watch:{
+    selectedOption: function (oldVal: string) {
+      if (oldVal === this.hint) {
+        this.buttonStyle = {
+          color: "var(--color-stroke)"
+        }
+      } else {
+        this.buttonStyle = {
+          color: "var(--color-text)"
+        }
+      }
+    }
+  }
 });
 </script>
 
 <style scoped>
-.dropdown {
-  display: inline-grid;
-  height: auto;
-  width: auto;
-}
 
-.selectItem {
-  width: 300px;
-  height: 50px;
+.custom-dropdown {
+  position: relative;
   border-radius: 8px;
-  background: var(--color-background);
-  font-size: 2.6vh;
-  padding-left: 1vh;
-  text-overline-color: var(--color-main);
-}
-option{
-  line-height: 10vh;
+  border: thin solid var(--color-stroke);
+  width: max-content;
+  background-color: var(--color-background);
 }
 
+.custom-dropdown button {
+  width: 30vw;
+  height: 7vh;
+  padding: 10px;
+  border: none;
+  background-color: transparent;
+  text-align: start;
+  font-size: 2.5vh;
+}
+
+.buttonValue {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.custom-dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  border: thin solid var(--color-stroke);
+  background-color: var(--color-background);
+  overflow: auto;
+  max-height: 45vh;
+}
+
+.custom-dropdown-options li {
+  padding: 6px;
+  text-align: start;
+}
+
+.custom-dropdown-options li:hover {
+  background-color: var(--color-selected);
+  color: var(--color-background);
+  cursor: default;
+}
 </style>

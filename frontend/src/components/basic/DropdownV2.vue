@@ -1,7 +1,7 @@
 <template>
   <div class="custom-dropdown">
     <button @click="openDropdown">
-      <div class="buttonValue">
+      <div class="buttonValue" :style="buttonStyle">
         {{ selectedOption }} <img :src="arrowDirection">
       </div>
     </button>
@@ -25,8 +25,11 @@ export default defineComponent({
   data() {
     return {
       isOpen: false,
-      selectedOption: this.value != null ? this.value : this.hint,
-      arrowDirection: Icon.EXPAND_RIGHT
+      selectedOption: "",
+      arrowDirection: Icon.EXPAND_RIGHT,
+      buttonStyle: {
+        color: "var(--color-stroke)"
+      }
     }
   },
   props: {
@@ -57,8 +60,17 @@ export default defineComponent({
       this.arrowDirection = Icon.EXPAND_RIGHT;
     }
   },
-  //TODO: CHATGPT sagt dass das ein memory leak erzeugen könnte muss man vielleicht beobachten
   mounted() {
+    if(this.value != null){
+      this.selectedOption = this.value;
+      this.buttonStyle = {
+        color: "var(--color-text)"
+      }
+    } else {
+      this.selectedOption = this.hint;
+    }
+
+
     document.addEventListener("click", (event) => {
       if (!this.$el.contains(event.target)) {
         this.isOpen = false;
@@ -73,6 +85,19 @@ export default defineComponent({
         this.arrowDirection = Icon.EXPAND_RIGHT;
       }
     });
+  },
+  watch:{
+    selectedOption: function (oldVal: string) {
+      if (oldVal === this.hint) {
+        this.buttonStyle = {
+          color: "var(--color-stroke)"
+        }
+      } else {
+        this.buttonStyle = {
+          color: "var(--color-text)"
+        }
+      }
+    }
   }
 });
 </script>

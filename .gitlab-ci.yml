@@ -23,9 +23,6 @@ stages:          # List of stages for jobs, and their order of execution
 #
 #services:
 #  - docker:dind
-before_script:
-  - docker info
-  - docker-compose --version
 
 #build-job:
 #  stage: build

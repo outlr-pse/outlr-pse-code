@@ -1,0 +1,62 @@
+/* styles which have to be applied to the whole page*/
+@import './fonts.css';
+@import './constants.css';
+
+:root {
+  font-family: "Poppins", Calibri, sans-serif;
+  letter-spacing: 0.02em;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: normal;
+
+  color-scheme: light dark;
+  color: var(--color-text);
+  background-color: var(--color-background);
+
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+/*vue.js global value*/
+#app {
+  text-align: center;
+  min-width: auto;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+
+/* semantic color variables for this project */
+:root {
+  --color-main: var(--palette-purple-5);
+  --color-main-white: #eeeeee;
+  --color-text: var(--color-main-white);
+  --color-background: #202020;
+  --color-stroke: var(--palette-grey-1);
+  --color-default-text-textbox: var(--palette-grey-1);
+  --color-textboxfill: var(--palette-grey-9);
+  --color-topbar: #2f293a; /* vlt zu palette ändern */
+  --color-lines: var(--palette-grey-3);
+  --color-subheader: var(--palette-grey-1);
+  --color-input-textbox: var(--palette-grey--1);
+  --color-selected: var(--palette-purple-3);
+  --color-cell-background: #3c3054;
+  --color-purple-button: var(--palette-purple-85);
+}
+
+/* add colors for light mode here */
+.light-mode {
+
+}
+

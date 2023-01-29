@@ -1,6 +1,5 @@
 <template>
-  <div class="base-table" :style="style">
-    <table>
+    <table :style="style">
       <thead>
       <slot name="header"></slot>
       </thead>
@@ -8,7 +7,6 @@
       <slot name="body"></slot>
       </tbody>
     </table>
-  </div>
 </template>
 
 <script lang="ts">
@@ -26,7 +24,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.base-table {
-  overflow: auto;
-}
 </style>

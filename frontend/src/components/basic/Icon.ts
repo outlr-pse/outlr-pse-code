@@ -1,26 +1,20 @@
-
-const ICONS_FOLDER = "/src/assets/icons/"
-function svgIcon(filename: string): string {
-    return ICONS_FOLDER + filename + ".svg"
-}
-
 /**
  * This enum contains all Icons that exist in the application.
  * It also stores the source of the icon for each enum entry.
  */
 export enum Icon {
-    INFO = svgIcon("info"),
-    CLOSE = svgIcon("close"),
-    HELP = svgIcon("help"),
-    EDIT = svgIcon("edit"),
-    DOWNLOAD = svgIcon("download"),
-    UPLOAD_FILE = svgIcon("upload_file"),
-    REFRESH = svgIcon("refresh"),
-    EXPAND_DOWN = svgIcon("expand_down"),
-    EXPAND_UP = svgIcon("expand_up"),
-    EXPAND_RIGHT = svgIcon("expand_right"),
-    EXPAND_LEFT = svgIcon("expand_left"),
-    VISIBLE = svgIcon("visible"),
-    VISIBLE_OFF = svgIcon("visible_off"),
-    USER = svgIcon("user"),
+    INFO = "/src/assets/icons/info.svg",
+    CLOSE = "/src/assets/icons/close.svg",
+    HELP = "/src/assets/icons/help.svg",
+    EDIT = "/src/assets/icons/edit.svg",
+    DOWNLOAD = "/src/assets/icons/download.svg",
+    UPLOAD_FILE = "/src/assets/icons/upload_file.svg",
+    REFRESH = "/src/assets/icons/refresh.svg",
+    EXPAND_DOWN = "/src/assets/icons/expand_down.svg",
+    EXPAND_UP = "/src/assets/icons/expand_up.svg",
+    EXPAND_RIGHT = "/src/assets/icons/expand_right.svg",
+    EXPAND_LEFT = "/src/assets/icons/expand_left.svg",
+    VISIBLE = "/src/assets/icons/visible.svg",
+    VISIBLE_OFF = "/src/assets/icons/visible_off.svg",
+    USER = "/src/assets/icons/user.svg"
 }

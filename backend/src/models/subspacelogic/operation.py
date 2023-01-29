@@ -6,6 +6,7 @@ from models.subspacelogic.subspace_logic import *
 
 
 class Operation(SubspaceLogic):
+    
 
     def __int__(self, operator: Callable[[list[list[int]]], list[int]], operands: list[SubspaceLogic]):
         self.operator = operator
@@ -15,4 +16,4 @@ class Operation(SubspaceLogic):
         return list(chain(map(lambda operand: operand.get_subspaces(), self.operands)))
 
     def evaluate(self) -> list[int]:
-        pass
+        return self.operator(list(map(lambda logic: logic.evaluate(), self.operands)))

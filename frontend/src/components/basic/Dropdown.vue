@@ -2,7 +2,7 @@
   <div class="custom-dropdown">
     <button @click="openDropdown">
       <div class="buttonValue" :style="buttonStyle">
-        {{ selectedOption }} <img :src="arrowDirection">
+        {{ selectedOption }} <span class="material-icons md-dark" style="color: var(--color-stroke); font-size: 4vh;">{{ arrowDirection }}</span>
       </div>
     </button>
     <ul v-if="isOpen" class="custom-dropdown-options">
@@ -14,19 +14,13 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {Icon} from "./Icon";
 
 export default defineComponent({
-  computed: {
-    Icon() {
-      return Icon
-    }
-  },
   data() {
     return {
       isOpen: false,
       selectedOption: "",
-      arrowDirection: Icon.EXPAND_RIGHT,
+      arrowDirection: "chevron_right",
       buttonStyle: {
         color: "var(--color-stroke)"
       }
@@ -51,13 +45,13 @@ export default defineComponent({
   methods: {
     openDropdown() {
       this.isOpen = !this.isOpen;
-      this.arrowDirection = this.isOpen ? Icon.EXPAND_DOWN : Icon.EXPAND_RIGHT;
+      this.arrowDirection = this.isOpen ? "expand_more" : "chevron_right"
     },
     selectOption(option: string) {
       this.selectedOption = option;
       this.$emit("onValueSelected", option);
       this.isOpen = false;
-      this.arrowDirection = Icon.EXPAND_RIGHT;
+      this.arrowDirection = "chevron_right";
     }
   },
   mounted() {
@@ -74,7 +68,7 @@ export default defineComponent({
     document.addEventListener("click", (event) => {
       if (!this.$el.contains(event.target)) {
         this.isOpen = false;
-        this.arrowDirection = Icon.EXPAND_RIGHT;
+        this.arrowDirection = "chevron_right";
       }
     });
   },
@@ -82,7 +76,7 @@ export default defineComponent({
     document.removeEventListener("click", (event) => {
       if (!this.$el.contains(event.target)) {
         this.isOpen = false;
-        this.arrowDirection = Icon.EXPAND_RIGHT;
+        this.arrowDirection = "chevron_right";
       }
     });
   },

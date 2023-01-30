@@ -28,6 +28,7 @@ MarkupSafe==2.1.2
 more-itertools==8.14.0
 msgpack==1.0.4
 packaging==22.0
+pandas>=1.5.3
 pexpect==4.8.0
 pipenv==2022.12.19
 pkginfo==1.9.2
@@ -55,3 +56,4 @@ virtualenv==20.17.1
 virtualenv-clone==0.5.7
 webencodings==0.5.1
 Werkzeug==2.2.2
+

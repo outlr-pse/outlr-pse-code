@@ -1,16 +1,24 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import {Languages} from "../../language/Languages";
+import Button from "../basic/button/Button.vue";
+import {ButtonType} from "../basic/button/ButtonType";
+import BaseTable from "../basic/BaseTable.vue";
 
 defineProps<{ msg: string }>()
 
 const count = ref(0)
 </script>
 
+
 <template>
-  <h1>{{ msg }}</h1>
+
+  <Button text="Click me" @buttonClick="count++" :button-type="ButtonType.DEFAULT"/>
+
+  <h1>{{ $t('message.greeting') }}, {{$t('message.name')}}</h1>
 
   <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
+    <button type="button" @click="$i18n.locale = Languages.GERMAN">count is {{ count }}</button>
     <p>
       Edit
       <code>components/HelloWorld.vue</code> to test HMR

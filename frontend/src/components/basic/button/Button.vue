@@ -8,7 +8,7 @@
         </div>
     </div>
     </div>
-    <div v-else style="">
+    <div v-else>
       {{ text }}
     </div>
   </button>

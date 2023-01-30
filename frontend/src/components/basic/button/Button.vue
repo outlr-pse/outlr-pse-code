@@ -1,24 +1,22 @@
 <template>
   <button :class="buttonType" :style="style" @click="onClick">
-    <div v-if="IconProvided" style="padding: 20px ">
-      <div style="display: inline-grid; grid-template-rows: auto auto; padding: 10px;">
+    <div v-if="IconProvided">
+      <div style="display: inline-grid; grid-template-rows: auto auto; padding-top: 3vh">
         <div> {{ text }}</div>
         <div>
-          <img :src="startIcon">
+          <Icon class="material-icons md-dark" style="font-size: 5vh; color: var(--color-stroke)" > {{startIcon}} </Icon>
         </div>
     </div>
     </div>
-    <div v-else>
+    <div v-else style="">
       {{ text }}
     </div>
-
   </button>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { ButtonType } from './ButtonType'
-import {Icon} from "../Icon";
 
 export default defineComponent({
     props: {
@@ -32,7 +30,7 @@ export default defineComponent({
         required: false
       },
       startIcon:{
-        type: String as () => Icon,
+        type: String,
         required: false
       },
       size:{

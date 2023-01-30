@@ -13,7 +13,7 @@ const count = ref(0)
 <template>
 
   <Button text="Run experiment" :button-type="ButtonType.ACTIVE" :size="[421, 78]" :text-size="[30, 900]"/>
-  <Button text="Create experiment" :button-type="ButtonType.ACTIVE" :size="[188, 45]" :text-size="[null, null]"/>
+  <Button text="Create experiment" :button-type="ButtonType.ACTIVE" :size="[188, 45]" :text-size="[-1, -1]"/>
   <Button text="Sign Up" :button-type="ButtonType.DEFAULT" :size="[200, 100]" color="var(--color-purple-button)"/>
   <Button text="Navigate to dashboard" :button-type="ButtonType.DEFAULT" :size="[543, 100]" color="var(--color-purple-button)" start-icon="expand_more"/>
   <Button text="Refresh" :button-type="ButtonType.OUTLINE" :size="[127, 45]" />

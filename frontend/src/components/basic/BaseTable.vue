@@ -10,13 +10,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {CSSProperties, defineComponent} from "vue";
 
 export default defineComponent({
 
   props: {
     style: {
-      type: Object as () => CSSStyleDeclaration,
+      type: Object as () => CSSProperties,
       required: false,
     },
   },

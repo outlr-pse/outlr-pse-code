@@ -33,7 +33,7 @@ export default defineComponent({
       default: "Select an option",
     },
     options: {
-      type: Array,
+      type: Array[string],
       required: true,
     },
     value: {

@@ -24,37 +24,55 @@ stages:          # List of stages for jobs, and their order of execution
 #services:
 #  - docker:dind
 
-#build-job:
-#  stage: build
-#  image: docker:19-dind
-#  script:
-#    - echo "Hello, $GITLAB_USER_LOGIN!"
-#    - cd frontend
-#    - docker build -t outlr-web .
-##    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-##    - docker push registry.gitlab.com/my-group/my-project/my-image:latest
 
-build:docker:
-  image: docker:20-dind
+#build:docker:
+#  image: docker:20-dind
+#  variables:
+#    # using "docker" as the host is only possible if you alias the service below
+#    DOCKER_HOST: tcp://docker:2375
+#    # could be wrong here but although Docker defaults to overlay2,
+#    # Docker-in-Docker (DIND) does not according to the following GitLab doc:
+#    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: ""
+#  services:
+#    - name: docker:20-dind
+#      alias: docker
+#      # in our experience although you'd assume this would be sufficient, this did
+#      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
+#      # to an empty string, and I would call that beyond mildly infuriating.
+#      command: ["--tls=false"]
+#  script:
+#    - cd frontend
+#    - docker build -t testfront .
+#    - docker run -p 8080:8080 --rm --name frontend testfront
+
+backend-test:
+  image: python-latest
+  stage: test
+  # Change pip's cache directory to be inside the project directory since we can
+  # only cache local items.
   variables:
-    # using "docker" as the host is only possible if you alias the service below
-    DOCKER_HOST: tcp://docker:2375
-    # could be wrong here but although Docker defaults to overlay2,
-    # Docker-in-Docker (DIND) does not according to the following GitLab doc:
-    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-  services:
-    - name: docker:20-dind
-      alias: docker
-      # in our experience although you'd assume this would be sufficient, this did
-      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
-      # to an empty string, and I would call that beyond mildly infuriating.
-      command: ["--tls=false"]
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  # Pip's cache doesn't store the python packages
+  # https://pip.pypa.io/en/stable/reference/pip_install/#caching
+  #
+  # If you want to also cache the installed packages, you have to install
+  # them in a virtualenv and cache it as well.
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
   script:
-    - cd frontend
-    - docker build -t testfront .
-    - docker run -p 8080:8080 --rm --name frontend testfront
+    - python3 -V  # Print out python version for debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip3 install requests
+    - pip3 install python-dotenv
+    - cd backend
+    - pip3 install -r requirements.txt
+    - python3 -m unittest discover tests
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).

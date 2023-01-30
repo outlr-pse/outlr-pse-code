@@ -18,9 +18,7 @@
 
 stages:          # List of stages for jobs, and their order of execution
   - build
-  - frontend-test
-  - backend-test
-  - lint-test
+  - test
   - deploy
 #
 #services:
@@ -51,7 +49,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 backend-test:
   image: python:latest
-  stage: backend-test
+  stage: test
   # Change pip's cache directory to be inside the project directory since we can
   # only cache local items.
   variables:
@@ -70,8 +68,6 @@ backend-test:
     - python3 -V  # Print out python version for debugging
 #    - echo $PYTHONPATH
 #    - pwd
-    - lshw
-    - nvidia-smi
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate
@@ -82,7 +78,7 @@ backend-test:
     - python3 -m unittest discover tests
 
 frontend-test:
-  stage: frontend-test
+  stage: test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   image: node:latest
   script:
@@ -93,7 +89,7 @@ frontend-test:
     - jest --ci --coverage --updateSnapshot
 
 lint-test-job:   # This job also runs in the test stage.
-  stage: lint-test    # It can run at the same time as unit-test-job (in parallel).
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - echo "Linting code... This will take about 10 seconds."
     - sleep 10

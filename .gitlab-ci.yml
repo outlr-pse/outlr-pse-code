@@ -84,9 +84,9 @@ frontend-test:
   script:
     - cd frontend
     - yarn global add jest
-    - yarn add --dev jest-junit
-    - yarn add --dev ts-jest @types/jest typescript
-    - jest --ci --reporters=default --reporters=jest-junit
+#    - yarn add --dev jest-junit
+#    - yarn add --dev ts-jest @types/jest typescript
+    - jest --ci --coverage
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).

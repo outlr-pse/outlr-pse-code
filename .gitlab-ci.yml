@@ -18,7 +18,8 @@
 
 stages:          # List of stages for jobs, and their order of execution
   - build
-  - test
+  - frontend-test
+  - backend-test
   - deploy
 #
 #services:
@@ -49,7 +50,7 @@ stages:          # List of stages for jobs, and their order of execution
 
 backend-test:
   image: python:latest
-  stage: test
+  stage: backend-test
   # Change pip's cache directory to be inside the project directory since we can
   # only cache local items.
   variables:
@@ -78,14 +79,14 @@ backend-test:
     - python3 -m unittest discover tests
 
 frontend-test:
-  stage: test
+  stage: frontend-test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   image: node:latest
   script:
     - cd frontend
-    - npm i --save-dev jest jest-ci
-#    - yarn add --dev jest-junit
-#    - yarn add --dev ts-jest @types/jest typescript
+    - yarn global add jest
+    - yarn add --dev jest-junit
+    - yarn add --dev ts-jest @types/jest typescript
     - jest --ci --coverage
 
 lint-test-job:   # This job also runs in the test stage.

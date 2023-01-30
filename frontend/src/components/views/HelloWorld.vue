@@ -31,7 +31,7 @@ const count = ref(0)
   <h1>{{ $t('message.greeting') }}, {{$t('message.name')}}</h1>
 
   <div class="card">
-    <Button @buttonClick="$i18n.locale = Languages.GERMAN" :button-type="ButtonType.DISABLED" :size="[150, 50]"
+    <Button @buttonClick="$i18n.locale = Languages.GERMAN" :button-type="ButtonType.ACTIVE" :size="[150, 50]"
      :text="'count is: ' + count" />
     <p>
       Edit

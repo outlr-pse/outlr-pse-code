@@ -18,8 +18,7 @@ button:focus-visible {
 
 
 .disabled {
-  border-color: var(--color-stroke);
-  background-color: transparent;
+  background-color: var(--color-disabled-button);
 }
 .disabled:hover {
   cursor: default;

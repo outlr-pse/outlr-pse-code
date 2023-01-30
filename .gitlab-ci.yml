@@ -54,7 +54,7 @@ backend-test:
   # only cache local items.
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-    PYTHONPATH: $PYTHONPATH:$HOME/backend/src
+    PYTHONPATH: "$PYTHONPATH:$HOME/backend/src"
   # Pip's cache doesn't store the python packages
   # https://pip.pypa.io/en/stable/reference/pip_install/#caching
   #
@@ -66,6 +66,7 @@ backend-test:
       - venv/
   script:
     - python3 -V  # Print out python version for debugging
+    - echo $PYTHONPATH
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate

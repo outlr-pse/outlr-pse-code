@@ -54,6 +54,7 @@ backend-test:
   # only cache local items.
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PYTHONPATH: $PYTHONPATH:$HOME/backend/src
   # Pip's cache doesn't store the python packages
   # https://pip.pypa.io/en/stable/reference/pip_install/#caching
   #

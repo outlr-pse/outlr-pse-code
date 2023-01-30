@@ -6,37 +6,36 @@ from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
 
-engine = create_engine("postgresql://postgres:postgres@localhost:5432/outlr_database")
+engine = create_engine("postgresql://postgres:123@localhost:5432/outlr")
 Base.metadata.create_all(bind=engine, checkfirst=True)
 Session = sessionmaker(bind=engine)
-session: Session
+session: Session = Session()
 
 
-def get_experiment(self, experiment: Experiment) -> Experiment:
-    return self.session.query(Experiment).filter_by(id=experiment.id).first()
+def add_experiment(experiment: Experiment) -> Experiment:
+    session.add(experiment)
+    session.commit()
+    return experiment
 
 
-def get_experiment(self, id: int) -> Experiment:
-    return self.session.query(Experiment).filter_by(id=id).first()
+def get_experiment(exp_id: int) -> Experiment | None:
+    return session.get(Experiment, exp_id)
 
 
-def get_user_experiments(self, user: User) -> list[Experiment]:
-    return self.session.query(Experiment).filter_by(user=user).all()
+def add_user(user: User) -> User:
+    session.add(user)
+    session.commit()
+    return user
 
 
-def add_user(self, user: User):
-    self.session.add(user)
-    self.session.commit()
+def get_user(user_id: int) -> User | None:
+    return session.get(User, user_id)
 
 
-def get_user(self, id: int) -> User:
-    return self.session.query(User).filter_by(id=id).first()
+def add_odm(odm: ODM):
+    session.add(odm)
+    session.commit()
 
 
-def add_odm(self, odm: ODM):
-    self.session.add(odm)
-    self.session.commit()
-
-
-def get_odm(self, id: int) -> ODM:
-    return self.session.query(ODM).filter_by(id=id).first()
+def get_odm(odm_id: int) -> ODM | None:
+    return session.get(ODM, odm_id)

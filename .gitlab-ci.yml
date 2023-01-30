@@ -83,7 +83,7 @@ frontend-test:
   image: node:latest
   script:
     - cd frontend
-    - yarn global add jest
+    - npm i --save-dev jest jest-ci
 #    - yarn add --dev jest-junit
 #    - yarn add --dev ts-jest @types/jest typescript
     - jest --ci --coverage

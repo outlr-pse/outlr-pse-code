@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import {CSSProperties, defineComponent} from 'vue'
 import { ButtonType } from './ButtonType'
 
 export default defineComponent({
@@ -34,7 +34,7 @@ export default defineComponent({
         required: false
       },
       size:{
-        type: Object as () => [Number, Number],
+        type: Object as () => [number, number],
         required: false,
         default: [100, 50],
       },
@@ -43,7 +43,7 @@ export default defineComponent({
         required: false,
       },
       textSize:{
-        type: Object as () => [Number, Number],
+        type: Object as () => [number, CSSProperties['fontWeight']],
         required: false,
         default: [20, 500],
       }
@@ -55,13 +55,13 @@ export default defineComponent({
     }
   },
   computed: {
-    style(){
+    style() : CSSProperties{
       return {
         width: this.size[0] + 'px',
         height: this.size[1] + 'px',
         backgroundColor: this.color,
-        fontSize: this.textSize[0] != null ? this.textSize[0] + 'px' : '20px',
-        fontWeight: this.textSize[1] != null ? this.textSize[1] : 500,
+        fontSize: this.textSize[0] != -1 ? this.textSize[0] + 'px' : '20px',
+        fontWeight: this.textSize[1] != -1 ? this.textSize[1] : 500 ,
       }
     },
     IconProvided(){

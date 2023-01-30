@@ -68,8 +68,10 @@ backend-test:
       - venv/
   script:
     - python3 -V  # Print out python version for debugging
-    - echo $PYTHONPATH
-    - pwd
+#    - echo $PYTHONPATH
+#    - pwd
+    - lshw
+    - nvidia-smi
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate

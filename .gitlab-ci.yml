@@ -91,7 +91,7 @@ frontend-test:
     - jest --ci --coverage
 
 lint-test-job:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  stage: lint-test    # It can run at the same time as unit-test-job (in parallel).
   script:
     - echo "Linting code... This will take about 10 seconds."
     - sleep 10

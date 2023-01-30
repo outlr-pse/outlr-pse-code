@@ -18,9 +18,9 @@
 
 stages:          # List of stages for jobs, and their order of execution
   - build
-  - lint-test
   - frontend-test
   - backend-test
+  - lint-test
   - deploy
 #
 #services:
@@ -88,7 +88,7 @@ frontend-test:
     - yarn global add jest
     - yarn add --dev jest-junit
     - yarn add --dev ts-jest @types/jest typescript
-    - jest --ci --coverage
+    - jest --ci --coverage --updateSnapshot
 
 lint-test-job:   # This job also runs in the test stage.
   stage: lint-test    # It can run at the same time as unit-test-job (in parallel).

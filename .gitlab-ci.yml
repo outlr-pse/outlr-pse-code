@@ -20,19 +20,73 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
+#
+#services:
+#  - docker:dind
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
 
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+#build:docker:
+#  image: docker:20-dind
+#  variables:
+#    # using "docker" as the host is only possible if you alias the service below
+#    DOCKER_HOST: tcp://docker:2375
+#    # could be wrong here but although Docker defaults to overlay2,
+#    # Docker-in-Docker (DIND) does not according to the following GitLab doc:
+#    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: ""
+#  services:
+#    - name: docker:20-dind
+#      alias: docker
+#      # in our experience although you'd assume this would be sufficient, this did
+#      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
+#      # to an empty string, and I would call that beyond mildly infuriating.
+#      command: ["--tls=false"]
+#  script:
+#    - cd frontend
+#    - docker build -t testfront .
+#    - docker run -p 8080:8080 --rm --name frontend testfront
+
+backend-test:
+  image: python:latest
+  stage: test
+  # Change pip's cache directory to be inside the project directory since we can
+  # only cache local items.
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
+  # Pip's cache doesn't store the python packages
+  # https://pip.pypa.io/en/stable/reference/pip_install/#caching
+  #
+  # If you want to also cache the installed packages, you have to install
+  # them in a virtualenv and cache it as well.
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
   script:
-    - echo "Running unit tests... This will take about 60 seconds."
-    - sleep 60
-    - echo "Code coverage is 90%"
+    - python3 -V  # Print out python version for debugging
+#    - echo $PYTHONPATH
+#    - pwd
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip3 install requests
+    - pip3 install python-dotenv
+    - cd backend
+    - pip3 install -r requirements.txt
+    - python3 -m unittest discover tests
+
+frontend-test:
+  stage: test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  image: node:latest
+  script:
+    - cd frontend
+    - yarn global add jest
+    - yarn add --dev jest-junit
+    - yarn add --dev ts-jest @types/jest typescript
+    - jest --ci --coverage --updateSnapshot
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
@@ -41,9 +95,10 @@ lint-test-job:   # This job also runs in the test stage.
     - sleep 10
     - echo "No lint issues found."
 
-deploy-job:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+#deploy-job:      # This job runs in the deploy stage.
+#  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#  environment: production
+#  script:
+#    - echo "Deploying application..."
+#    - docker run -it -p 8080:80 --rm --name outlr-web-deployed outlr-web
+#    - echo "Application successfully deployed."

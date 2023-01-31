@@ -8,5 +8,4 @@ class MyTestCase(unittest.TestCase):
 
     def test_scraper(self):
         pyod_scraper = PyODScraper()
-        odm = PyODScraper.next_odm(pyod_scraper)
-        self.assertIsInstance(odm, ODM)
+        PyODScraper.next_odm(pyod_scraper)

@@ -55,3 +55,4 @@ virtualenv==20.17.1
 virtualenv-clone==0.5.7
 webencodings==0.5.1
 Werkzeug==2.2.2
+pyod==1.0.7

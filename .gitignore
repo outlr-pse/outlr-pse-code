@@ -1,2 +1,4 @@
 .idea/
+/backend/config.ini
+
 /node_modules/

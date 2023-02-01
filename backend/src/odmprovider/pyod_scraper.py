@@ -26,6 +26,11 @@ from odmprovider.odm_provider import ODMProvider
 class PyODScraper(ODMProvider):
 
     def get_odms(self) -> Iterator[ODM]:
+        """Scrapes the pyod package for ODMs and their hyper parameters.
+
+            Returns:
+                An iterator of ODMs in the pyod package.
+        """
         pkg_path = os.path.dirname(pyod.models.__file__)
         for _, name, _ in pkgutil.iter_modules([pkg_path]):
             try:

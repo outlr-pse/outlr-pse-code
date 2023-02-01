@@ -9,4 +9,9 @@ class ODMProvider(ABC):
 
     @abstractmethod
     def get_odms(self) -> Iterator[ODM]:
+        """Collects all ODMs.
+
+        Returns:
+            An iterator of ODMs.
+        """
         pass

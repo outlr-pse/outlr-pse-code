@@ -7,7 +7,7 @@ from models.odm.odm import ODM
 from models.user.user import User
 
 engine = create_engine("postgresql://postgres:12345678@localhost:5432/outlr")
-Base.metadata.create_all(bind=engine, checkfirst=True) # only creates table when table doesn't exist
+Base.metadata.create_all(bind=engine, checkfirst=True)  # only creates table when table doesn't exist
 Session = sessionmaker(bind=engine)
 session: Session = Session()
 

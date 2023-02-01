@@ -1,16 +1,17 @@
 from models.base import Base
-from sqlalchemy import Column, Integer, Text
-from sqlalchemy.orm import relationship
+from models.odm.hyper_parameter import HyperParameter
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 
 class ODM(Base):
-    __tablename__ = 'odm'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(Text)
-    hyper_parameters = relationship("hyper_parameter", back_populates="odm")
+    __tablename__: str = 'odm'
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str]
+    hyper_parameters: Mapped[list["HyperParameter"]] = relationship()
 
     def to_json(self) -> dict:
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters]
         }

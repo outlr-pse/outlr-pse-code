@@ -1,3 +1,5 @@
+from typing import Type
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import config
@@ -19,7 +21,7 @@ def add_experiment(experiment: Experiment) -> Experiment:
     return experiment
 
 
-def get_experiment(exp_id: int) -> Experiment | None:
+def get_experiment(exp_id: int) -> Type[Experiment] | None:
     return session.get(Experiment, exp_id)
 
 
@@ -29,7 +31,7 @@ def add_user(user: User) -> User:
     return user
 
 
-def get_user(user_id: int) -> User | None:
+def get_user(user_id: int) -> Type[User] | None:
     return session.get(User, user_id)
 
 
@@ -38,5 +40,5 @@ def add_odm(odm: ODM):
     session.commit()
 
 
-def get_odm(odm_id: int) -> ODM | None:
+def get_odm(odm_id: int) -> Type[ODM] | None:
     return session.get(ODM, odm_id)

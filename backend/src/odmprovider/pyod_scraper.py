@@ -1,5 +1,3 @@
-import importlib
-
 import pkgutil
 import os.path
 
@@ -12,8 +10,6 @@ from odmprovider.odm_provider import ODMProvider
 class PyODScraper(ODMProvider):
 
     def next_odm(self) -> ODM:
-        pkgpath = os.path.dirname(pyod.models.__file__)
-        for _, name, _ in pkgutil.iter_modules([pkgpath]):
+        package_path = os.path.dirname(pyod.models.__file__)
+        for _, name, _ in pkgutil.iter_modules([package_path]):
             yield ODM(name)
-
-

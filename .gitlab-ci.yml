@@ -48,7 +48,7 @@ stages:          # List of stages for jobs, and their order of execution
 #    - docker run -p 8080:8080 --rm --name frontend testfront
 
 backend-test:
-  image: python:latest
+  image: python:3.10-bullseye
   stage: test
   # Change pip's cache directory to be inside the project directory since we can
   # only cache local items.

@@ -1,4 +1,6 @@
+"""This module provides an abstract class for ODM providers."""
 from abc import ABC, abstractmethod
+from typing import Iterator
 
 from models.odm.odm import ODM
 
@@ -6,5 +8,5 @@ from models.odm.odm import ODM
 class ODMProvider(ABC):
 
     @abstractmethod
-    def next_odm(self) -> ODM:
+    def get_odms(self) -> Iterator[ODM]:
         pass

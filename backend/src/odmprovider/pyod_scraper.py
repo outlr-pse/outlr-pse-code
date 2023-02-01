@@ -1,8 +1,20 @@
+"""This module scrapes the pyod package for ODMs and their hyper parameters.
+
+This module scrapes only those ODMs that use TensorFlow, and not those that use PyTorch.
+It accomplishes this by catching the ImportError and skipping the ODM in question.
+
+
+Typical usage example:
+
+    odm = PyODScraper().get_odms()
+    insert odm into database
+"""
 import importlib
 import inspect
 
 import pkgutil
 import os.path
+from typing import Iterator
 
 import pyod.models
 
@@ -13,25 +25,21 @@ from odmprovider.odm_provider import ODMProvider
 
 class PyODScraper(ODMProvider):
 
-    def next_odm(self) -> ODM:
-        pkgpath = os.path.dirname(pyod.models.__file__)
-        for _, name, _ in pkgutil.iter_modules([pkgpath]):
+    def get_odms(self) -> Iterator[ODM]:
+        pkg_path = os.path.dirname(pyod.models.__file__)
+        for _, name, _ in pkgutil.iter_modules([pkg_path]):
             try:
                 odm_module = importlib.import_module(f'pyod.models.{name}')
-            except ImportError:
-                # print(f'Could not import {name}')
+            except ImportError as e:
+                print(f'Could not import {name}: {e}')
                 continue
-            try:
-                odm_class = getattr(odm_module, name.upper())
-            except AttributeError:
-                # print(f'Could not find class {name.upper()} in {name}')
+            odm_class = next((getattr(odm_module, f) for f in dir(odm_module) if f.lower() == name), None)
+            if not odm_class:
+                print(f'Could not find class {name} in {odm_module}')
                 continue
-            odm_method = getattr(odm_class, '__init__')
-            sig = inspect.signature(odm_method)
+            init_method = getattr(odm_class, '__init__')
+            sig = inspect.signature(init_method)
             odm = ODM(name=name)
-            for param in sig.parameters:
-                if param != 'self':
-                    hyper_param = HyperParameter(name=param)
-                    odm.hyper_parameters.append(hyper_param)
-
-            print(name)
+            odm.hyper_parameters = [HyperParameter(name=param) for param in sig.parameters if param != 'self']
+            print(f'Correctly imported {name}')
+            yield odm

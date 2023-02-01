@@ -1,7 +1,7 @@
 from typing import Any
 
 from models.base import Base
-from models.odm import hyper_parameter
+from models.dataset.dataset import Dataset
 from models.odm.hyper_parameter import HyperParameter
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
@@ -26,7 +26,7 @@ class ODM(Base):
             if repr(type(args[param.name])) != param.param_type:
                 return False
 
-    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int] | NotImplementedError:
+    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
         raise NotImplementedError
 
 

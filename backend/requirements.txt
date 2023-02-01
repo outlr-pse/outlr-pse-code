@@ -40,6 +40,7 @@ psycopg2-binary==2.9.5
 ptyprocess==0.7.0
 pycparser==2.21
 PyJWT==2.6.0
+pyod == 1.0.7
 pyrsistent==0.18.1
 rapidfuzz==2.13.7
 requests==2.28.1

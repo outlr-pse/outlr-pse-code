@@ -35,16 +35,13 @@ class PyODScraper(ODMProvider):
         for _, name, _ in pkgutil.iter_modules([pkg_path]):
             try:
                 odm_module = importlib.import_module(f'pyod.models.{name}')
-            except ImportError as e:
-                print(f'Could not import {name}: {e}')
+            except ImportError:
                 continue
             odm_class = next((getattr(odm_module, f) for f in dir(odm_module) if f.lower() == name), None)
             if not odm_class:
-                print(f'Could not find class {name} in {odm_module}')
                 continue
             init_method = getattr(odm_class, '__init__')
             sig = inspect.signature(init_method)
             odm = ODM(name=name)
             odm.hyper_parameters = [HyperParameter(name=param) for param in sig.parameters if param != 'self']
-            print(f'Correctly imported {name}')
             yield odm

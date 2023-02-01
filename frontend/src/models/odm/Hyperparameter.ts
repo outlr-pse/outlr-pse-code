@@ -8,12 +8,14 @@ import {JSONSerializable} from "../JSONSerializable";
 export class Hyperparameter implements JSONSerializable, JSONDeserializable{
     name: string;
     value: string;
-    type: HyperparameterType;
+    paramType: HyperparameterType;
+    optional: boolean;
 
-    constructor(name: string, value: string, type: HyperparameterType) {
+    constructor(name: string, value: string, paramType: HyperparameterType, optional: boolean) {
         this.name = name;
         this.value = value;
-        this.type = type;
+        this.paramType = paramType;
+        this.optional = optional;
     }
 
     /**
@@ -24,7 +26,8 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
         return {
             name: this.name,
             value: this.value,
-            type: this.type
+            param_type: this.paramType,
+            optional: this.optional
         };
     }
 
@@ -33,7 +36,7 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
      * @param json
      */
     public static fromJSON(json: string): Hyperparameter {
-        let hyperparameter = new Hyperparameter("", "", HyperparameterType.STRING);
+        let hyperparameter = new Hyperparameter("", "", HyperparameterType.STRING, false);
         hyperparameter.deserialize(json);
         return hyperparameter;
     }
@@ -42,7 +45,8 @@ export class Hyperparameter implements JSONSerializable, JSONDeserializable{
         let jsonObject = JSON.parse(json);
         this.name = jsonObject.name;
         this.value = jsonObject.value;
-        this.type = jsonObject.type;
+        this.paramType = jsonObject.param_type
+        this.optional = jsonObject.optional;
     }
 
     serialize(): string {

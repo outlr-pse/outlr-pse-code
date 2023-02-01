@@ -4,7 +4,7 @@ from odmprovider.pyod_scraper import PyODScraper
 
 
 def setup_db() -> None:
-    """Sets up the database and collects all odms."""
+    """Inserts all available ODMs into the database."""
     odms = PyODScraper().get_odms()
     for odm in odms:
         db.add_odm(odm)

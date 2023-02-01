@@ -1,3 +1,5 @@
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -6,7 +8,8 @@ from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
 
-engine = create_engine("postgresql://postgres:12345678@localhost:5432/outlr")
+DB_HOST = os.environ.get("DB_HOST", "localhost")
+engine = create_engine(f"postgresql://postgres:12345678@{DB_HOST}:5432/outlr")
 Base.metadata.create_all(bind=engine, checkfirst=True)  # only creates table when table doesn't exist
 Session = sessionmaker(bind=engine)
 session: Session = Session()

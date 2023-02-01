@@ -1,3 +1,5 @@
+from typing import Type
+
 import os
 
 from sqlalchemy import create_engine
@@ -42,3 +44,7 @@ def add_odm(odm: ODM):
 
 def get_odm(odm_id: int) -> ODM | None:
     return session.get(ODM, odm_id)
+
+
+def get_all_odms() -> list[Type[ODM]]:
+    return session.query(ODM).all()

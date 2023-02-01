@@ -55,6 +55,8 @@ setup_db:
     POSTGRES_DB: outlr
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: 12345678
+  script:
+    - export PGPASSWORD=$POSTGRES_PASSWORD
 
 
 backend-test:

@@ -1,7 +1,16 @@
+import { LanguageService } from './language/LanguageService'
+import { createI18n } from 'vue-i18n'
 import { createApp } from 'vue'
 import './assets/main.css'
 import App from './App.vue'
-import {i18n} from "./language/LanguageSetup";
+
+const languageService = new LanguageService()
+
+const i18n = createI18n({
+  locale: languageService.getCurrentLocale(),
+  fallbackLocale: 'en',
+   messages: languageService.getTranslations()
+ })
 
 const app = createApp(App)
 

@@ -1,50 +1,30 @@
 button {
-  border-radius: 12px;
+  border-radius: 8px;
   border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--color-main);
+  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 
 button:hover {
-  border: 1px solid var(--color-selected);
+  border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
-
-.disabled {
-  background-color: var(--color-disabled-button);
-}
 .disabled:hover {
   cursor: default;
+  border-color: transparent;
   outline: none;
-  border: 1px solid var(--color-stroke);
-  box-shadow: 0 0 30px 3px darkred;
-
 }
 
 .contrast {
-  background-color: #057402;
-
-}
-.active {
-  background-color: var(--color-main);
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 18px;
-
-}
-.outline {
-  background-color: var(--color-background);
-  border-color: var(--color-stroke);
-
-}
-.transparent {
-    background-color: transparent;
-    border-color: transparent;
+  background-color: #2511fc;
 }

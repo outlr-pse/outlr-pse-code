@@ -43,5 +43,18 @@ class PyODScraper(ODMProvider):
             init_method = getattr(odm_class, '__init__')
             sig = inspect.signature(init_method)
             odm = ODM(name=name)
-            odm.hyper_parameters = [HyperParameter(name=param) for param in sig.parameters if param != 'self']
+
+            for param in sig.parameters.values():
+                if param.name == 'self':
+                    continue
+                hyper_param = HyperParameter(name=param.name)
+                if param.default != inspect.Parameter.empty:
+                    hyper_param.param_type = repr(type(param.default))
+                    hyper_param.optional = True
+                else:
+                    hyper_param.param_type = 'Any'
+
+                odm.hyper_parameters.append(hyper_param)
+                print(hyper_param)
+            print(odm)
             yield odm

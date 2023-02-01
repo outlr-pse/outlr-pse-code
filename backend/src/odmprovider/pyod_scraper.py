@@ -45,6 +45,3 @@ class PyODScraper(ODMProvider):
             odm = ODM(name=f'{name}.{odm_class.__name__}')
             odm.hyper_parameters = [HyperParameter(name=param) for param in sig.parameters if param != 'self']
             yield odm
-
-        def __repr__(self) -> str:
-            return f'PyODScraper()'

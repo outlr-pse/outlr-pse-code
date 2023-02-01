@@ -8,6 +8,7 @@ class ODM(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
     hyper_parameters: Mapped[list["HyperParameter"]] = relationship()
+    deprecated: Mapped[bool]
 
     def to_json(self) -> dict:
         return {

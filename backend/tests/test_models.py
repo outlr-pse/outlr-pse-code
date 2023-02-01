@@ -1,6 +1,7 @@
 import unittest
 
-from models.ODM import HyperParameter, ODM
+from models.odm.odm import ODM
+from models.odm.hyper_parameter import HyperParameter
 from models.user.user import User
 
 

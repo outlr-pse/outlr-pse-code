@@ -17,6 +17,5 @@ class HyperParameter(Base):
             "id": self.id,
             "name": self.name,
             "param_type": self.param_type,
-            "optional": self.optional,
-            "odm_id": self.odm_id
+            "optional": self.optional
         }

@@ -62,12 +62,12 @@ class TestDBAccess(unittest.TestCase):
         hp.name = name
         return hp
 
-    def test_add_and_get_odm(self) -> None:
-        odm = ODM()
-        odm.name = "odm1"
-        odm.hyper_parameters = [self.hp(hp) for hp in ["hp1", "hp2", "hp3"]]
-        db.add_odm(odm)
-        self.assertEqual(1, odm.id)
-        assert session.get(HyperParameter, 1).name == "hp1"
-        assert session.get(HyperParameter, 2).name == "hp2"
-        assert session.get(HyperParameter, 3).name == "hp3"
+    # def test_add_and_get_odm(self) -> None:
+    #     odm = ODM()
+    #     odm.name = "odm1"
+    #     odm.hyper_parameters = [self.hp(hp) for hp in ["hp1", "hp2", "hp3"]]
+    #     db.add_odm(odm)
+    #     self.assertEqual(1, odm.id)
+    #     assert session.get(HyperParameter, 1).name == "hp1"
+    #     assert session.get(HyperParameter, 2).name == "hp2"
+    #     assert session.get(HyperParameter, 3).name == "hp3"

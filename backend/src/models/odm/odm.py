@@ -21,8 +21,12 @@ class ODM(Base):
             'deprecated': self.deprecated
         }
 
-    # def check_params(self, args: dict[str, Any]) -> bool:
-    #     for param in self.hyper_parameters:
-    #         if()
+    def check_params(self, args: dict[str, Any]) -> bool:
+        for param in self.hyper_parameters:
+            if repr(type(args[param.name])) != param.param_type:
+                return False
+
+    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int] | NotImplementedError:
+        raise NotImplementedError
 
 

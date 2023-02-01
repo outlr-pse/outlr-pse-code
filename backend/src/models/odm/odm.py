@@ -14,5 +14,6 @@ class ODM(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters]
+            'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters],
+            'deprecated': self.deprecated
         }

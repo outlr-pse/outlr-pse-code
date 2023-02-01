@@ -1,12 +1,13 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import config
 
 from models.base import Base
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
 
-engine = create_engine("postgresql://postgres:123@localhost:5432/outlr")
+engine = create_engine(config.db_url)
 Base.metadata.create_all(bind=engine, checkfirst=True)
 Session = sessionmaker(bind=engine)
 session: Session = Session()

@@ -1,10 +1,13 @@
+import database.database_access as db
 from api.api import app
+from odmprovider.pyod_scraper import PyODScraper
 
 
 def setup_db() -> None:
     """Sets up the database and collects all odms."""
-    # TODO: Implement setup_db
-    pass
+    odms = PyODScraper().get_odms()
+    for odm in odms:
+        db.add_odm(odm)
 
 
 setup_db()

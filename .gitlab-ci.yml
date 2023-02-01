@@ -66,8 +66,6 @@ backend-test:
       - venv/
   script:
     - python3 -V  # Print out python version for debugging
-#    - echo $PYTHONPATH
-#    - pwd
     - pip3 install virtualenv
     - virtualenv venv
     - source venv/bin/activate
@@ -83,9 +81,9 @@ frontend-test:
   image: node:latest
   script:
     - cd frontend
-    - yarn global add jest
-    - yarn add --dev jest-junit
-    - yarn add --dev ts-jest @types/jest typescript
+    - npm install -g jest
+    - npm install --save-dev jest-junit
+    - npm install --save-dev ts-jest @types/jest typescript
     - jest --ci --coverage --updateSnapshot
 
 lint-test-job:   # This job also runs in the test stage.

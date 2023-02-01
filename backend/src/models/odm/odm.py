@@ -1,17 +1,32 @@
+from typing import Any
+
 from models.base import Base
+from models.odm import hyper_parameter
+from models.odm.hyper_parameter import HyperParameter
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from abc import ABC, abstractmethod
 
 
-class ODM(Base, ABC):
-    __tablename__ = 'odm'
+class ODM(Base):
+    __tablename__: str = 'odm'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str]
-    hyper_parameters = relationship("HyperParameter", back_populates="odm")
+    hyper_parameters: Mapped[list["HyperParameter"]] = relationship()
     deprecated: Mapped[bool]
 
     def to_json(self) -> dict:
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters],
+            'deprecated': self.deprecated
         }
+
+    def check_params(self, args: dict[str, Any]) -> bool:
+        for param in self.hyper_parameters:
+            if repr(type(args[param.name])) != param.param_type:
+                return False
+
+    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int] | NotImplementedError:
+        raise NotImplementedError
+
+

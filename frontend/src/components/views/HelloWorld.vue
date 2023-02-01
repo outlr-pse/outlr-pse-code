@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import {Languages} from "../../language/Languages";
 import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
-import BaseTable from "../basic/BaseTable.vue";
 
 defineProps<{ msg: string }>()
 

@@ -30,7 +30,6 @@ class TestHyperParameter(unittest.TestCase):
         }
         self.assertEqual(self.hyper_parameter.to_json(), expected_result)
 
-
 class TestODM(unittest.TestCase):
     def setUp(self):
         self.odm = ODM(id=1, name='test_odm', deprecated=False)

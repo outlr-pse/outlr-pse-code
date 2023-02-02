@@ -53,8 +53,8 @@ class PyODScraper(ODMProvider):
                     hyper_param.optional = True
                 else:
                     hyper_param.param_type = 'Any'
+                    hyper_param.optional = False
 
                 odm.hyper_parameters.append(hyper_param)
-                print(hyper_param)
-            print(odm)
+                odm.deprecated = False
             yield odm

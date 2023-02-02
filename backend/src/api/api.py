@@ -19,7 +19,7 @@ app.register_blueprint(experiment_api, url_prefix='/api/experiment')
 app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')
 
-# JWTManager(app)
+jwt = JWTManager(app)
 
 
 @app.route('/api/status', methods=['GET'])

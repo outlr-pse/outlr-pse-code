@@ -8,7 +8,7 @@ import json
 import random
 from pathlib import Path
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, jsonify
 from flask_jwt_extended import jwt_required
 
 odm_api = Blueprint('odm', __name__)

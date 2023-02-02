@@ -13,6 +13,8 @@ from api.user_management_api import user_management_api
 from api.odm_api import odm_api
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+import config
+
 
 app = Flask(__name__)
 # allows requests from anywhere
@@ -22,6 +24,7 @@ app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')
 
 JWTManager(app)
+app.config["JWT_SECRET_KEY"] = config.jwt_secret
 
 
 @app.route('/api/status', methods=['GET'])

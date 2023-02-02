@@ -1,23 +1,23 @@
-"""Defines the /odm API endpoint.
+"""Defines the odm API endpoint.
 
 Endpoints defined:
-    /odm/get-all
-    /odm/get-parameters/<odm_id>
+    /get-all
+    /get-parameters/<odm_id>
 """
 import json
 import random
 from pathlib import Path
 
-from flask import Blueprint, Response, jsonify
+from flask import Blueprint, Response
 from flask_jwt_extended import jwt_required
 
-odm_api = Blueprint('odm', __name__, url_prefix='/odm')
+odm_api = Blueprint('odm', __name__)
 mock_success = True
 script_location_parent = Path(__file__).absolute().parent
 single_odm = True
 
 @odm_api.route('/get-all', methods=['GET'])
-#@jwt_required()
+@jwt_required()
 def get_all() -> Response:
     if not mock_success:
         no_success_response = jsonify(message="Something went wrong", status=400)
@@ -43,7 +43,7 @@ def get_all() -> Response:
 
 
 @odm_api.route('/get-parameters/<int:odm_id>', methods=['GET'])
-#mock_jwt_required()
+@jwt_required()
 def get_parameters(odm_id: int) -> Response:
     if not mock_success:
         no_success_response = jsonify(message="ODM not found", status=400)

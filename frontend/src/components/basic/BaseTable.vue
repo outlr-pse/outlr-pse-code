@@ -1,26 +1,22 @@
 <template>
-  <ScollLayout :horizontal-scroll-bar="true" :vertical-scroll-bar="true">
     <table :style="style">
-    <thead>
+      <thead>
       <slot name="header"></slot>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <slot name="body"></slot>
-    </tbody>
-  </table>
-  </ScollLayout>
-
+      </tbody>
+    </table>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import ScollLayout from "./ScollLayout.vue";
+import {CSSProperties, defineComponent} from "vue";
 
 export default defineComponent({
-  components: {ScollLayout},
+
   props: {
     style: {
-      type: Object as () => CSSStyleDeclaration,
+      type: Object as () => CSSProperties,
       required: false,
     },
   },
@@ -28,5 +24,4 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
 </style>

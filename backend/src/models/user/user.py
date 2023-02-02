@@ -1,12 +1,14 @@
 from models.base import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from models.experiment.experiment import Experiment
 
 
 class User(Base):
-    __tablename__ = "user"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, unique=True)
-    password = Column(String)
+    __tablename__: str = "user"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str]
+    password: Mapped[str]
+    experiments: Mapped[list["Experiment"]] = relationship()
 
     def to_json(self) -> dict:
         return {

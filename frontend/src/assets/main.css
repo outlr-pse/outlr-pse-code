@@ -53,6 +53,7 @@ body {
   --color-selected: var(--palette-purple-3);
   --color-cell-background: #3c3054;
   --color-purple-button: var(--palette-purple-85);
+  --color-disabled-button: var(--palette-grey-4);
 }
 
 /* add colors for light mode here */

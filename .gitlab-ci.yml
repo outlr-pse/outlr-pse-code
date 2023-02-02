@@ -80,6 +80,7 @@ backend-test:
     DB_HOST: postgres
     JWT_SECRET_KEY: secret_key
     DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
+
   cache:
     paths:
       - .cache/pip

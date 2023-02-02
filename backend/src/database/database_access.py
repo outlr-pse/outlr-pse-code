@@ -1,4 +1,3 @@
-import os
 from typing import Type
 
 from sqlalchemy import create_engine
@@ -8,10 +7,10 @@ from models.base import Base
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
+import config
 
-DB_HOST = os.environ.get("DB_HOST", "localhost")
-engine = create_engine(f"postgresql://postgres:12345678@{DB_HOST}:5432/outlr")
-Base.metadata.create_all(bind=engine, checkfirst=True)  # only creates table when table doesn't exist
+engine = create_engine(config.db_url)
+Base.metadata.create_all(bind=engine, checkfirst=True)
 Session = sessionmaker(bind=engine)
 session: Session = Session()
 

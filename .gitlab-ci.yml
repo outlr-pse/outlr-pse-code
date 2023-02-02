@@ -68,7 +68,7 @@ backend-test:
   # only cache local items.
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
+    PYTHONPATH: "${PYTHONPATH}:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
   # Pip's cache doesn't store the python packages
   # https://pip.pypa.io/en/stable/reference/pip_install/#caching
   #
@@ -77,13 +77,13 @@ backend-test:
     POSTGRES_DB: outlr
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: 12345678
+    DB_HOST: postgres
   cache:
     paths:
       - .cache/pip
       - venv/
   before_script:
       - python3 -V  # Print out python version for debugging
-      - export DB_HOST=postgres
       - pip3 install virtualenv
       - virtualenv venv
       - source venv/bin/activate

@@ -1,11 +1,13 @@
+from typing import Type
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import config
 
 from models.base import Base
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
+import config
 
 engine = create_engine(config.db_url)
 Base.metadata.create_all(bind=engine, checkfirst=True)
@@ -40,3 +42,7 @@ def add_odm(odm: ODM):
 
 def get_odm(odm_id: int) -> ODM | None:
     return session.get(ODM, odm_id)
+
+
+def get_all_odms() -> list[Type[ODM]]:
+    return session.query(ODM).all()

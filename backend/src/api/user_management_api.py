@@ -10,37 +10,22 @@ from functools import wraps
 
 from flask import Blueprint, Response, jsonify, request
 from backend.src.api.mock_classes import MockDatabase
+from backend.src.api.models.error import UserManagementError
 
 user_management_api = Blueprint('user_management', __name__)
 mock_database = MockDatabase()
 
-
-def mock_jwt_required():
-    def wrapper(fn):
-        @wraps(fn)
-        def decorator(*args, **kwargs):
-            headers = request.headers
-            bearer = headers.get('Authorization')
-            user_to_token = None
-
-            if bearer is not None and len(bearer) >= 1:
-                token = bearer.split()[1]
-                user_to_token = mock_database.get_user_by_token(int(token))
-
-            if user_to_token is None:
-                response = jsonify(msg="Token not valid and not linked to a user", status=400)
-                response.status = 400
-                return response
-            else:
-                return fn(*args, **kwargs)
-        return decorator
-    return wrapper
-
-
 @user_management_api.route('/login', methods=['POST'])
 def login() -> Response:
     username = request.json['username']
-    return jsonify(message=f'Successfully logged in as {username}', status=200)
+    password = request.json['password']
+    user = mock_database.login_user(username, password)
+    if user is None:
+        login_error = UserManagementError('User with provided credentials does not exist or password not valid', 0, 400)
+        response = jsonify(message=login_error.error_message, status=400, error=login_error.to_json())
+        response.status = 400
+        return response
+    return jsonify(user=user.to_json(), message=f'Successfully logged in as {username}', status=200)
 
 
 @user_management_api.route('/register', methods=['POST'])

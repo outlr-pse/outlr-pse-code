@@ -11,12 +11,14 @@ Endpoints defined:
 import json
 from pathlib import Path
 
-from flask import Blueprint, Response, jsonify, send_file
+from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required
+
+from backend.src.api.models.error import ExperimentError
 
 experiment_api = Blueprint('experiment', __name__)
 
-#to be deleted
+# to be deleted
 import random
 script_location_parent = Path(__file__).absolute().parent
 
@@ -25,33 +27,57 @@ mock_success = True
 no_experiments = False
 single_experiment = (not no_experiments) and False
 
-#to be deleted
+# to be deleted
+
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
 @jwt_required()
 def validate_dataset() -> Response:
+    """
+    Requires a JWT access token. Expects a dataset as a CSV file in the
+    request. Returns status code "200 OK" if the dataset was valid, "400
+    Bad Request" with message "Invalid dataset." and an ExperimentError otherwise.
+    """
     if mock_success:
         return jsonify(message="Valid dataset", status=200)
+
+    dataset_error = ExperimentError("Invalid dataset", 0, 400)
+    response = jsonify(message=dataset_error.error_message, status=400, error=dataset_error.to_json())
+    response.status = 400
+    return response
 
 
 @experiment_api.route('/validate-ground-truth', methods=['POST'])
 @jwt_required()
 def validate_ground_truth() -> Response:
+    """
+    Requires a jwt access token. Expects a ground truth file as a CSV file in
+    the request. Returns status code "200 OK" if the ground truth file was
+    valid, "400 Bad Request" with message "Invalid dataset." and an ExperimentError otherwise.
+    """
     if mock_success:
         return jsonify(message="Valid ground truth", status=200)
 
-    no_success_response = jsonify(message="Invalid dataset", status=400)
-    no_success_response.status = 400
-    return no_success_response
+    dataset_error = ExperimentError("Invalid dataset", 0, 400)
+    response = jsonify(message=dataset_error.error_message, status=400, error=dataset_error.to_json())
+    response.status = 400
+    return response
 
 
 @experiment_api.route('/get-result/<int:exp_id>', methods=['GET'])
 @jwt_required()
 def get_result(exp_id: int) -> Response:
+    """
+    Requires a jwt access token. Expects the experiment id in the request.
+    If the experiment was found, returns status code "200 OK" and the
+    experiment results encoded as json. If there is no experiment with the
+    given ID it returns "404 Not Found".
+    """
     if not mock_success:
-        no_success_response = jsonify(message="Experiment with provided id does not exist", status=404)
-        no_success_response.status = 404
-        return no_success_response
+        experiment_error = ExperimentError(f'Experiment with {exp_id} as id does not exist', 2, 404)
+        response = jsonify(message=experiment_error.error_message, status=404, error=experiment_error.to_json())
+        response.status = 404
+        return response
 
     file = open(script_location_parent / 'mock_files/experiment_result.json')
     exp_result = json.load(file)
@@ -61,6 +87,11 @@ def get_result(exp_id: int) -> Response:
 @experiment_api.route('/get-all', methods=['GET'])
 @jwt_required()
 def get_all() -> Response:
+    """
+    Requires a jwt access token. Returns a list of all experiments the user
+    has encoded as json and status code "200 OK". In the case of an error, a ODMError is returned with status code
+    "400 Bad Request".
+    """
     if no_experiments:
         response = jsonify(experiment=[], message="No experiments to be retrieved", status=200)
         return response
@@ -85,19 +116,36 @@ def get_all() -> Response:
 @experiment_api.route('/create', methods=['POST'])
 @jwt_required()
 def create() -> Response:
-    if not mock_success:
-        no_success_response = jsonify(message="Experiment could not be created - something went wrong", status=400)
-        no_success_response.status = 400
-        return no_success_response
+    """
+    Requires a jwt access token. Expects an experiment encoded as json in
+    the request. Inserts the experiment in the database and runs it. If no experiment was passed, "400 Bad Request"
+    and an ExperimentError is returned
+    """
+    experiment = request.json["experiment"]
+    if not mock_success or experiment is None:
+        create_experiment_error = ExperimentError("Experiment could not be created - something went wrong", 3, 400)
+        response = jsonify(message=create_experiment_error.error_message, status=400,
+                           error=create_experiment_error.to_json())
+        response.status = 400
+        return response
 
     return jsonify(message="Experiment successfully created", status=200)
+
 
 @experiment_api.route('/download-result/<int:exp_id>', methods=['GET'])
 @jwt_required()
 def download_result(exp_id: int) -> Response:
+    """
+    Requires a jwt access token. Expects the experiment id in the request.
+    If the experiment was found, returns a CSV file with all the outliers
+    from the given experiment and status code "200 OK". If there is no
+    experiment with the given ID it returns "404 Not Found".
+    """
     if not mock_success:
-        no_success_response = jsonify(message="Experiment result could not be download - not found", status=404)
-        no_success_response.status = 404
-        return no_success_response
+        download_experiment_result_error = ExperimentError(f'No experiment with {exp_id} to be downloaded', 4, 404)
+        response = jsonify(message=download_experiment_result_error.error_message, status=404,
+                           error=download_experiment_result_error.to_json())
+        response.status = 404
+        return response
 
     return send_file(script_location_parent / "mock_files/outliers.csv", mimetype="text/csv", as_attachment=True)

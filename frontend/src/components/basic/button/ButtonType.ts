@@ -2,5 +2,7 @@ export enum ButtonType{
     DEFAULT = "default",
     CONTRAST = "contrast",
     ACTIVE = "active",
-    DISABLED = "disabled"
+    DISABLED = "disabled",
+    OUTLINE = "outline",
+    TRANSPARENT = "transparent"
 }

@@ -12,8 +12,11 @@ from api.experiment_api import experiment_api
 from api.user_management_api import user_management_api
 from api.odm_api import odm_api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 app = Flask(__name__)
+# allows requests from any page
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(experiment_api, url_prefix='/api/experiment')
 app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')

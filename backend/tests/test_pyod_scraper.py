@@ -1,6 +1,6 @@
 import unittest
 import database.database_access as db
-from backend.src import setup_db
+#from backend.src import setup_db
 from database.database_access import Base
 
 
@@ -9,7 +9,7 @@ class MyTestCase(unittest.TestCase):
     def setUpClass(cls):
         Base.metadata.drop_all(bind=db.engine, checkfirst=True)
         Base.metadata.create_all(bind=db.engine)
-        setup_db()
+        #setup_db()
 
     # def test_scraper(self):
     #     odms = db.get_all_odms()

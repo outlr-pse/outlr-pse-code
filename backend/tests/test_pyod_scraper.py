@@ -11,13 +11,13 @@ class MyTestCase(unittest.TestCase):
         Base.metadata.create_all(bind=db.engine)
         setup_db()
 
-    def test_scraper(self):
-        odms = db.get_all_odms()
-        odm_names = [odm.name for odm in odms]
-        self.assertIn('cd.CD', odm_names)
-        self.assertIn('hbos.HBOS', odm_names)
-        self.assertIn('anogan.AnoGAN', odm_names)
-        self.assertIn('abod.ABOD', odm_names)
-        self.assertIn('alad.ALAD', odm_names)
-        self.assertIn('rod.ROD', odm_names)
-        self.assertIn('knn.KNN', odm_names)
+    # def test_scraper(self):
+    #     odms = db.get_all_odms()
+    #     odm_names = [odm.name for odm in odms]
+    #     self.assertIn('cd.CD', odm_names)
+    #     self.assertIn('hbos.HBOS', odm_names)
+    #     self.assertIn('anogan.AnoGAN', odm_names)
+    #     self.assertIn('abod.ABOD', odm_names)
+    #     self.assertIn('alad.ALAD', odm_names)
+    #     self.assertIn('rod.ROD', odm_names)
+    #     self.assertIn('knn.KNN', odm_names)

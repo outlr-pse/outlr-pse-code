@@ -1,15 +1,32 @@
 {
-  "id": null,
-  "name": "name",
-  "datasetName": "datasetName",
+  "id": 51,
+  "name": "Example Experiment 2",
+  "datasetName": "Test Dataset 2",
   "dataset": null,
   "groundTruth": null,
   "odm": {
-    "name": "",
-    "hyperparameters": [
-
-    ]
-  },
+      "name": "HBOS",
+      "hyperparameters": [{
+          "name": "n_bins",
+          "value": 10,
+          "type": "integer"
+      },
+      {
+        "name": "alpha",
+        "value": 0.1,
+        "type": "numeric"
+      },
+      {
+        "name": "tol",
+        "value": 0.5,
+        "type": "numeric"
+      },
+      {
+        "name": "contamination",
+        "value": 0.1,
+        "type": "numeric"
+      }]
+    },
   "subspaceLogic": {
     "operation": {
       "operator": "and",
@@ -176,7 +193,7 @@
   },
   "experimentResult": {
     "id": 1,
-    "accuracy": 1,
+    "accuracy": 0.97,
     "executionDate": "2023-01-27T00:20:17.102Z",
     "executionTime": 20
   }

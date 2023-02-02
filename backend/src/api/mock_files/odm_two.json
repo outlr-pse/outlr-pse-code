@@ -1,0 +1,13 @@
+{
+  "name": "COPOD",
+  "hyperparameters": [{
+      "name": "contamination",
+      "value": 0.1,
+      "type": "numeric"
+  },
+  {
+    "name": "n_jobs",
+    "value": -1,
+    "type": "integer"
+  }]
+}

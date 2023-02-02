@@ -1,5 +1,5 @@
 import {sendLoginData, sendLogout, sendRegisterData} from "./APIRequests";
-import store from "../../../../Desktop/auth/store"
+import store from "../store"
 import axios, {AxiosError} from "axios";
 
 function validateLoginData(username:string, password:string) : boolean {
@@ -10,7 +10,7 @@ function validateRegisterData(username:string, password:string, passwordRepeated
     return true
 }
 
-export async function login(username : string, password : string) : Promise<any> {
+export async function login(username : string, password : string){
     if (validateLoginData(username, password)) {
         try {
             const response = await sendLoginData(username, password)
@@ -19,6 +19,7 @@ export async function login(username : string, password : string) : Promise<any>
                 localStorage.setItem('token', userJson.token)
                 await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
             }
+            return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const serverError = error as AxiosError;
@@ -38,11 +39,11 @@ export async function register(username : string, password : string, passwordRep
             const response = await sendRegisterData(username, password)
             const userJson = response.data.user
             if (userJson) {
-                console.log(userJson)
                 localStorage.removeItem('token')
                 localStorage.setItem('token', userJson.token)
                 await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
             }
+            return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const serverError = error as AxiosError;
@@ -63,6 +64,7 @@ export async function logout() {
                 localStorage.removeItem("token")
                 await store.dispatch("auth/unsetAuthenticated")
             }
+            return response.data
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 const serverError = error as AxiosError;

@@ -23,6 +23,7 @@ class TestDBAccess(unittest.TestCase):
     def setUpClass(cls) -> None:
         Base.metadata.drop_all(bind=db.engine, checkfirst=True)
         Base.metadata.create_all(bind=db.engine)
+        db.setup_db()
         u = User(name="overleafer", password="nix")
         db.add_user(u)
         db.add_experiment(cls.exp("exp1", u.id))
@@ -67,7 +68,20 @@ class TestDBAccess(unittest.TestCase):
         odm.name = "odm1"
         odm.hyper_parameters = [self.hp(hp) for hp in ["hp1", "hp2", "hp3"]]
         db.add_odm(odm)
-        self.assertEqual(1, odm.id)
-        assert session.get(HyperParameter, 1).name == "hp1"
-        assert session.get(HyperParameter, 2).name == "hp2"
-        assert session.get(HyperParameter, 3).name == "hp3"
+        id0 = odm.hyper_parameters[0].id
+        id1 = odm.hyper_parameters[1].id
+        id2 = odm.hyper_parameters[2].id
+        self.assertEqual(session.get(HyperParameter, id0).name, "hp1")
+        self.assertEqual(session.get(HyperParameter, id1).name, "hp2")
+        self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
+
+    def test_scraper(self):
+        odms = db.get_all_odms()
+        odm_names = [odm.name for odm in odms]
+        self.assertIn('cd.CD', odm_names)
+        self.assertIn('hbos.HBOS', odm_names)
+        self.assertIn('anogan.AnoGAN', odm_names)
+        self.assertIn('abod.ABOD', odm_names)
+        self.assertIn('alad.ALAD', odm_names)
+        self.assertIn('rod.ROD', odm_names)
+        self.assertIn('knn.KNN', odm_names)

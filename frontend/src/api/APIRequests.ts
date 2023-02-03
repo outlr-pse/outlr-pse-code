@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios'
+import axios from 'axios'
 import {authHeader} from "./DataRetrievalService";
 
 export async  function sendLogout() : Promise<any>{

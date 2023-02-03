@@ -28,7 +28,6 @@ class TestDBAccess(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        db.setup_db()
         u = User(name="overleafer", password="nix")
         db.add_user(u)
         db.add_experiment(cls.exp("exp1", u.id))

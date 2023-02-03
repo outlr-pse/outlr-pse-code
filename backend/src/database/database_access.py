@@ -52,6 +52,7 @@ def get_all_odms() -> list[Type[ODM]]:
 
 def setup_db() -> None:
     """Inserts all available ODMs into the database."""
+    session.query(ODM).delete()
     odms = PyODScraper().get_odms()
     for odm in odms:
         add_odm(odm)

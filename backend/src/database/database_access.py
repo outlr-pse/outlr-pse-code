@@ -7,10 +7,12 @@ from models.base import Base
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
-from odmprovider.pyod_scraper import PyODScraper
 
-engine = create_engine("postgresql://postgres:123@localhost:5432/outlr")
-Base.metadata.create_all(bind=engine, checkfirst=True)  # only creates table when table doesn't exist
+from odmprovider.pyod_scraper import PyODScraper
+import config
+
+engine = create_engine(config.db_url)
+Base.metadata.create_all(bind=engine, checkfirst=True)
 Session = sessionmaker(bind=engine)
 session: Session = Session()
 
@@ -49,7 +51,7 @@ def get_all_odms() -> list[Type[ODM]]:
 
 
 def setup_db() -> None:
-    """Sets up the database. Should only be called once on application startup."""
+    """Inserts all available ODMs into the database."""
     odms = PyODScraper().get_odms()
     for odm in odms:
         add_odm(odm)

@@ -1,7 +1,7 @@
 from api.api import app
-import database.database_access as db
+from database.database_access import setup_db
 
-db.setup_db()
+setup_db()
 
 if __name__ == '__main__':
     # Starts the api in debug mode for development. Do not use in production.

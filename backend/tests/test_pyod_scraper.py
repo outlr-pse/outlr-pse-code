@@ -1,7 +1,6 @@
 import unittest
 import database.database_access as db
-from backend.src import setup_db
-from database.database_access import Base
+from database.database_access import Base, setup_db
 
 
 class MyTestCase(unittest.TestCase):

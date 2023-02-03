@@ -1,10 +1,17 @@
 import unittest
+
 import database.database_access as db
 from database.database_access import session
 from models.user.user import User
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM, HyperParameter
 from models.base import Base
+
+
+def setUpModule() -> None:
+    Base.metadata.drop_all(bind=db.engine, checkfirst=True)
+    Base.metadata.create_all(bind=db.engine)
+    db.setup_db()
 
 
 class TestDBAccess(unittest.TestCase):
@@ -21,8 +28,6 @@ class TestDBAccess(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        Base.metadata.drop_all(bind=db.engine, checkfirst=True)
-        Base.metadata.create_all(bind=db.engine)
         db.setup_db()
         u = User(name="overleafer", password="nix")
         db.add_user(u)
@@ -75,6 +80,8 @@ class TestDBAccess(unittest.TestCase):
         self.assertEqual(session.get(HyperParameter, id1).name, "hp2")
         self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
 
+
+class TestODMProvider(unittest.TestCase):
     def test_scraper(self):
         odms = db.get_all_odms()
         odm_names = [odm.name for odm in odms]

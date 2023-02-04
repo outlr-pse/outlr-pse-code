@@ -1,22 +1,23 @@
 from sqlalchemy import Column, Integer, ARRAY, Table, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from models.base import Base
 
 subspace_outlier = Table(
     "subspace_outlier",
     Base.metadata,
-    Column("subspace_id", ForeignKey("subspace.id"), primary_key=True),
-    Column("outlier_index", ForeignKey("outlier.index"), primary_key=True),
+    Column("subspace_id", ForeignKey("subspace.id")),
+    Column("outlier_index", ForeignKey("outlier.index")),
 )
 
 
 class Subspace(Base):
     __tablename__ = "subspace"
-    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    experiment_result_id: Mapped[int] = mapped_column(ForeignKey("experiment_result.id"))
     columns = Column(ARRAY(Integer))
-    outliers = relationship("Outlier", secondary="association_table1", back_populates="subspace")
-    experiment_result = relationship("ExperimentResult", back_populates="subspaces", primary_key=True)
+    outliers: Mapped[list["Outlier"]] = relationship(secondary=subspace_outlier)
 
     def to_json(self) -> dict:
         return {
@@ -29,8 +30,8 @@ class Subspace(Base):
 class Outlier(Base):
     __tablename__ = "outlier"
     index = Column(Integer, primary_key=True)
-    experiment_result = relationship("ExperimentResult", back_populates="outliers", primary_key=True)
-    subspaces = relationship("Subspace", secondary="association_table1", back_populates="outlier")
+    experiment_result_id: Mapped[int] = mapped_column(ForeignKey("experiment_result.id"))
+    subspaces: Mapped[list["Subspace"]] = relationship(secondary=subspace_outlier)
 
     def to_json(self) -> dict:
         return {

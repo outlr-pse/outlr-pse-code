@@ -40,4 +40,4 @@ def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
         Dataset: The Dataset object.
 
     """
-    np.savetxt(path, arr, delimiter=",")
+    pd.DataFrame(arr).to_csv(path, index=False, header=False)

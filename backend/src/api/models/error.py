@@ -31,9 +31,9 @@ class Error:
     def to_json(self):
         return {
             "message": self.error_message,
-            "errorType": self.error_type,
-            "errorId": self.error_id,
-            "statusCode": self.status_code
+            "error_type": self.error_type,
+            "error_id": self.error_id,
+            "status_code": self.status_code
         }
 
 

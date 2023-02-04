@@ -1,9 +1,9 @@
 {
   "id": 51,
   "name": "Example Experiment 2",
-  "datasetName": "Test Dataset 2",
+  "dataset_name": "Test Dataset 2",
   "dataset": null,
-  "groundTruth": null,
+  "ground_truth": null,
   "odm": {
       "name": "HBOS",
       "hyperparameters": [{
@@ -27,7 +27,7 @@
         "type": "numeric"
       }]
     },
-  "subspaceLogic": {
+  "subspace_logic": {
     "operation": {
       "operator": "and",
       "operands": [
@@ -50,7 +50,7 @@
                       7,
                       9
                     ],
-                    "rocCurve": null
+                    "roc_curve": null
                   }
                 }
               },
@@ -70,7 +70,7 @@
                       7,
                       10
                     ],
-                    "rocCurve": null
+                    "roc_curve": null
                   }
                 }
               }
@@ -100,7 +100,7 @@
                             7,
                             9
                           ],
-                          "rocCurve": null
+                          "roc_curve": null
                         }
                       }
                     },
@@ -120,7 +120,7 @@
                             7,
                             10
                           ],
-                          "rocCurve": null
+                          "roc_curve": null
                         }
                       }
                     }
@@ -143,7 +143,7 @@
                       7,
                       10
                     ],
-                    "rocCurve": null
+                    "roc_curve": null
                   }
                 }
               },
@@ -162,7 +162,7 @@
                       7,
                       9
                     ],
-                    "rocCurve": null
+                    "roc_curve": null
                   }
                 }
               }
@@ -184,17 +184,17 @@
                 7,
                 9
               ],
-              "rocCurve": null
+              "roc_curve": null
             }
           }
         }
       ]
     }
   },
-  "experimentResult": {
+  "experiment_result": {
     "id": 1,
     "accuracy": 0.97,
-    "executionDate": "2023-01-27T00:20:17.102Z",
-    "executionTime": 20
+    "execution_date": "2023-01-27T00:20:17.102Z",
+    "execution_time": 20
   }
 }

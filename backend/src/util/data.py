@@ -19,7 +19,7 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
 
     return dataset
 
-def csv_to_groundtruth(groundtruth: str) -> np.ndarray:
+def csv_to_ndarray(groundtruth: str) -> np.ndarray:
     """Converts a CSV string to a groundtruth array.
     Args:
         groundtruth (str): The path to the CSV file.
@@ -30,7 +30,7 @@ def csv_to_groundtruth(groundtruth: str) -> np.ndarray:
 
     return df.to_numpy(dtype=int)
 
-def csv_to_groundtruth(name: str, groundtruth: str) -> np.ndarray:
+def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
 
     """Converts a CSV string to a Dataset object.
     Args:
@@ -40,7 +40,4 @@ def csv_to_groundtruth(name: str, groundtruth: str) -> np.ndarray:
         Dataset: The Dataset object.
 
     """
-    df = pd.read_csv(dataset)
-    dataset = Dataset(name, df)
-
-    return dataset
+    np.savetxt(path, arr, delimiter=",")

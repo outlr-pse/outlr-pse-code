@@ -27,7 +27,7 @@ async function notAuthenticated() {
         expect(await getIdentity()).toEqual("")
 }
 
-describe('Logging in to an account registered and logged out of',  function () {
+describe('Authentication',  function () {
 
     beforeEach(() => {
             logout()

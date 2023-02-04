@@ -1,11 +1,5 @@
 from api.api import app
-
-
-def setup_db() -> None:
-    """Sets up the database and collects all odms."""
-    # TODO: Implement setup_db
-    pass
-
+from database.database_access import setup_db
 
 setup_db()
 

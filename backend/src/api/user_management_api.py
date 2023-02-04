@@ -33,7 +33,6 @@ def login() -> Response:
         return response
     return jsonify(user=user.to_json(), message=f'Successfully logged in as {username}', status=200)
 
-
 @user_management_api.route('/register', methods=['POST'])
 def register() -> Response:
     """
@@ -50,6 +49,7 @@ def register() -> Response:
         response.status = 409
         return response
     return jsonify(user=user.to_json(), message=f'Successfully registered user - Welcome {username}!', status=200)
+
 
 @user_management_api.route('/logout', methods=['POST'])
 @jwt_required()

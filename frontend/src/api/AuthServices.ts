@@ -1,6 +1,7 @@
 import {sendLoginData, sendLogout, sendRegisterData} from "./APIRequests";
 import store from "../store"
 import axios, {AxiosError} from "axios";
+import {ErrorType} from "../models/error/ErrorType";
 
 export function validateUsername(username : string) : boolean {
     /**
@@ -67,7 +68,10 @@ export async function login(username : string, password : string){
                     return serverError.response.data;
                 }
             }
-            return {message: "Something went wrong"}
+            return {message: "Something went wrong",
+                    errorType: ErrorType.OtherError,
+                    errorId: 0,
+                    statusCode: 400}
         }
 }
 
@@ -98,15 +102,18 @@ export async function register(username : string, password : string){
                     return serverError.response.data;
                 }
             }
-            return {message: "Something went wrong"}
+            return {message: "Something went wrong",
+                    errorType: ErrorType.OtherError,
+                    errorId: 0,
+                    statusCode: 400}
         }
 }
 
 export async function logout() {
     /**
      * This method logs out a user using {@link sendLogout}
-     * request to request the token deletion of the token on API side - it also removes
-     * the current access token, which will be invalidated, from the local storage.
+     * to request the deletion of the token on API side - it also removes
+     * the current access token, which will be invalidated by API, from the local storage.
      * It returns the response JSON data.
      *
      * @param username the username, the user provided
@@ -127,7 +134,10 @@ export async function logout() {
                     return serverError.response.data;
                 }
             }
-            return {message: "Something went wrong"}
+            return {message: "Something went wrong",
+                    errorType: ErrorType.OtherError,
+                    errorId: 0,
+                    statusCode: 400}
         }
 }
 

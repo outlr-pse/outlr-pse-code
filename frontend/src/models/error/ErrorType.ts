@@ -11,4 +11,6 @@ export enum ErrorType {
     ExperimentError = "ExperimentError",
     /** An error in the ODM part of the API */
     ODMError = "ODMError",
+    /**An error of other origin */
+    OtherError = "OtherError"
 }

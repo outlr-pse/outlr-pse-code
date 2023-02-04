@@ -1,16 +1,22 @@
 from models.base import Base
+from models.odm.odm import ODM
+from models.results.experiment_result import ExperimentResult
+
 from sqlalchemy import ForeignKey, Integer, JSON, ARRAY
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 
 class Experiment(Base):
-    __tablename__: str = 'experiments'
+    __tablename__: str = 'experiment'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     name: Mapped[str]
-    subspace_logic = mapped_column(JSON)
-    odm_params = mapped_column(JSON)
     true_outliers = mapped_column(ARRAY(Integer))
+    odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
+    param_values = mapped_column(JSON)
+    subspace_logic = mapped_column(JSON)
+    experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+    database = 8
 
     def to_json(self) -> dict:
         return {

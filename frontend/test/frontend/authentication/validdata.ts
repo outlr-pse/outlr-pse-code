@@ -15,8 +15,7 @@ describe('validateData', () => {
             "SuD0",
             "j_6",
             "H__",
-            "           ",
-            "H2Y2U8CI56W_A3SaH7_XA_6LBF<2_"
+            "H2Y2U8CI56W_A3SaH7_XA_6LBF_2_"
         ]
 
         invalidUsernames = [

@@ -1,7 +1,16 @@
 import {sendLoginData, sendLogout, sendRegisterData} from "./APIRequests";
 import store from "../store"
 import axios, {AxiosError} from "axios";
-import {ErrorType} from "../models/error/ErrorType";
+import {errorOther} from "./ErrorOther";
+import {getIdentity} from "./DataRetrievalService";
+
+export async function initialValidityCheck() {
+    let identityJson = await getIdentity()
+
+    if ("username" in identityJson) {
+        await store.dispatch("auth/setAuthenticated", identityJson.username)
+    }
+}
 
 export function validateUsername(username : string) : boolean {
     /**
@@ -68,10 +77,7 @@ export async function login(username : string, password : string){
                     return serverError.response.data;
                 }
             }
-            return {message: "Something went wrong",
-                    errorType: ErrorType.OtherError,
-                    errorId: 0,
-                    statusCode: 400}
+            return errorOther
         }
 }
 
@@ -102,10 +108,7 @@ export async function register(username : string, password : string){
                 return serverError.response.data;
             }
         }
-        return {message: "Something went wrong",
-                errorType: ErrorType.OtherError,
-                errorId: 0,
-                statusCode: 400}
+        return errorOther
     }
 }
 
@@ -134,10 +137,7 @@ export async function logout() {
                     return serverError.response.data;
                 }
             }
-            return {message: "Something went wrong",
-                    errorType: ErrorType.OtherError,
-                    errorId: 0,
-                    statusCode: 400}
+            return errorOther
         }
 }
 

@@ -4,14 +4,9 @@ import {ActionContext} from "vuex";
 
 let hasValidAuthToken:boolean = false
 let username:string = ""
-/*
-let identityJson = await getIdentity()
 
-if ("username" in identityJson) {
-    hasValidAuthToken = true
-    username = identityJson.username
-}
-*/
+
+
 export default {
     namespaced:true,
     state:{

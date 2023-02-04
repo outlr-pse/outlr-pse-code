@@ -1,13 +1,17 @@
 import axios from 'axios'
 import {authHeader} from "./DataRetrievalService";
 
+const axiosClient = axios.create({
+    baseURL: 'http://localhost:1337'
+});
+
 export async  function sendLogout() : Promise<any>{
     /**
      * Sends request to back-end to delete/invalidate the access token provided
      * with the http request.
      */
     try {
-        return axios.post('http://localhost:5000/user/logout',
+        return await axiosClient.post('/user/logout',
             {},
             {headers: authHeader()})
     }
@@ -23,7 +27,7 @@ export async function sendLoginData(username : string, password : string) : Prom
      * successful
      */
     try {
-        return axios.post('http://localhost:5000/user/login',
+        return await axiosClient.post('/user/login',
             {username: username,password: password},
             {headers: authHeader()})
     }
@@ -39,7 +43,7 @@ export async function sendRegisterData(username : string, password : string) : P
      * registering was successful
      */
     try {
-        return axios.post('http://localhost:5000/user/register',
+        return await axiosClient.post('/user/register',
             {username: username,password: password},
             {headers: authHeader()})
     }
@@ -54,7 +58,7 @@ export async function requestTokenIdentity() : Promise<any> {
      * in a promise on success. The response, a promise, is returned
      */
     try {
-        return axios.get('http://localhost:5000/user/get-token-identity',{headers: authHeader()})
+        return await axiosClient.get('/user/get-token-identity',{headers: authHeader()})
     }
     catch(error) {
         return error

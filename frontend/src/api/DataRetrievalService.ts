@@ -1,6 +1,6 @@
 import {requestTokenIdentity} from "./APIRequests";
 import axios, {AxiosError} from "axios";
-import {ErrorType} from "../models/error/ErrorType";
+import {errorOther} from "./ErrorOther";
 
 export async function getIdentity() : Promise<any> {
     /**
@@ -19,10 +19,7 @@ export async function getIdentity() : Promise<any> {
               return serverError.response.data;
             }
         }
-        return {message: "Something went wrong",
-                errorType: ErrorType.OtherError,
-                errorId: 0,
-                statusCode: 400}
+        return errorOther
     }
 }
 export function authHeader() {

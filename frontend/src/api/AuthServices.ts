@@ -48,7 +48,7 @@ export function validatePassword(password:string, passwordRepeated:string) {
         return false
     }
 
-    let passwordRegex = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})")
+    let passwordRegex = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})")
     return passwordRegex.test(password)
 }
 

@@ -1,3 +1,27 @@
+no_data_provided = {
+    "error": "no_data_provided",
+    "message": "No data provided",
+    "status": 401,
+}
+
+no_username_provided = {
+    "error": "no_username_provided",
+    "message": "No username provided",
+    "status": 401,
+}
+
+no_password_provided = {
+    "error": "no_password_provided",
+    "message": "No password provided",
+    "status": 401,
+}
+
+no_experiment_provided = {
+    "error": "no_experiment_provided",
+    "message": "No experiment provided",
+    "status": 401,
+}
+
 
 invalid_password = {
     "error": "invalid_password",

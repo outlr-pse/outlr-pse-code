@@ -40,7 +40,7 @@ def validate_dataset() -> (Response, int):
     if mock_success:
         return jsonify(message="Valid dataset", status=200)
 
-    return jsonify(error=error.dataset_not_valid), error.dataset_not_valid.status
+    return jsonify(error=error.dataset_not_valid), error.dataset_not_valid["status"]
 
 
 @experiment_api.route('/validate-ground-truth', methods=['POST'])
@@ -54,7 +54,7 @@ def validate_ground_truth() -> (Response, int):
     if mock_success:
         return jsonify(message="Valid ground truth", status=200)
 
-    return jsonify(error=error.ground_truth_not_valid), error.ground_truth_not_valid.status
+    return jsonify(error=error.ground_truth_not_valid), error.ground_truth_not_valid["status"]
 
 
 @experiment_api.route('/get-result/<int:exp_id>', methods=['GET'])
@@ -67,7 +67,7 @@ def get_result(exp_id: int) -> (Response, int):
     given ID it returns "404 Not Found".
     """
     if not mock_success:
-        return jsonify(error=error.no_experiment_with_id), error.no_experiment_with_id.status
+        return jsonify(error=error.no_experiment_with_id), error.no_experiment_with_id["status"]
 
     file = open(script_location_parent / 'mock_files/experiment_result.json')
     exp_result = json.load(file)
@@ -112,11 +112,17 @@ def create() -> (Response, int):
     the request. Inserts the experiment in the database and runs it. If no experiment was passed, "400 Bad Request"
     and an error is returned
     """
-    experiment = request.json["experiment"]
+    data = request.get_json()
+    if not data:
+        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+    if not "experiment" in data:
+        return jsonify(error=error.no_experiment_provided), error.no_experiment_provided["status"]
+
+    experiment = data["experiment"]
     if experiment is None:
-        return jsonify(error.no_create_experiment_data_provided), error.no_create_experiment_data_provided.status
+        return jsonify(error.no_create_experiment_data_provided), error.no_create_experiment_data_provided["status"]
     if not mock_success:
-        return jsonify(error.create_experiment_data_not_valid), error.create_experiment_data_not_valid.status
+        return jsonify(error.create_experiment_data_not_valid), error.create_experiment_data_not_valid["status"]
 
     return jsonify(message="Experiment successfully created", status=200)
 
@@ -131,6 +137,6 @@ def download_result(exp_id: int) -> (Response, int):
     experiment with the given ID it returns "404 Not Found".
     """
     if not mock_success:
-        return jsonify(error=error.no_experiment_with_id), error.no_experiment_with_id.status
+        return jsonify(error=error.no_experiment_with_id), error.no_experiment_with_id["status"]
 
     return send_file(script_location_parent / "mock_files/outliers.csv", mimetype="text/csv", as_attachment=True)

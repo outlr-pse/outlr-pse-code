@@ -1,6 +1,6 @@
 from typing import Type
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, update
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
@@ -52,7 +52,15 @@ def get_all_odms() -> list[Type[ODM]]:
 
 def setup_db() -> None:
     """Inserts all available ODMs into the database."""
-    session.query(ODM).delete()
+    db_odms = get_all_odms()
+    for db_odm in db_odms:
+        db_odm.deprecated = True
+    session.commit()
     odms = PyODScraper().get_odms()
     for odm in odms:
-        add_odm(odm)
+        db_odm = session.query(ODM).filter_by(name=odm.name).first()
+        if db_odm is not None:
+            db_odm.deprecated = False
+        else:
+            session.add(odm)
+    session.commit()

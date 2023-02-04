@@ -90,3 +90,4 @@ class TestODMProvider(unittest.TestCase):
         self.assertIn('alad.ALAD', odm_names)
         self.assertIn('rod.ROD', odm_names)
         self.assertIn('knn.KNN', odm_names)
+        db.setup_db()

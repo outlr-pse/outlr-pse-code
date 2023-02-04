@@ -9,6 +9,7 @@ Endpoints defined:
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 
+from api.models import error
 from backend.src.api.mock_classes import MockDatabase
 from backend.src.api.models.error import UserManagementError
 
@@ -35,7 +36,7 @@ def login() -> Response:
 
 
 @user_management_api.route('/register', methods=['POST'])
-def register() -> Response:
+def register() -> (Response, int):
     """
     Expects a username and a password in the request. Inserts a new user
     into the database if username and password are valid and returns a user json
@@ -45,10 +46,7 @@ def register() -> Response:
     password = request.json['password']
     user = mock_database.register_user(username, password)
     if user is None:
-        register_error = UserManagementError('User with username already exists', 1, 409)
-        response = jsonify(message=register_error.error_message, status=409, error=register_error.to_json())
-        response.status = 409
-        return response
+        return jsonify(error.invalid_password), error.invalid_password.status
     return jsonify(user=user.to_json(), message=f'Successfully registered user - Welcome {username}!', status=200)
 
 

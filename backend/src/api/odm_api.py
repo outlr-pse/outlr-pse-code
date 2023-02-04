@@ -30,7 +30,7 @@ def get_all() -> (Response, int):
     "400 Bad Request".
     """
     if not mock_success:
-        return jsonify(error.error_other), error.error_other.status
+        return jsonify(error.error_other), error.error_other["status"]
 
     if single_odm:
         odm_one = json.load(open(script_location_parent / 'mock_files/odm_one.json'))
@@ -59,7 +59,7 @@ def get_parameters(odm_id: int) -> (Response, int):
     OK" if the ODM was found, status code "400 Bad Request" and ODMError otherwise.
     """
     if not mock_success:
-        return jsonify(error.no_odm_with_id), error.no_odm_with_id.status
+        return jsonify(error.no_odm_with_id), error.no_odm_with_id["status"]
 
     hyperparams = json.load(open(script_location_parent / 'mock_files/hyperparameters.json'))
     response = jsonify(hyperparameters=hyperparams, message="Hyperparameters successfully retrieved", status=200)

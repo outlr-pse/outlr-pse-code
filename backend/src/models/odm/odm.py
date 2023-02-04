@@ -1,3 +1,8 @@
+"""ODM model.
+
+This module contains the ODM model, which is used to store the ODMs.
+
+"""
 from typing import Any
 
 from models.base import Base
@@ -14,6 +19,7 @@ class ODM(Base):
     deprecated: Mapped[bool]
 
     def to_json(self) -> dict:
+        """Converts the ODM object to a JSON object"""
         return {
             'id': self.id,
             'name': self.name,
@@ -22,11 +28,11 @@ class ODM(Base):
         }
 
     def check_params(self, args: dict[str, Any]) -> bool:
+        """Checks if the given parameters are valid for this ODM"""
         for param in self.hyper_parameters:
             if repr(type(args[param.name])) != param.param_type:
                 return False
 
     def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
+        """Runs the ODM on the given subspace"""
         raise NotImplementedError
-
-

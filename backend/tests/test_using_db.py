@@ -1,5 +1,4 @@
 import unittest
-
 import database.database_access as db
 from database.database_access import session
 from models.user.user import User

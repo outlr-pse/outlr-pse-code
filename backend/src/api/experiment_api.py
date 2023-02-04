@@ -10,7 +10,7 @@ Endpoints defined:
 """
 import json
 from pathlib import Path
-
+import random
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required
 
@@ -19,7 +19,6 @@ from backend.src.api.models.error import ExperimentError
 experiment_api = Blueprint('experiment', __name__)
 
 # to be deleted
-import random
 script_location_parent = Path(__file__).absolute().parent
 
 mock_success = True
@@ -83,6 +82,7 @@ def get_result(exp_id: int) -> Response:
     exp_result = json.load(file)
     response = jsonify(experiment=exp_result, message="Experiment successfully retrieved", status=200)
     return response
+
 
 @experiment_api.route('/get-all', methods=['GET'])
 @jwt_required()

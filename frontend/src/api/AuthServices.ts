@@ -86,27 +86,27 @@ export async function register(username : string, password : string){
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-        try {
-            const response = await sendRegisterData(username, password)
-            const userJson = response.data.user
-            if (userJson) {
-                localStorage.removeItem('token')
-                localStorage.setItem('token', userJson.token)
-                await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
-            }
-            return response.data
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const serverError = error as AxiosError;
-                if (serverError && serverError.response) {
-                    return serverError.response.data;
-                }
-            }
-            return {message: "Something went wrong",
-                    errorType: ErrorType.OtherError,
-                    errorId: 0,
-                    statusCode: 400}
+    try {
+        const response = await sendRegisterData(username, password)
+        const userJson = response.data.user
+        if (userJson) {
+            localStorage.removeItem('token')
+            localStorage.setItem('token', userJson.token)
+            await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
         }
+        return response.data
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            const serverError = error as AxiosError;
+            if (serverError && serverError.response) {
+                return serverError.response.data;
+            }
+        }
+        return {message: "Something went wrong",
+                errorType: ErrorType.OtherError,
+                errorId: 0,
+                statusCode: 400}
+    }
 }
 
 export async function logout() {

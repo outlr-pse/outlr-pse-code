@@ -1,10 +1,12 @@
 import {requestTokenIdentity} from "./APIRequests";
 import axios, {AxiosError} from "axios";
+import {ErrorType} from "../models/error/ErrorType";
 
 export async function getIdentity() : Promise<any> {
     /**
      * Retrieves the identity of a token by handling {@link requestTokenIdentity} promise.
-     * It returns either the user JSON or returns the error JSON.
+     * It returns either the user JSON, when token is valid containg username and token key, when not valid an empty
+     * JSON. If an actual error occurs an error JSON is returned. The return values are encapsulated in a Promise.
      */
     try {
         const response = await requestTokenIdentity()
@@ -17,7 +19,10 @@ export async function getIdentity() : Promise<any> {
               return serverError.response.data;
             }
         }
-        return {message : "Something went wrong"}
+        return {message: "Something went wrong",
+                errorType: ErrorType.OtherError,
+                errorId: 0,
+                statusCode: 400}
     }
 }
 export function authHeader() {

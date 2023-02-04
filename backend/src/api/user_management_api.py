@@ -33,6 +33,7 @@ def login() -> Response:
         return response
     return jsonify(user=user.to_json(), message=f'Successfully logged in as {username}', status=200)
 
+
 @user_management_api.route('/register', methods=['POST'])
 def register() -> Response:
     """
@@ -80,7 +81,7 @@ def get_token_identity() -> Response:
         token = bearer.split()[1]
         user_to_token = mock_database.get_user_by_token(int(token))
     if user_to_token is None:
-        return jsonify(user={}, message=f'No user linked to token or token missing', status=200)
+        return jsonify(user={}, message="No user linked to token or token missing", status=200)
     else:
         response = jsonify(user=user_to_token.to_json(), message=f'Token is linked to {user_to_token.username}',
                            status=202)

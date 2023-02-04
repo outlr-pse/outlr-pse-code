@@ -1,19 +1,21 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
-from sqlalchemy import Column, Float, Integer, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from models.base import Base
+from models.results.subspace_outlier import Subspace, Outlier
 
 
 class ExperimentResult(Base):
     __tablename__ = "experiment_result"
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    accuracy = Column(Float)
-    execution_date = Column(DateTime)
-    execution_time = Column(timedelta)
-    subspaces = relationship("Subspace", back_populates="experiment_result")
-    outliers = relationship("Outlier", back_populates="experiment_result")
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiment.id"))
+    accuracy: Mapped[float]
+    execution_date: Mapped[datetime]
+    execution_time: Mapped[timedelta]
+    subspaces = relationship(Subspace)
+    outliers = relationship(Outlier)
 
     def to_json(self) -> dict:
         return {

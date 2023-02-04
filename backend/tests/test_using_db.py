@@ -20,6 +20,7 @@ class TestDBAccess(unittest.TestCase):
         exp = Experiment()
         exp.user_id = user_id
         exp.name = name
+        exp.odm_id = 1
         exp.subspace_logic = {"a": 1}
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]

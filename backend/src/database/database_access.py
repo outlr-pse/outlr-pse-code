@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
 from models.experiment.experiment import Experiment
+from models.odm.hyper_parameter import HyperParameter
 from models.odm.odm import ODM
 from models.user.user import User
 
@@ -60,7 +61,13 @@ def setup_db() -> None:
     for odm in odms:
         db_odm: Type[ODM] = session.query(ODM).filter_by(name=odm.name).first()
         if db_odm is not None:
+            session.query(HyperParameter).filter_by(odm_id=db_odm.id).delete()
+            for param in odm.hyper_parameters:
+                param.odm_id = db_odm.id
+                session.add(param)
+            new_hyper_params = session.query(HyperParameter).filter_by(odm_id=db_odm.id).all()
             db_odm.deprecated = False
+            db_odm.hyper_parameters = new_hyper_params
         else:
             session.add(odm)
     session.commit()

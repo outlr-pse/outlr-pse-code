@@ -17,7 +17,6 @@ class HyperParameter(Base):
     optional: Mapped[bool]
     odm_id: Mapped[int] = mapped_column(ForeignKey('odm.id'))
 
-
     def to_json(self) -> dict:
         """Converts the HyperParameter object to a JSON object"""
         return {

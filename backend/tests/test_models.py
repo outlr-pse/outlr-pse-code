@@ -33,7 +33,6 @@ class TestHyperParameter(unittest.TestCase):
         self.assertEqual(self.hp.optional, True)
 
 
-
 class TestODM(unittest.TestCase):
     def setUp(self):
         self.odm = ODM(id=1, name='test_odm', deprecated=False)
@@ -54,6 +53,3 @@ class TestODM(unittest.TestCase):
         self.assertEqual(self.odm.id, 1)
         self.assertEqual(self.odm.name, 'test_odm')
         self.assertEqual(self.odm.deprecated, False)
-
-
-

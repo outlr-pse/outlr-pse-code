@@ -24,11 +24,11 @@ class TestPyODM(unittest.TestCase):
         #                                                columns=range(2)))
         self.X_train_df = Dataset("test", pd.DataFrame(self.X_train))
 
-
     def test_working_abod(self):
-        self.abod_y_train = self.abod.run_odm(self.X_train_df, {'contamination': 0.1, 'n_neighbors': 100, 'method': 'fast'})
+        self.abod_y_train = self.abod.run_odm(self.X_train_df,
+                                              {'contamination': 0.1, 'n_neighbors': 100, 'method': 'fast'})
         print(np.sum(self.abod_y_train == self.y_train) / 200)
-        #visualize("ABOD", self.X_train, self.y_train, self.X_test, self.y_test, self.abod_y_train,
+        # visualize("ABOD", self.X_train, self.y_train, self.X_test, self.y_test, self.abod_y_train,
         #          self.y_test, show_figure=True, save_figure=False)
         result = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -39,7 +39,8 @@ class TestPyODM(unittest.TestCase):
         self.assertListEqual(result, list(self.abod_y_train))
 
     def test_working_abod2(self):
-        self.abod2_y_train = self.abod.run_odm(self.X_train_df, {'contamination': 0.1, 'n_neighbors': 3, 'method': 'default'})
+        self.abod2_y_train = self.abod.run_odm(self.X_train_df,
+                                               {'contamination': 0.1, 'n_neighbors': 3, 'method': 'default'})
         print(np.sum(self.abod2_y_train == self.y_train) / 200)
         result = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -49,6 +50,7 @@ class TestPyODM(unittest.TestCase):
                   0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         self.assertListEqual(result, list(self.abod2_y_train))
+
     def test_working_knn(self):
         self.knn_y_train = (self.knn.run_odm(self.X_train_df, {}))
         print(np.sum(self.knn_y_train == self.y_train) / 200)

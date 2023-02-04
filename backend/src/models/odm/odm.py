@@ -36,7 +36,3 @@ class ODM(Base):
     def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
         """Runs the ODM on the given subspace"""
         raise NotImplementedError
-
-
-
-

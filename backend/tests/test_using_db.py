@@ -9,9 +9,7 @@ from models.base import Base
 def setUpModule() -> None:
     Base.metadata.drop_all(bind=db.engine, checkfirst=True)
     Base.metadata.create_all(bind=db.engine)
-    # db.setup_db()
-    # remove the following line when pyod_scraper is fixed and the above line is uncommented
-    db.add_odm(ODM(name="test", deprecated=False))
+    db.setup_db()
 
 
 class TestDBAccess(unittest.TestCase):
@@ -80,14 +78,16 @@ class TestDBAccess(unittest.TestCase):
     #     self.assertEqual(session.get(HyperParameter, id1).name, "hp2")
     #     self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
 
-# class TestODMProvider(unittest.TestCase):
-#     def test_scraper(self):
-#         odms = db.get_all_odms()
-#         odm_names = [odm.name for odm in odms]
-#         self.assertIn('cd.CD', odm_names)
-#         self.assertIn('hbos.HBOS', odm_names)
-#         self.assertIn('anogan.AnoGAN', odm_names)
-#         self.assertIn('abod.ABOD', odm_names)
-#         self.assertIn('alad.ALAD', odm_names)
-#         self.assertIn('rod.ROD', odm_names)
-#         self.assertIn('knn.KNN', odm_names)
+
+class TestODMProvider(unittest.TestCase):
+    def test_scraper(self):
+        odms = db.get_all_odms()
+        odm_names = [odm.name for odm in odms]
+        self.assertIn('cd.CD', odm_names)
+        self.assertIn('hbos.HBOS', odm_names)
+        self.assertIn('anogan.AnoGAN', odm_names)
+        self.assertIn('abod.ABOD', odm_names)
+        self.assertIn('alad.ALAD', odm_names)
+        self.assertIn('rod.ROD', odm_names)
+        self.assertIn('knn.KNN', odm_names)
+        db.setup_db()

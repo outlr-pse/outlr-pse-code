@@ -42,7 +42,7 @@ describe('validateData', () => {
 
         invalidPasswords = [
             "T&l?0",
-            "78Hqh_",
+            "78Hqh",
             null,
             "H&k____",
             " ",

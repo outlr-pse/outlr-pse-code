@@ -1,8 +1,5 @@
-from pandas import DataFrame
-
 from models.base import Base
 from models.odm.odm import ODM
-from models.dataset.dataset import Dataset
 from models.results.experiment_result import ExperimentResult
 
 from sqlalchemy import ForeignKey, Integer, JSON, ARRAY
@@ -19,7 +16,9 @@ class Experiment(Base):
     param_values = mapped_column(JSON)
     subspace_logic = mapped_column(JSON)
     experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
-    database = 8
+
+    # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
+    dataset = None
 
     def to_json(self) -> dict:
         return {

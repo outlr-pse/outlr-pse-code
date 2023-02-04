@@ -17,6 +17,7 @@ dulwich==0.20.46
 filelock==3.8.0
 Flask==2.2.2
 Flask-JWT-Extended==4.4.4
+Flask-CORS==3.0.10
 flatbuffers==23.1.21
 fonttools==4.38.0
 gast==0.4.0

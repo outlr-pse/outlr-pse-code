@@ -1,6 +1,5 @@
 import unittest
 import database.database_access as db
-from database.database_access import session
 from models.user.user import User
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM, HyperParameter
@@ -11,6 +10,8 @@ def setUpModule() -> None:
     Base.metadata.drop_all(bind=db.engine, checkfirst=True)
     Base.metadata.create_all(bind=db.engine)
     # db.setup_db()
+    # remove the following line when pyod_scraper is fixed and the above line is uncommented
+    db.add_odm(ODM(name="test", deprecated=False))
 
 
 class TestDBAccess(unittest.TestCase):
@@ -20,6 +21,7 @@ class TestDBAccess(unittest.TestCase):
         exp = Experiment()
         exp.user_id = user_id
         exp.name = name
+        exp.odm_id = 1
         exp.subspace_logic = {"a": 1}
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]
@@ -77,7 +79,6 @@ class TestDBAccess(unittest.TestCase):
     #     self.assertEqual(session.get(HyperParameter, id0).name, "hp1")
     #     self.assertEqual(session.get(HyperParameter, id1).name, "hp2")
     #     self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
-
 
 # class TestODMProvider(unittest.TestCase):
 #     def test_scraper(self):

@@ -1,5 +1,8 @@
+from pandas import DataFrame
+
 from models.base import Base
 from models.odm.odm import ODM
+from models.dataset.dataset import Dataset
 from models.results.experiment_result import ExperimentResult
 
 from sqlalchemy import ForeignKey, Integer, JSON, ARRAY

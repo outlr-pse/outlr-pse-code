@@ -1,8 +1,8 @@
 {
     "id": 0,
     "accuracy": null,
-    "executionDate": "2018-01-01T00:00:00.000Z",
-    "executionTime": 29,
+    "execution_date": "2018-01-01T00:00:00.000Z",
+    "execution_time": 29,
     "outliers" : [1,7,9,10,15,28,34,35],
     "subspaces": [
       {
@@ -10,28 +10,28 @@
           "name":"S1",
           "columns":[2,3],
           "outliers":[9,10,15,28,34],
-          "rocCurve": null
+          "roc_curve": null
       },
       {
          "id":2,
           "name":"S2",
           "columns":[0,1,2,3],
           "outliers":[1,7,9,10,15,28,34],
-          "rocCurve": null
+          "roc_curve": null
       },
       {
           "id":3,
           "name":"S3",
           "columns":[3,4,5],
           "outliers":[10,11,17,35],
-          "rocCurve": null
+          "roc_curve": null
       }
     ],
-    "resultSpace": {
+    "result_space": {
         "id":13,
         "name":"ResultSpace",
         "columns":[],
         "outliers":[9,10,15,28,34],
-        "rocCurve": null
+        "roc_curve": null
     }
 }

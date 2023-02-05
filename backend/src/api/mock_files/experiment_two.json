@@ -2,199 +2,39 @@
   "id": 51,
   "name": "Example Experiment 2",
   "dataset_name": "Test Dataset 2",
-  "dataset": null,
-  "ground_truth": null,
   "odm": {
-      "name": "HBOS",
-      "hyperparameters": [{
-          "name": "n_bins",
-          "value": 10,
-          "type": "integer"
+    "name": "HBOS",
+    "hyper_parameters": [
+      {
+        "name": "n_bins",
+        "type": "integer",
+        "optional": false
       },
       {
         "name": "alpha",
-        "value": 0.1,
-        "type": "numeric"
+        "type": "numeric",
+        "optional": false
       },
       {
         "name": "tol",
-        "value": 0.5,
-        "type": "numeric"
+        "type": "numeric",
+        "optional": false
       },
       {
         "name": "contamination",
-        "value": 0.1,
-        "type": "numeric"
-      }]
-    },
-  "subspace_logic": {
-    "operation": {
-      "operator": "and",
-      "operands": [
-        {
-          "operation": {
-            "operator": "and",
-            "operands": [
-              {
-                "literal": {
-                  "subspace": {
-                    "id": 1,
-                    "name": "sub1",
-                    "columns": [
-                      1
-                    ],
-                    "outliers": [
-                      1,
-                      2,
-                      3,
-                      7,
-                      9
-                    ],
-                    "roc_curve": null
-                  }
-                }
-              },
-              {
-                "literal": {
-                  "subspace": {
-                    "id": 2,
-                    "name": "sub2",
-                    "columns": [
-                      2,
-                      3,
-                      4
-                    ],
-                    "outliers": [
-                      2,
-                      4,
-                      7,
-                      10
-                    ],
-                    "roc_curve": null
-                  }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "operation": {
-            "operator": "and",
-            "operands": [
-              {
-                "operation": {
-                  "operator": "and",
-                  "operands": [
-                    {
-                      "literal": {
-                        "subspace": {
-                          "id": 1,
-                          "name": "sub1",
-                          "columns": [
-                            1
-                          ],
-                          "outliers": [
-                            1,
-                            2,
-                            3,
-                            7,
-                            9
-                          ],
-                          "roc_curve": null
-                        }
-                      }
-                    },
-                    {
-                      "literal": {
-                        "subspace": {
-                          "id": 2,
-                          "name": "sub2",
-                          "columns": [
-                            2,
-                            3,
-                            4
-                          ],
-                          "outliers": [
-                            2,
-                            4,
-                            7,
-                            10
-                          ],
-                          "roc_curve": null
-                        }
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "literal": {
-                  "subspace": {
-                    "id": 2,
-                    "name": "sub2",
-                    "columns": [
-                      2,
-                      3,
-                      4
-                    ],
-                    "outliers": [
-                      2,
-                      4,
-                      7,
-                      10
-                    ],
-                    "roc_curve": null
-                  }
-                }
-              },
-              {
-                "literal": {
-                  "subspace": {
-                    "id": 1,
-                    "name": "sub1",
-                    "columns": [
-                      1
-                    ],
-                    "outliers": [
-                      1,
-                      2,
-                      3,
-                      7,
-                      9
-                    ],
-                    "roc_curve": null
-                  }
-                }
-              }
-            ]
-          }
-        },
-        {
-          "literal": {
-            "subspace": {
-              "id": 1,
-              "name": "sub1",
-              "columns": [
-                1
-              ],
-              "outliers": [
-                1,
-                2,
-                3,
-                7,
-                9
-              ],
-              "roc_curve": null
-            }
-          }
-        }
-      ]
-    }
+        "type": "numeric",
+        "optional": false
+      }
+    ]
   },
-  "experiment_result": {
-    "id": 1,
-    "accuracy": 0.97,
-    "execution_date": "2023-01-27T00:20:17.102Z",
-    "execution_time": 20
-  }
+  "param_values": {
+    "n_bins": 10,
+    "alpha": 0.1,
+    "tol": 0.5,
+    "contamination": 0.1
+  },
+  "running": false,
+  "accuracy": 0.97,
+  "execution_date": "2023-01-27T00:20:17.102Z",
+  "execution_time": 20
 }

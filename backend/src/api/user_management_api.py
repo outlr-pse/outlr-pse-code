@@ -9,7 +9,7 @@ Endpoints defined:
 from flask import Blueprint, Response, jsonify, request
 import re
 
-from backend.src import mock_database
+from backend.src.init_mock_database import mock_database
 from backend.src.api.models import error
 
 user_management_api = Blueprint('user_management', __name__)

@@ -4,7 +4,7 @@ import {errorOther} from "./ErrorOther";
 import {MockStorage} from "./MockStorage";
 
 export const axiosClient = axios.create({
-    baseURL: 'http://127.0.0.1:5000/api'
+    baseURL: 'http://127.0.0.1:1337/api'
 });
 export const storage = new MockStorage()
 

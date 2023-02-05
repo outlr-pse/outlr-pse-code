@@ -1,4 +1,4 @@
-from backend.src.api.models.mock_classes import MockDatabase
+from backend.src.api.mock_classes import MockDatabase
 mock_database = MockDatabase()
 
 from api.api import app

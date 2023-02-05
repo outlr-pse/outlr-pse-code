@@ -1,7 +1,7 @@
 import {login, logout, register} from "../../../src/api/AuthServices";
 import {authHeader, getIdentity, storage} from "../../../src/api/DataRetrievalService";
 import store from "../../../src/store";
-import {requestTokenIdentity, sendLogout, sendRegisterData} from "../../../src/api/APIRequests";
+import {axiosClient, requestTokenIdentity, sendLogout, sendRegisterData} from "../../../src/api/APIRequests";
 
 async function checkAuthenticationSuccessful(response: { error?: any; user: { username?: any; access_token?: any; }; }, username: string){
         expect(response.error).not.toBeDefined()
@@ -33,6 +33,14 @@ describe('Authentication',  function () {
             logout()
         }
     )
+
+    test('test connection to backend', async () => {
+        const response = axiosClient.get("/status")
+        const data = (await response).data
+        expect(data.status).toBeDefined()
+        expect(data.status).toEqual("running")
+    })
+
 
     test('registering and then logging in', async () => {
         const username = "SCH3LOM0TEST1"

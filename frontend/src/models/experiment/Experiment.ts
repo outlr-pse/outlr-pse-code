@@ -41,40 +41,42 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      */
     toJSON() {
         return {
-            id: this.id,
             name: this.name,
-            datasetName: this.datasetName,
             dataset: this.dataset,
-            groundTruth: this.groundTruth,
-            odm: this.odm,
+            dataset_name: this.datasetName,
+            ground_truth: this.groundTruth,
+            odm: this.odm.serialize(),
             subspaceLogic: this.subspaceLogic,
-            experimentResult: this.experimentResult
         };
 
     }
 
-     /**
-      * This method creates an experiment from a JSON string.
-      * @param json
-      */
-     public static fromJSON(json: string): Experiment {
-         let experiment = new Experiment("", "", null, null, new ODM("", []));
-         experiment.deserialize(json);
-         return experiment;
-     }
+    /**
+     * This method creates an experiment from a JSON string.
+     * @param json
+     */
+    public static fromJSON(json: string): Experiment {
+        let experiment = new Experiment("", "", null, null, new ODM("", []));
+        experiment.deserialize(json);
+        return experiment;
+    }
 
     deserialize(json: string): void {
         let jsonObject = JSON.parse(json);
         this.id = jsonObject.id;
         this.name = jsonObject.name;
-        this.datasetName = jsonObject.datasetName;
-        this.odm = jsonObject.odm;
+        this.datasetName = jsonObject.dataset_name;
+        this.odm = ODM.fromJSON(jsonObject.odm, jsonObject.param_values);
 
         let subspaceMap = new Map<number, Subspace>();
         let outlierMap = new Map<number, Outlier>();
 
-        this.subspaceLogic = SubspaceLogic.fromJSONObject(jsonObject.subspaceLogic, subspaceMap, outlierMap);
-        this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experimentResult, subspaceMap, outlierMap);
+        if(jsonObject.subspace_logic != null){
+            this.subspaceLogic = SubspaceLogic.fromJSONObject(jsonObject.subspace_logic, subspaceMap, outlierMap);
+        } else {
+            this.subspaceLogic = null;
+        }
+        this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experiment_result, subspaceMap, outlierMap);
 
     }
 

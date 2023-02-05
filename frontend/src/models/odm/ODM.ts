@@ -5,13 +5,15 @@ import {JSONSerializable} from "../JSONSerializable";
 /**
  * This class represents an ODM.
  */
-export class ODM implements JSONSerializable, JSONDeserializable {
+export class ODM implements JSONSerializable {
+    id: number | null;
     name: string;
-    hyperparameters: Hyperparameter[];
+    hyperParameters: Hyperparameter[];
 
-    constructor(name: string, hyperparameters: Hyperparameter[]) {
+    constructor(name: string, hyperParameters: Hyperparameter[]) {
+        this.id = null;
         this.name = name;
-        this.hyperparameters = hyperparameters;
+        this.hyperParameters = hyperParameters;
     }
 
     /**
@@ -19,9 +21,13 @@ export class ODM implements JSONSerializable, JSONDeserializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
+        let hyperParametersJSON: {[key: number]: string} = {};
+        for (let param of this.hyperParameters){
+            hyperParametersJSON[param.id] = param.value;
+        }
         return {
-            name: this.name,
-            hyperparameters: this.hyperparameters
+            id: this.id,
+            hyper_parameters: JSON.stringify(hyperParametersJSON)
         };
     }
 
@@ -29,16 +35,17 @@ export class ODM implements JSONSerializable, JSONDeserializable {
      * This method creates an ODM from a JSON string.
      * @param json
      */
-    public static fromJSON(json: string): ODM {
+    public static fromJSON(json: any, valuesJson: any): ODM {
         let odm = new ODM("", []);
-        odm.deserialize(json);
+        odm.deserializeODM(json, valuesJson);
         return odm;
     }
 
-    deserialize(json: string): void {
-        let jsonObject = JSON.parse(json);
-        this.name = jsonObject.name;
-        this.hyperparameters = jsonObject.hyperparameters;
+    deserializeODM(json: any, valuesJson: any): void {
+        this.name = json.name;
+        for (let param of json.hyper_parameters){
+            this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+        }
     }
 
     serialize(): string {

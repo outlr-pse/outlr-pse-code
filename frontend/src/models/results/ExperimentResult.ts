@@ -6,7 +6,7 @@ import {Outlier} from "./Outlier";
  * This class represents an experiment result.
  */
 export class ExperimentResult implements JSONSerializable {
-    id: number;
+    running: boolean;
     accuracy: number | null;
     executionDate: Date;
     executionTime: number;
@@ -14,14 +14,14 @@ export class ExperimentResult implements JSONSerializable {
     outliers: Outlier[];
     resultSpace: Subspace | undefined
 
-    constructor(id: number,
+    constructor(running: boolean,
                 accuracy: number,
                 executionDate: Date,
                 executionTime: number,
                 subspaces: Subspace[],
                 outliers: Outlier[],
                 resultSpace?: Subspace) {
-        this.id = id;
+        this.running = running;
         this.accuracy = accuracy;
         this.executionDate = executionDate;
         this.executionTime = executionTime;
@@ -30,19 +30,6 @@ export class ExperimentResult implements JSONSerializable {
         this.resultSpace = resultSpace;
     }
 
-    /**
-     * This method returns the experiment result as a JSON object.
-     * It is called by the JSON.stringify() method.
-     */
-    toJSON() {
-        return {
-            id: this.id,
-            accuracy: this.accuracy,
-            executionDate: this.executionDate,
-            executionTime: this.executionTime,
-            resultSpace: this.resultSpace
-        };
-    }
     serialize(): string {
         return JSON.stringify(this);
     }
@@ -54,14 +41,19 @@ export class ExperimentResult implements JSONSerializable {
      * @param outlierMap The map of  all outliers that the experiment holds.
      */
     static fromJSONObject(jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): ExperimentResult {
+        let resultSpace = undefined;
+        if (jsonObject.result_space != undefined) {
+           resultSpace  = Subspace.fromJSONObject(jsonObject.result_space, outlierMap)
+        }
+
         return new ExperimentResult(
-            jsonObject.id,
+            jsonObject.running,
             jsonObject.accuracy,
-            new Date(jsonObject.executionDate),
-            jsonObject.executionTime,
+            new Date(jsonObject.execution_date),
+            jsonObject.execution_time,
             Array.from(subspaceMap.values()),
             Array.from(outlierMap.values()),
-            Subspace.fromJSONObject(jsonObject.resultSpace, outlierMap)
+            resultSpace
     );
 
     }

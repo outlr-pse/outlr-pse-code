@@ -5,51 +5,37 @@ import {JSONSerializable} from "../JSONSerializable";
 /**
  * This class represents a hyperparameter.
  */
-export class Hyperparameter implements JSONSerializable, JSONDeserializable{
+export class Hyperparameter{
+    id: number;
     name: string;
     value: string;
     paramType: HyperparameterType;
     optional: boolean;
 
-    constructor(name: string, value: string, paramType: HyperparameterType, optional: boolean) {
+    constructor(id: number, name: string, value: string, paramType: HyperparameterType, optional: boolean) {
+        this.id = id;
         this.name = name;
         this.value = value;
         this.paramType = paramType;
         this.optional = optional;
     }
 
-    /**
-     * This method returns the hyperparameter as a JSON object.
-     * It is called by the JSON.stringify() method.
-     */
-    toJSON() {
-        return {
-            name: this.name,
-            value: this.value,
-            param_type: this.paramType,
-            optional: this.optional
-        };
-    }
 
     /**
      * This method creates a hyperparameter from a JSON string.
      * @param json
+     * @param valuesJson
      */
-    public static fromJSON(json: string): Hyperparameter {
-        let hyperparameter = new Hyperparameter("", "", HyperparameterType.STRING, false);
-        hyperparameter.deserialize(json);
+    public static fromJSON(json: any, valuesJson: any): Hyperparameter {
+        let hyperparameter = new Hyperparameter(0,"", "", HyperparameterType.STRING, false);
+        hyperparameter.deserializeParam(json, valuesJson);
         return hyperparameter;
     }
 
-    deserialize(json: string): void {
-        let jsonObject = JSON.parse(json);
-        this.name = jsonObject.name;
-        this.value = jsonObject.value;
-        this.paramType = jsonObject.param_type
-        this.optional = jsonObject.optional;
-    }
-
-    serialize(): string {
-        return JSON.stringify(this);
+    deserializeParam(json: any, valuesJson: any): void {
+        this.name = json.name;
+        this.paramType = json.type
+        this.optional = json.optional;
+        this.value = valuesJson[json.name];
     }
 }

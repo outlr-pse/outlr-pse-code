@@ -2,7 +2,6 @@ import {Experiment} from '../../../src/models/experiment/Experiment';
 import {ODM} from "../../../src/models/odm/ODM";
 import {Hyperparameter} from "../../../src/models/odm/Hyperparameter";
 import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
-import {Subspace} from "../../../src/models/results/Subspace";
 
 describe('Experiment', () => {
 

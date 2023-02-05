@@ -108,13 +108,13 @@ frontend-test:
  # install Python
     - apt-get update
     - apt-get install -y python3.10 python3-pip
-    - python 3 - m pip install virtualenv
+    - python3 - m pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-    - python 3 - m pip install requests
-    - python 3 - m pip install python-dotenv
+    - python3 - m pip install requests
+    - python3 - m pip install python-dotenv
     - cd backend
-    - python 3 - m pip install -r requirements.txt
+    - python3 - m pip install -r requirements.txt
     - cd src
     - python3 __init__.py
     - cd ../..

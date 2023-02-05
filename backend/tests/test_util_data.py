@@ -17,8 +17,6 @@ class TestCsvMethods(unittest.TestCase):
         # create a sample numpy array
         cls.sample_array = np.array([[1, 2, 3], [4, 5, 6]])
 
-        # test the ndarray_to_csv function
-        ndarray_to_csv("sample_array.csv", cls.sample_array)
     @classmethod
     def tearDownClass(cls):
         # remove the sample csv file
@@ -40,6 +38,8 @@ class TestCsvMethods(unittest.TestCase):
         self.assertTrue(np.array_equal(result, expected))
 
     def test_ndarray_to_csv(self):
+        # test the ndarray_to_csv function
+        ndarray_to_csv("sample_array.csv", self.sample_array)
         result = pd.read_csv("sample_array.csv", header=None)
         expected = pd.DataFrame(self.sample_array)
         self.assertTrue(np.array_equal(result, expected))

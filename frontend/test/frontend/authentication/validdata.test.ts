@@ -1,10 +1,10 @@
 import {validatePassword, validateUsername} from "../../../src/api/AuthServices"
 
 describe('validateData', () => {
-    let validUsernames
-    let invalidUsernames
-    let invalidPasswords
-    let validPasswords
+    let validUsernames: Array<string>
+    let invalidUsernames: Array<string>
+    let invalidPasswords: Array<string>
+    let validPasswords: Array<string>
 
     beforeAll( () => {
 
@@ -21,7 +21,6 @@ describe('validateData', () => {
         invalidUsernames = [
             " ",
             "",
-            null,
             "!io",
             "H1",
             "!!!",
@@ -43,7 +42,6 @@ describe('validateData', () => {
         invalidPasswords = [
             "T&l?0",
             "78Hqh",
-            null,
             "H&k____",
             " ",
             "  ",
@@ -55,33 +53,25 @@ describe('validateData', () => {
 
     // USER VALIDATION
     test('valid usernames', () => {
-        for (let username in validUsernames) {
-            expect(validateUsername(username)).toEqual(true)
-        }
+        validUsernames.forEach(val => {expect(validateUsername(val)).toEqual(true)})
     })
 
     test('should return false - invalid usernames', () => {
-        for (let username in invalidUsernames) {
-            expect(validateUsername(username)).toEqual(false)
-        }
+        invalidUsernames.forEach(val => {expect(validateUsername(val)).toEqual(false)})
     })
 
     // PASSWORD VALIDATION
     test('password repeated does not equal actual password', () => {
-        for(let i = 0; i < validPasswords.size - 1; i++) {
+        for(let i = 0; i < validPasswords.length - 1; i++) {
             expect(validatePassword(validPasswords[i], validPasswords[i+1])).toEqual(false)
         }
     })
 
     test('should return true - valid password', () => {
-        for (let password in validPasswords) {
-            expect(validatePassword(password, password)).toEqual(true)
-        }
+        validPasswords.forEach(val => {expect(validatePassword(val, val)).toEqual(true)})
     });
 
     test('should return false - invalid password', () => {
-        for (let password in invalidPasswords) {
-            expect(validatePassword(password, password)).toEqual(false)
-        }
+        invalidPasswords.forEach(val => {expect(validatePassword(val, val)).toEqual(false)})
     });
 });

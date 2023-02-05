@@ -1,5 +1,7 @@
 stages:          # List of stages for jobs, and their order of execution
   - build
+  - back-test
+  - front-test
   - test
   - deploy
 #
@@ -51,7 +53,7 @@ frontend-build:
 
 backend-test:
   image: python:3.10-bullseye
-  stage: test
+  stage: back-test
   services:
     - postgres:12.4
   # Change pip's cache directory to be inside the project directory since we can
@@ -89,7 +91,7 @@ backend-test:
     - python3 -m unittest discover tests
 
 frontend-test:
-  stage: test
+  stage: front-test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   image: node:latest
   before_script:

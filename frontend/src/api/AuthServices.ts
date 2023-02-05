@@ -2,7 +2,7 @@ import {sendLoginData, sendLogout, sendRegisterData} from "./APIRequests";
 import store from "../store"
 import axios, {AxiosError} from "axios";
 import {errorOther} from "./ErrorOther";
-import {getIdentity} from "./DataRetrievalService";
+import {getIdentity, storage} from "./DataRetrievalService";
 
 export async function initialValidityCheck() {
     let identityJson = await getIdentity()
@@ -57,28 +57,31 @@ export async function login(username : string, password : string){
      * This method tries to log in using {@link sendLoginData}
      * the provided credentials to send a request to the API. It returns
      * the JSON, which either can be successful and then contains the user (especially the token)
-     * or not successful containing an error JSON of a specific {@link ErrorType}.
+     * or not successful containing an error JSON of a specific {@link ErrorType}. If the API responds with a success
+     * JSON the token is stored in storage and the state of vuex is changed.
      *
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-        try {
-            const response = await sendLoginData(username, password)
-            const userJson = response.data.user
-            if (userJson) {
-                localStorage.setItem('token', userJson.token)
-                await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
-            }
-            return response.data
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const serverError = error as AxiosError;
-                if (serverError && serverError.response) {
-                    return serverError.response.data;
-                }
-            }
+     try {
+        const response = await sendLoginData(username, password)
+        if (response.error != null) {
+            return response
+        }
+
+        const userJson = response.data.user
+        if (userJson == null) {
             return errorOther
         }
+
+        storage.removeItem('access_token')
+        storage.setItem('access_token', userJson.access_token)
+        await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
+        return response.data
+        }
+    catch (error) {
+        return errorOther
+    }
 }
 
 
@@ -87,27 +90,29 @@ export async function register(username : string, password : string){
      * This method tries to register a user in using {@link sendRegisterData}
      * the provided credentials to send a request to the API. It returns
      * the JSON, which either can be successful and then contains the user (especially the token)
-     * or not successful containing an error JSON of a specific {@link ErrorType}.
+     * or not successful containing an error JSON of a specific {@link ErrorType}. If the API responds with a success
+     * JSON the token is stored in storage and the state of vuex is changed.
      *
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
     try {
         const response = await sendRegisterData(username, password)
+        if (response.error != null) {
+            return response
+        }
+
         const userJson = response.data.user
-        if (userJson) {
-            localStorage.removeItem('token')
-            localStorage.setItem('token', userJson.token)
-            await store.dispatch("auth/setAuthenticated", userJson.username, userJson.token)
+        if (userJson == null) {
+            return errorOther
         }
+
+        storage.removeItem('access_token')
+        storage.setItem('access_token', userJson.access_token)
+        await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
         return response.data
-    } catch (error) {
-        if (axios.isAxiosError(error)) {
-            const serverError = error as AxiosError;
-            if (serverError && serverError.response) {
-                return serverError.response.data;
-            }
         }
+    catch (error) {
         return errorOther
     }
 }
@@ -124,19 +129,21 @@ export async function logout() {
      */
     try {
             const response = await sendLogout()
+            if (response.error != null) {
+                return response
+            }
+
             const userJson = response.data.user
+            if (userJson == null) {
+                return errorOther
+            }
+
             if ("username" in userJson) {
-                localStorage.removeItem("token")
+                storage.removeItem("access_token")
                 await store.dispatch("auth/unsetAuthenticated")
             }
             return response.data
         } catch (error) {
-            if (axios.isAxiosError(error)) {
-                const serverError = error as AxiosError;
-                if (serverError && serverError.response) {
-                    return serverError.response.data;
-                }
-            }
             return errorOther
         }
 }

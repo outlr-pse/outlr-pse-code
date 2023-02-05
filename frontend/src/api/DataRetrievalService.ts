@@ -1,6 +1,9 @@
 import {requestTokenIdentity} from "./APIRequests";
 import axios, {AxiosError} from "axios";
 import {errorOther} from "./ErrorOther";
+import {MockStorage} from "./MockStorage";
+
+export const storage = new MockStorage()
 
 export async function getIdentity() : Promise<any> {
     /**
@@ -13,12 +16,6 @@ export async function getIdentity() : Promise<any> {
         return response.data.user
     }
     catch (error) {
-        if (axios.isAxiosError(error)) {
-            const serverError = error as AxiosError;
-            if (serverError && serverError.response) {
-              return serverError.response.data;
-            }
-        }
         return errorOther
     }
 }
@@ -28,7 +25,7 @@ export function authHeader() {
      * no token is in the local storage it is a empty JSON.
      */
 
-    let token = localStorage.getItem('token')
+    let token = storage.getItem('access_token')
 
     if (token != null) {
         return {Authorization: 'Bearer ' + token}

@@ -1,18 +1,19 @@
 import {login, logout, register} from "../../../src/api/AuthServices";
-import {getIdentity} from "../../../src/api/DataRetrievalService";
+import {authHeader, getIdentity, storage} from "../../../src/api/DataRetrievalService";
 import store from "../../../src/store";
+import {requestTokenIdentity, sendLogout, sendRegisterData} from "../../../src/api/APIRequests";
 
-async function checkAuthenticationSuccessful(response, username){
-        //TO-DO: find out if null or undefined
-        expect(response.error).toBeNull()
+async function checkAuthenticationSuccessful(response: { error?: any; user: { username?: any; access_token?: any; }; }, username: string){
+        expect(response.error).not.toBeDefined()
 
-        expect(response.user.username).not.toBeNull()
-        expect(response.user.token).not.toBeNull()
-        expect(response.user.username).not.toBeNull()
-        expect(response.user.token).not.toBeNull()
+        expect(response.user.username).toBeDefined()
+        expect(response.user.access_token).toBeDefined()
+        expect(response.user.username).toBeDefined()
 
-        expect(localStorage.getItem('token')).not.toBeNull()
-        expect(await getIdentity()).toEqual(username)
+
+        expect(storage.getItem('access_token')).not.toBeNull()
+        expect((await getIdentity()).username).toBeDefined()
+        expect((await getIdentity()).username).toEqual(username)
 
         // Vuex store auth states correctly set
         expect(store.getters["auth/username"]).toEqual(username)
@@ -22,8 +23,8 @@ async function checkAuthenticationSuccessful(response, username){
 async function notAuthenticated() {
         expect(store.getters["auth/username"]).toEqual("")
         expect(store.getters["auth/isAuthenticated"]).toEqual(false)
-        expect(localStorage.getItem('token')).toBeNull()
-        expect(await getIdentity()).toEqual("")
+        expect(storage.getItem('access_token')).not.toBeDefined()
+        expect((await getIdentity()).username).not.toBeDefined()
 }
 
 describe('Authentication',  function () {
@@ -40,6 +41,7 @@ describe('Authentication',  function () {
         /*
         REGISTER with valid data - expectation: response with no error key but a user JSON
          */
+
         const response = await register(username, password)
         await checkAuthenticationSuccessful(response, username)
 
@@ -47,10 +49,9 @@ describe('Authentication',  function () {
         LOGOUT
          */
         const response_logout = await logout()
-        expect(response_logout.token).not.toBeNull()
-        expect(response_logout.error).toBeNull()
+        expect(response_logout.user.access_token).toBeDefined()
+        expect(response_logout.error).not.toBeDefined()
         await notAuthenticated()
-
        /*
        LOGIN
         */
@@ -69,8 +70,10 @@ describe('Authentication',  function () {
     test("registering with invalid password", async () => {
         const username = "SCH3LOM0"
         const password = "abcd1"
-        const response = await register(username, password)
-        expect(response.error).not.toBeNull()
+        const response2 = await register(username, password)
+        let responseL = response2
+        //const response = await register(username, password)
+        expect(response2.error).toBeDefined()
         //TO-DO
         //expect(response.error.error).toEqual(ErrorType.UserManagementError)
         expect(await getIdentity()).toEqual({})
@@ -84,9 +87,7 @@ describe('Authentication',  function () {
         await checkAuthenticationSuccessful(response, username)
         // Assumption: user with valid token can register more accounts
         const response_second_register = await register(username, password)
-        expect(response_second_register.error).not.toBeNull()
-        //TO-DO
-        //expect(response_second_register.error.errorType).toEqual(ErrorType.UserManagementError)
+        expect(response_second_register.error).toBeDefined()
     })
 
     test("logging in to registered account with wrong password", async () => {
@@ -94,7 +95,7 @@ describe('Authentication',  function () {
         const password = "s&1Hzk"
         const response = await login(username, password)
 
-        expect(response.error).not.toBeNull()
+        expect(response.error).toBeDefined()
         //TO-DO
         //expect(response.error.errorType).toEqual(ErrorType.UserManagementError)
     })
@@ -105,14 +106,14 @@ describe('Authentication',  function () {
         const password = "s&1Hzk"
 
         const response_login = await login(username, password + "F")
-        expect(response_login.error).not.toBeNull()
+        expect(response_login.error).toBeDefined()
         //TO-DO
         //expect(response_login.error.errorType).toEqual(ErrorType.UserManagementError)
     })
 
     test("logging out when not logged in", async () => {
         const response = await logout()
-        expect(response.error).not.toBeNull()
-        expect(response.error).not.toBeNull()
+        expect(response.error).toBeDefined()
+        expect(response.error).toBeDefined()
     })
 });

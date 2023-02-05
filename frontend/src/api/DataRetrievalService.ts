@@ -1,9 +1,5 @@
-import {requestTokenIdentity} from "./APIRequests";
-import axios, {AxiosError} from "axios";
+import {requestTokenIdentity, storage} from "./APIRequests";
 import {errorOther} from "./ErrorOther";
-import {MockStorage} from "./MockStorage";
-
-export const storage = new MockStorage()
 
 export async function getIdentity() : Promise<any> {
     /**

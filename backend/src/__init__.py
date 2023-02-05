@@ -1,6 +1,4 @@
-from backend.src.api.mock_classes import MockDatabase
-mock_database = MockDatabase()
-
+import init_mock_database
 from api.api import app
 from database.database_access import setup_db
 

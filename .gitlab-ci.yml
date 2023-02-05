@@ -41,6 +41,14 @@ setup_db:
     - export PGPASSWORD=$POSTGRES_PASSWORD
 
 
+frontend-build:
+    stage: build
+    image: node:latest
+    script:
+        - cd frontend
+        - npm install
+        - npm run build
+
 backend-test:
   image: python:3.10-bullseye
   stage: test

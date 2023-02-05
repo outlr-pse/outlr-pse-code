@@ -1,8 +1,7 @@
-import {sendLoginData, sendLogout, sendRegisterData} from "./APIRequests";
+import {sendLoginData, sendLogout, sendRegisterData, storage} from "./APIRequests";
 import store from "../store"
-import axios, {AxiosError} from "axios";
 import {errorOther} from "./ErrorOther";
-import {getIdentity, storage} from "./DataRetrievalService";
+import {getIdentity} from "./DataRetrievalService";
 
 export async function initialValidityCheck() {
     let identityJson = await getIdentity()

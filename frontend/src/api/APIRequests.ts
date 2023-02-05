@@ -1,10 +1,12 @@
 import axios, {AxiosError} from 'axios'
 import {authHeader} from "./DataRetrievalService";
 import {errorOther} from "./ErrorOther";
+import {MockStorage} from "./MockStorage";
 
 export const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:1337/api'
 });
+export const storage = new MockStorage()
 
 export async  function sendLogout() : Promise<any>{
     /**

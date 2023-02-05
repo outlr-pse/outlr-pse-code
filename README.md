@@ -1,4 +1,4 @@
-<div style="text-align:center;">
+<div style="text-align:center; height: 50%">
   <img src="./Logo.png" style="width:25%; height:25%;"  alt="Outlr-Logo"/>
 </div>
 

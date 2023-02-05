@@ -18,7 +18,7 @@ import re
 user_management_api = Blueprint('user_management', __name__)
 mock_database = MockDatabase()
 username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
-password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
+password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})"
 
 
 def mock_jwt_required():

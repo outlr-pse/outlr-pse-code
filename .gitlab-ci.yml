@@ -109,7 +109,7 @@ frontend-test:
     - apt-get update
     - apt-get install -y python3.10 python3-pip
     - python3 -V  # Print out python version for debugging
-    - python3 - m pip install virtualenv
+    - python3 -m pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
     - python3 -m pip install requests

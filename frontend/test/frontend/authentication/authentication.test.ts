@@ -1,7 +1,7 @@
 import {login, logout, register} from "../../../src/api/AuthServices";
-import {authHeader, getIdentity, storage} from "../../../src/api/DataRetrievalService";
+import {getIdentity} from "../../../src/api/DataRetrievalService";
 import store from "../../../src/store";
-import {axiosClient, requestTokenIdentity, sendLogout, sendRegisterData} from "../../../src/api/APIRequests";
+import {axiosClient, storage} from "../../../src/api/APIRequests";
 
 async function checkAuthenticationSuccessful(response: { error?: any; user: { username?: any; access_token?: any; }; }, username: string){
         expect(response.error).not.toBeDefined()
@@ -71,7 +71,7 @@ describe('Authentication',  function () {
         const username = "H1"
         const password = "aG_4HfioiPerglioure9!"
         const response = await register(username, password)
-        expect(response.error).not.toBeNull()
+        expect(response.error).toBeDefined()
         await notAuthenticated()
     })
 

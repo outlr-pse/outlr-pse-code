@@ -12,11 +12,12 @@ from api.experiment_api import experiment_api
 from api.user_management_api import user_management_api
 from api.odm_api import odm_api
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 import config
 
-from backend.src.api.models.error import JWTAuthError
-
 app = Flask(__name__)
+# allows requests from anywhere
+CORS(app, resources={r"/*": {"origins": "*"}})
 app.register_blueprint(experiment_api, url_prefix='/api/experiment')
 app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')
@@ -24,62 +25,6 @@ app.register_blueprint(odm_api, url_prefix='/api/odm')
 jwt = JWTManager(app)
 JWTManager(app)
 app.config["JWT_SECRET_KEY"] = config.jwt_secret
-
-
-@jwt.unauthorized_loader
-def unauthorized_token_error(error):
-    token_error = JWTAuthError(error, 0, 403)
-    response = jsonify(message=error, status=403, error=token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.expired_token_loader
-def expired_token_error(jwt_header, jwt_payload):
-    token_error = JWTAuthError('Token expired', 0, 403)
-    response = jsonify(message='Token expired', status=403, error=token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.invalid_token_loader
-def invalid_token_error(err):
-    token_error = JWTAuthError(err, 0, 403)
-    response = jsonify(message=err, status=403, error=token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.needs_fresh_token_loader
-def invalid_token_error(jwt_header, jwt_payload):
-    token_error = JWTAuthError('Token declined', 0, 403)
-    response = jsonify(message='Token declined', status=403, error=token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.revoked_token_loader
-def revoked_token_error(jwt_header, jwt_payload):
-    token_error = JWTAuthError('Token declined', 0, 403)
-    response = jsonify(message='Token declined', status=403, error=token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.token_in_blocklist_loader
-def blocklist_token_error(jwt_header, jwt_payload):
-    blocklist_token_error = JWTAuthError('Token declined', 0, 403)
-    response = jsonify(message='Token declined', status=403, error=blocklist_token_error.to_json())
-    response.status = 403
-    return response
-
-
-@jwt.token_verification_failed_loader
-def verfication_token_error(jwt_header, jwt_payload):
-    verfication_token_error = JWTAuthError('Token declined', 0, 403)
-    response = jsonify(message='Token declined', status=403, error=verfication_token_error.to_json())
-    response.status = 403
-    return response
 
 
 @app.route('/api/status', methods=['GET'])

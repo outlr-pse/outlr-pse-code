@@ -9,46 +9,84 @@ Endpoints defined:
 from flask import Blueprint, Response, jsonify, request
 from flask_jwt_extended import jwt_required
 
+from api.models import error
 from backend.src.api.mock_classes import MockDatabase
-from backend.src.api.models.error import UserManagementError
+import re
 
 user_management_api = Blueprint('user_management', __name__)
 mock_database = MockDatabase()
+username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
+password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
+
+
+def validate_username(username: str) -> bool:
+    if username is None:
+        return False
+    return bool(re.match(username_regex, username))
+
+
+def validate_password(password: str) -> bool:
+    if password is None:
+        return False
+    return bool(re.match(password_regex, password))
 
 
 @user_management_api.route('/login', methods=['POST'])
-def login() -> Response:
+def login() -> (Response, int):
     """
     Expects a username and a password in the request. If username and
     password were correct a user json (with the jwt token connected to the user) and the status code "200 OK"
     is returned, status code "401 Unauthorized" otherwise.
     """
-    username = request.json['username']
-    password = request.json['password']
+    data = request.get_json()
+    if not data:
+        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+
+    if not "username" in data:
+        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
+
+    if not "password" in data:
+        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
+    username = data['username']
+    password = data['password']
+    if username is None or not validate_username(username):
+        return jsonify(error=error.invalid_username), error.invalid_username["status"]
+    if password is None or not validate_password(password):
+        return jsonify(error=error.invalid_password), error.invalid_password["status"]
+
     user = mock_database.login_user(username, password)
     if user is None:
-        login_error = UserManagementError('User with provided credentials does not exist or password not valid', 0, 401)
-        response = jsonify(message=login_error.error_message, status=401, error=login_error.to_json())
-        response.status = 401
-        return response
+        return jsonify(error=error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
     return jsonify(user=user.to_json(), message=f'Successfully logged in as {username}', status=200)
 
 
 @user_management_api.route('/register', methods=['POST'])
-def register() -> Response:
+def register() -> (Response, int):
     """
     Expects a username and a password in the request. Inserts a new user
     into the database if username and password are valid and returns a user json
     (with the jwt token connected to the user), otherwise "409 Conflict"
     """
-    username = request.json['username']
-    password = request.json['password']
+    data = request.get_json()
+    if not data:
+        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+
+    if not "username" in data:
+        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
+
+    if not "password" in data:
+        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
+
+    username = data['username']
+    password = data['password']
+    if username is None or not validate_username(username):
+        return jsonify(error=error.invalid_username), error.invalid_username["status"]
+    if password is None or not validate_password(password):
+        return jsonify(error=error.invalid_password), error.invalid_password["status"]
+
     user = mock_database.register_user(username, password)
     if user is None:
-        register_error = UserManagementError('User with username already exists', 1, 409)
-        response = jsonify(message=register_error.error_message, status=409, error=register_error.to_json())
-        response.status = 409
-        return response
+        return jsonify(error=error.username_already_taken), error.username_already_taken["status"]
     return jsonify(user=user.to_json(), message=f'Successfully registered user - Welcome {username}!', status=200)
 
 
@@ -68,20 +106,21 @@ def logout() -> Response:
 
 
 @user_management_api.route('/get-token-identity', methods=['GET'])
-def get_token_identity() -> Response:
+def get_token_identity() -> (Response, int):
     """
     Returns the user json of the user connected to the provided JWT Token. In the case of a valid JWT Token
     "202 Accepted" is returned with the user json, otherwise an empty user json and "200 OK" is returned
     """
     headers = request.headers
     bearer = headers.get('Authorization')
-    user_to_token = None
 
-    if bearer is not None and len(bearer) >= 1:
-        token = bearer.split()[1]
-        user_to_token = mock_database.get_user_by_token(int(token))
+    if bearer is None or len(bearer) < 1:
+        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
+    token = bearer.split()[1]
+    user_to_token = mock_database.get_user_by_token(int(token))
+
     if user_to_token is None:
-        return jsonify(user={}, message=f'No user linked to token or token missing', status=200)
+        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
     else:
         response = jsonify(user=user_to_token.to_json(), message=f'Token is linked to {user_to_token.username}',
                            status=202)

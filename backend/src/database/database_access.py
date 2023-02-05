@@ -7,6 +7,8 @@ from models.base import Base
 from models.experiment.experiment import Experiment
 from models.odm.odm import ODM
 from models.user.user import User
+
+from odmprovider.pyod_scraper import PyODScraper
 import config
 
 engine = create_engine(config.db_url)
@@ -46,3 +48,11 @@ def get_odm(odm_id: int) -> ODM | None:
 
 def get_all_odms() -> list[Type[ODM]]:
     return session.query(ODM).all()
+
+
+def setup_db() -> None:
+    """Inserts all available ODMs into the database."""
+    session.query(ODM).delete()
+    odms = PyODScraper().get_odms()
+    for odm in odms:
+        add_odm(odm)

@@ -1,0 +1,23 @@
+{
+  "id":1,
+  "name":"S1",
+  "columns":[2,3],
+  "outliers":[9,10,15,28,34],
+  "rocCurve": null
+}
+
+{
+  "id":2,
+  "name":"S2",
+  "columns":[0,1,2,3],
+  "outliers":[1,7,9,10,15,28,34],
+  "rocCurve": null
+},
+
+{
+  "id":3,
+  "name":"S3",
+  "columns":[3,4,5],
+  "outliers":[10,11,17,35],
+  "rocCurve": null
+}

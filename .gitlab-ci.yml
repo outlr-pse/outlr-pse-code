@@ -1,7 +1,5 @@
 stages:          # List of stages for jobs, and their order of execution
   - build
-  - back-test
-  - front-test
   - test
   - deploy
 #
@@ -54,7 +52,7 @@ frontend-build:
 
 backend-test:
   image: python:3.10-bullseye
-  stage: back-test
+  stage: test
   services:
     - postgres:12.4
   # Change pip's cache directory to be inside the project directory since we can
@@ -92,11 +90,20 @@ backend-test:
     - python3 -m unittest discover tests
 
 frontend-test:
-  stage: front-test
+  stage: test
   services:
     - postgres:12.4
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
   image: node:latest
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
+    POSTGRES_DB: outlr
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 12345678
+    DB_HOST: postgres
+    JWT_SECRET_KEY: secret_key
+    DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
   before_script:
  # install Python
     - apt-get update

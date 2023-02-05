@@ -56,7 +56,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      * @param json
      */
     public static fromJSON(json: string): Experiment {
-        let experiment = new Experiment("", "", null, null, new ODM("", []));
+        let experiment = new Experiment("", "", null, null, new ODM(0,"", []));
         experiment.deserialize(json);
         return experiment;
     }

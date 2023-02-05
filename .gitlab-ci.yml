@@ -32,6 +32,7 @@ stages:          # List of stages for jobs, and their order of execution
 #    - docker run -p 8080:8080 --rm --name frontend testfront
 
 setup_db:
+  stage: build
   image: postgres:12.4
   services:
     - postgres:12.4

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from flask import Blueprint, Response, jsonify, request
 
-from backend.src import mock_database
+from backend.src.init_mock_database import mock_database
 from backend.src.api.models import error
 
 odm_api = Blueprint('odm', __name__)

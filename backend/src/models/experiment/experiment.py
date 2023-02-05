@@ -16,6 +16,7 @@ class Experiment(Base):
     param_values = mapped_column(JSON)
     subspace_logic = mapped_column(JSON)
     experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+    dataset_name: Mapped[str]
 
     # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
     dataset = None

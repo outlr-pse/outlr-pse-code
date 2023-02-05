@@ -49,13 +49,13 @@ username_already_taken = {
 token_not_provided = {
     "error": "token_not_provided",
     "message": "The provided token is not linked to any User or no token provided",
-    "status": 200,
+    "status": 401,
 }
 
 token_not_linked = {
     "error": "token_not_linked",
     "message": "The provided token is not linked to any User or no token provided",
-    "status": 200,
+    "status": 401,
 }
 
 dataset_not_valid = {

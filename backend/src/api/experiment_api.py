@@ -1,21 +1,23 @@
-"""Defines the /experiment API endpoints.
+"""Defines the experiment API endpoints.
 
 Endpoints defined:
-    validate-dataset
-    validate-ground-truth
-    get-result/<exp_id>
-    get-all
-    create
-    download-result/<exp_id>
+    /validate-dataset
+    /validate-ground-truth
+    /get-result/<exp_id>
+    /get-all
+    /create
+    /download-result/<exp_id>
 """
 import json
 from pathlib import Path
-import random
+
 from flask import Blueprint, Response, jsonify, send_file, request
 
-from backend.src import mock_database
+
 from backend.src.api.models import error
 import random
+
+from backend.src.init_mock_database import mock_database
 
 experiment_api = Blueprint('experiment', __name__)
 

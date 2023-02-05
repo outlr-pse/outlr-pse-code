@@ -16,6 +16,7 @@ user_management_api = Blueprint('user_management', __name__)
 username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
 password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})"
 
+
 def validate_username(username: str) -> bool:
     if username is None:
         return False
@@ -39,10 +40,10 @@ def login() -> (Response, int):
     if not data:
         return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
 
-    if not "username" in data:
+    if "username" not in data:
         return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
 
-    if not "password" in data:
+    if "password" not in data:
         return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
     username = data['username']
     password = data['password']
@@ -68,10 +69,10 @@ def register() -> (Response, int):
     if not data:
         return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
 
-    if not "username" in data:
+    if "username" not in data:
         return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
 
-    if not "password" in data:
+    if "password" not in data:
         return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
 
     username = data['username']
@@ -85,7 +86,6 @@ def register() -> (Response, int):
     if user is None:
         return jsonify(error=error.username_already_taken), error.username_already_taken["status"]
     return jsonify(user=user.to_json(), message=f'Successfully registered user - Welcome {username}!', status=200)
-
 
 
 @user_management_api.route('/logout', methods=['POST'])
@@ -123,7 +123,7 @@ def get_token_identity() -> (Response, int):
     bearer = headers.get('Authorization')
 
     if bearer is None or len(bearer) < 1:
-        response = jsonify(user={}, message=f'No token provided',
+        response = jsonify(user={}, message="No token provided",
                            status=202)
         response.status = 202
         return response
@@ -131,7 +131,7 @@ def get_token_identity() -> (Response, int):
     user_to_token = mock_database.get_user_by_token(int(token))
 
     if user_to_token is None:
-        response = jsonify(user={}, message=f'Token is not linked',
+        response = jsonify(user={}, message="No token provided",
                            status=202)
         response.status = 202
         return response

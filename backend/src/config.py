@@ -17,6 +17,7 @@ import os
 
 config = configparser.ConfigParser()
 config.read('../config.ini')
-
-jwt_secret: str = os.getenv("JWT_SECRET_KEY") or config.get('jwt', 'secret_key')
-db_url: str = os.getenv("DATABASE_URL") or config.get('database', 'url')
+#os.getenv("JWT_SECRET_KEY") or config.get('jwt', 'secret_key')
+jwt_secret: str = "SECRET-KEY"
+#os.getenv("DATABASE_URL") or config.get('database', 'url')
+db_url: str = "postgresql://postgres:12345678@localhost:5432/outlr"

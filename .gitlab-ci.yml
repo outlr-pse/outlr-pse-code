@@ -91,7 +91,7 @@ backend-test:
 frontend-test:
   stage: test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  image: node:latest
+  image: python3.10-nodejs19
   script:
     - cd frontend
     - npm install -g jest

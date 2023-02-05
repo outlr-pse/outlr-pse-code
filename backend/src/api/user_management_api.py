@@ -7,17 +7,14 @@ Endpoints defined:
     /check-token
 """
 from flask import Blueprint, Response, jsonify, request
-from flask_jwt_extended import jwt_required
-
-from api.models import error
-from backend.src.api.mock_classes import MockDatabase
 import re
 
-user_management_api = Blueprint('user_management', __name__)
-mock_database = MockDatabase()
-username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
-password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})"
+from backend.src import mock_database
+from backend.src.api.models import error
 
+user_management_api = Blueprint('user_management', __name__)
+username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
+password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})"
 
 def validate_username(username: str) -> bool:
     if username is None:
@@ -90,19 +87,30 @@ def register() -> (Response, int):
     return jsonify(user=user.to_json(), message=f'Successfully registered user - Welcome {username}!', status=200)
 
 
+
 @user_management_api.route('/logout', methods=['POST'])
-@jwt_required()
-def logout() -> Response:
+# jwt_required()
+def logout() -> (Response, int):
     """
     Requires JWT token. Logs out the user connected to the JWT Token, which means deleting the access token
     connected to the user.
     """
+
     headers = request.headers
+    if headers is None:
+        return jsonify(error=error.no_header_provided), error.no_header_provided["status"]
     bearer = headers.get('Authorization')
+
+    if bearer is None or len(bearer) < 1:
+        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
     token = bearer.split()[1]
-    user = mock_database.get_user_by_token(int(token))
-    user.delete_token()
-    return jsonify(user=user.to_json(), message="Logged out", status=200)
+    user_to_token = mock_database.get_user_by_token(int(token))
+
+    if user_to_token is not None:
+        user_to_token.delete_token()
+        return jsonify(user=user_to_token.to_json(), message="Logged out", status=200)
+    else:
+        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
 
 
 @user_management_api.route('/get-token-identity', methods=['GET'])
@@ -115,12 +123,18 @@ def get_token_identity() -> (Response, int):
     bearer = headers.get('Authorization')
 
     if bearer is None or len(bearer) < 1:
-        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
+        response = jsonify(user={}, message=f'No token provided',
+                           status=202)
+        response.status = 202
+        return response
     token = bearer.split()[1]
     user_to_token = mock_database.get_user_by_token(int(token))
 
     if user_to_token is None:
-        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
+        response = jsonify(user={}, message=f'Token is not linked',
+                           status=202)
+        response.status = 202
+        return response
     else:
         response = jsonify(user=user_to_token.to_json(), message=f'Token is linked to {user_to_token.username}',
                            status=202)

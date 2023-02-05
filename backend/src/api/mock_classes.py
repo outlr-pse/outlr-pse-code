@@ -25,7 +25,7 @@ class MockUser:
     def to_json(self):
         """Returns a dictionary to the object"""
         return {"username": self.username,
-                "token": self.token}
+                "access_token": self.token}
 
 
 class MockDatabase:

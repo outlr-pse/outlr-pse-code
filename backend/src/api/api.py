@@ -15,7 +15,6 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 import config
 
-
 app = Flask(__name__)
 # allows requests from anywhere
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -24,7 +23,6 @@ app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')
 
 jwt = JWTManager(app)
-JWTManager(app)
 app.config["JWT_SECRET_KEY"] = config.jwt_secret
 
 

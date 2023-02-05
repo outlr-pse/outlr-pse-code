@@ -1,17 +1,38 @@
+"""ODM model.
+
+This module contains the ODM model, which is used to store the ODMs.
+
+"""
+from typing import Any
+
 from models.base import Base
-from sqlalchemy import Column, Integer, Text
-from sqlalchemy.orm import relationship
+from models.dataset.dataset import Dataset
+from models.odm.hyper_parameter import HyperParameter
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 
 class ODM(Base):
-    __tablename__ = 'odm'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(Text)
-    hyper_parameters = relationship("hyper_parameter", back_populates="odm")
+    __tablename__: str = 'odm'
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str]
+    hyper_parameters: Mapped[list["HyperParameter"]] = relationship()
+    deprecated: Mapped[bool]
 
     def to_json(self) -> dict:
+        """Converts the ODM object to a JSON object"""
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters],
+            'deprecated': self.deprecated
         }
 
+    def check_params(self, args: dict[str, Any]) -> bool:
+        """Checks if the given parameters are valid for this ODM"""
+        for param in self.hyper_parameters:
+            if repr(type(args[param.name])) != param.param_type:
+                return False
+
+    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
+        """Runs the ODM on the given subspace"""
+        raise NotImplementedError

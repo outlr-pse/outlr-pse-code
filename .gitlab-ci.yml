@@ -1,0 +1,133 @@
+# This file is a template, and might need editing before it works on your project.
+# This is a sample GitLab CI/CD configuration file that should run without any modifications.
+# It demonstrates a basic 3 stage CI/CD pipeline. Instead of real tests or scripts,
+# it uses echo commands to simulate the pipeline execution.
+#
+# A pipeline is composed of independent jobs that run scripts, grouped into stages.
+# Stages run in sequential order, but jobs within stages run in parallel.
+#
+# For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
+#
+# You can copy and paste this template into a new `.gitlab-ci.yml` file.
+# You should not add this template to an existing `.gitlab-ci.yml` file by using the `include:` keyword.
+#
+# To contribute improvements to CI/CD templates, please follow the Development guide at:
+# https://docs.gitlab.com/ee/development/cicd/templates.html
+# This specific template is located at:
+# https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+  - test
+  - deploy
+#
+#services:
+#  - docker:dind
+
+
+#build:docker:
+#  image: docker:20-dind
+#  variables:
+#    # using "docker" as the host is only possible if you alias the service below
+#    DOCKER_HOST: tcp://docker:2375
+#    # could be wrong here but although Docker defaults to overlay2,
+#    # Docker-in-Docker (DIND) does not according to the following GitLab doc:
+#    # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver
+#    DOCKER_DRIVER: overlay2
+#    DOCKER_TLS_CERTDIR: ""
+#  services:
+#    - name: docker:20-dind
+#      alias: docker
+#      # in our experience although you'd assume this would be sufficient, this did
+#      # nothing to prevent connection errors without `DOCKER_TLS_CERTDIR` being set
+#      # to an empty string, and I would call that beyond mildly infuriating.
+#      command: ["--tls=false"]
+#  script:
+#    - cd frontend
+#    - docker build -t testfront .
+#    - docker run -p 8080:8080 --rm --name frontend testfront
+
+setup_db:
+  image: postgres:12.4
+  services:
+    - postgres:12.4
+  variables:
+    POSTGRES_DB: outlr
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 12345678
+  script:
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+
+
+frontend-build:
+    stage: build
+    image: node:latest
+    script:
+        - cd frontend
+        - npm install
+        - npm run build
+
+backend-test:
+  image: python:3.10-bullseye
+  stage: test
+  services:
+    - postgres:12.4
+  # Change pip's cache directory to be inside the project directory since we can
+  # only cache local items.
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
+  # Pip's cache doesn't store the python packages
+  # https://pip.pypa.io/en/stable/reference/pip_install/#caching
+  #
+  # If you want to also cache the installed packages, you have to install
+  # them in a virtualenv and cache it as well.
+    POSTGRES_DB: outlr
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 12345678
+    DB_HOST: postgres
+    JWT_SECRET_KEY: secret_key
+    DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
+
+  cache:
+    paths:
+      - .cache/pip
+      - venv/
+  before_script:
+      - python3 -V  # Print out python version for debugging
+      - echo $PYTHONPATH
+      - pip3 install virtualenv
+      - virtualenv venv
+      - source venv/bin/activate
+      - pip3 install requests
+      - pip3 install python-dotenv
+      - cd backend
+      - pip3 install -r requirements.txt
+  script:
+    - python3 -m unittest discover tests
+
+frontend-test:
+  stage: test
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  image: node:latest
+  script:
+    - cd frontend
+    - npm install -g jest
+    - npm install --save-dev jest-junit
+    - npm install --save-dev ts-jest @types/jest typescript
+    - jest --ci --coverage --updateSnapshot
+
+lint-test-job:   # This job also runs in the test stage.
+  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  script:
+    - echo "Linting code... This will take about 10 seconds."
+    - sleep 10
+    - echo "No lint issues found."
+
+#deploy-job:      # This job runs in the deploy stage.
+#  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#  environment: production
+#  script:
+#    - echo "Deploying application..."
+#    - docker run -it -p 8080:80 --rm --name outlr-web-deployed outlr-web
+#    - echo "Application successfully deployed."

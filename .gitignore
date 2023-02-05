@@ -1,2 +1,5 @@
 .idea/
 package-lock.json
+/backend/config.ini
+
+/node_modules/

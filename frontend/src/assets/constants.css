@@ -1,0 +1,44 @@
+/* global constants */
+:root {
+    /* color palette*/
+    --palette-purple-05: #f4effd;
+    --palette-purple-1: #e9dffc;
+    --palette-purple-15: #decffa;
+    --palette-purple-2: #d3bff9;
+    --palette-purple-3: #be9ff6;
+    --palette-purple-4: #a87ff3;
+    --palette-purple-5: #925ff0;
+    --palette-purple-6: #784dc7;
+    --palette-purple-7: #5E3A9E;
+    --palette-purple-8: #432876;
+    --palette-purple-85: #361F61;
+    --palette-purple-9: #29154D;
+    --palette-purple-95: #1C0C38;
+    --palette-purple-10: #0F0324;
+
+    --palette-grey--1: #E6E6E6;
+    --palette-grey-05: #9F9F9F;
+    --palette-grey-1: #909090;
+    --palette-grey-15: #737373;
+    --palette-grey-2: #646464;
+    --palette-grey-3: #464646;
+    --palette-grey-4: #292929;
+    --palette-grey-5: #0B0B0B;
+    --palette-grey-6: #090909;
+    --palette-grey-7: #070707;
+    --palette-grey-8: #040404;
+    --palette-grey-85: #030303;
+    --palette-grey-9: #020202;
+    --palette-grey-95: #010101;
+    --palette-grey-10: #000000;
+
+
+}
+
+
+/* different variables*/
+:root {
+  --router-view-height: 100vh;
+  --top-bar-height: 75px;
+  --top-bar-circle-size: 35px;
+}

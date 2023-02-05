@@ -1,0 +1,34 @@
+{
+  "operation": {
+    "operator": "and",
+    "operands": [
+      {
+        "operation": {
+          "operator": "and",
+          "operands": [
+            {
+              "literal": {
+                "subspace": {}
+              }
+            },
+            {
+              "literal": {
+                "subspace": {}
+              }
+            }
+          ]
+        }
+      },
+      {
+        "literal": {
+          "subspace": {}
+        }
+      },
+      {
+        "literal": {
+          "subspace": {}
+        }
+      }
+    ]
+  }
+}

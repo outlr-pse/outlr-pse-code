@@ -19,6 +19,7 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
 
     return dataset
 
+
 def csv_to_ndarray(groundtruth: str) -> np.ndarray:
     """Converts a CSV string to a groundtruth array.
     Args:
@@ -29,6 +30,7 @@ def csv_to_ndarray(groundtruth: str) -> np.ndarray:
     df = pd.read_csv(groundtruth)
 
     return df.to_numpy(dtype=int)
+
 
 def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
 

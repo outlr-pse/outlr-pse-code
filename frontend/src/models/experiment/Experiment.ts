@@ -45,8 +45,8 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
             dataset: this.dataset,
             dataset_name: this.datasetName,
             ground_truth: this.groundTruth,
-            odm: this.odm.serialize(),
-            subspaceLogic: this.subspaceLogic,
+            odm: this.odm,
+            subspace_logic: this.subspaceLogic,
         };
 
     }

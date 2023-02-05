@@ -1,4 +1,9 @@
 import {Experiment} from '../../../src/models/experiment/Experiment';
+import {ODM} from "../../../src/models/odm/ODM";
+import {Hyperparameter} from "../../../src/models/odm/Hyperparameter";
+import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
+import {Subspace} from "../../../src/models/results/Subspace";
+
 describe('Experiment', () => {
 
 
@@ -27,6 +32,29 @@ describe('Experiment', () => {
         const serialized = "{\"id\":3,\"name\":\"ExampleExperiment\",\"dataset_name\":\"ExampleDataset\",\"odm\":{\"name\":\"COPOD\",\"hyper_parameters\":[{\"name\":\"contamination\",\"type\":\"numeric\",\"optional\":true},{\"name\":\"n_jobs\",\"type\":\"integer\",\"optional\":true}]},\"param_values\":{\"contamination\":0.1,\"n_jobs\":-1},\"subspace_logic\":{\"operation\":{\"operator\":\"or\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}}]}}]}},\"experiment_result\":{\"accuracy\":null,\"execution_date\":\"2018-01-01T00:00:00.000Z\",\"execution_time\":29,\"result_space\":{\"id\":13,\"name\":\"Result\",\"columns\":[],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}}"
         const deserialized = Experiment.fromJSON(serialized);
         expect(deserialized).toBeInstanceOf(Experiment);
+    })
+
+    it('create experiment',  () => {
+        let odm = new ODM("lunar", []);
+        odm.id = 14;
+        odm.hyperParameters = [
+            new Hyperparameter(15,"contamination", "value",HyperparameterType.NUMERIC, true),
+            new Hyperparameter(36,"n_jobs","value2", HyperparameterType.INTEGER, true),
+        ];
+        const experiment = new Experiment(
+          "exp1",
+            "dataset1",
+          null,
+          null,
+          odm,
+      );
+        const serialized = "{\"id\":3,\"name\":\"ExampleExperiment\",\"dataset_name\":\"ExampleDataset\",\"odm\":{\"name\":\"COPOD\",\"hyper_parameters\":[{\"name\":\"contamination\",\"type\":\"numeric\",\"optional\":true},{\"name\":\"n_jobs\",\"type\":\"integer\",\"optional\":true}]},\"param_values\":{\"contamination\":0.1,\"n_jobs\":-1},\"subspace_logic\":{\"operation\":{\"operator\":\"or\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}}]}}]}},\"experiment_result\":{\"accuracy\":null,\"execution_date\":\"2018-01-01T00:00:00.000Z\",\"execution_time\":29,\"result_space\":{\"id\":13,\"name\":\"Result\",\"columns\":[],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}}"
+        const deserialized = Experiment.fromJSON(serialized);
+        experiment.subspaceLogic = deserialized.subspaceLogic;
+        const experimentJson = experiment.serialize();
+        expect(experimentJson).toBe(
+            "{\"name\":\"exp1\",\"dataset\":null,\"dataset_name\":\"dataset1\",\"ground_truth\":null,\"odm\":{\"id\":14,\"hyper_parameters\":{\"15\":\"value\",\"36\":\"value2\"}},\"subspace_logic\":{\"operation\":{\"operator\":\"or\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}}]}}]}}}"
+        )
     })
 
 });

@@ -27,7 +27,7 @@ export class ODM implements JSONSerializable {
         }
         return {
             id: this.id,
-            hyper_parameters: JSON.stringify(hyperParametersJSON)
+            hyper_parameters: hyperParametersJSON
         };
     }
 

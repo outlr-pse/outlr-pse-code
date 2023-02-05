@@ -15,6 +15,7 @@ from flask import Blueprint, Response, jsonify, send_file, request
 
 from backend.src import mock_database
 from backend.src.api.models import error
+import random
 
 experiment_api = Blueprint('experiment', __name__)
 
@@ -30,7 +31,7 @@ single_experiment = (not no_experiments) and False
 
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
-#jwt_required()
+# jwt_required()
 def validate_dataset() -> (Response, int):
     """
     Requires a JWT access token. Expects a dataset as a CSV file in the
@@ -56,7 +57,7 @@ def validate_dataset() -> (Response, int):
 
 
 @experiment_api.route('/validate-ground-truth', methods=['POST'])
-#jwt_required()
+# jwt_required()
 def validate_ground_truth() -> (Response, int):
     """
     Requires a jwt access token. Expects a ground truth file as a CSV file in
@@ -82,7 +83,7 @@ def validate_ground_truth() -> (Response, int):
 
 
 @experiment_api.route('/get-result/<int:exp_id>', methods=['GET'])
-#jwt_required()
+# jwt_required()
 def get_result(exp_id: int) -> (Response, int):
     """
     Requires a jwt access token. Expects the experiment id in the request.
@@ -113,7 +114,7 @@ def get_result(exp_id: int) -> (Response, int):
 
 
 @experiment_api.route('/get-all', methods=['GET'])
-#jwt_required()
+# jwt_required()
 def get_all() -> Response:
     """
     Requires a jwt access token. Returns a list of all experiments the user
@@ -153,8 +154,9 @@ def get_all() -> Response:
     else:
         return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
 
+
 @experiment_api.route('/create', methods=['POST'])
-#jwt_required()
+# jwt_required()
 def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
@@ -175,7 +177,7 @@ def create() -> (Response, int):
         data = request.get_json()
         if not data:
             return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
-        if not "experiment" in data:
+        if "experiment" not in data:
             return jsonify(error=error.no_experiment_provided), error.no_experiment_provided["status"]
 
         experiment = data["experiment"]
@@ -190,7 +192,7 @@ def create() -> (Response, int):
 
 
 @experiment_api.route('/download-result/<int:exp_id>', methods=['GET'])
-#jwt_required()
+# jwt_required()
 def download_result(exp_id: int) -> (Response, int):
     """
     Requires a jwt access token. Expects the experiment id in the request.

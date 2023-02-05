@@ -3,7 +3,7 @@ import {authHeader} from "./DataRetrievalService";
 import {errorOther} from "./ErrorOther";
 
 const axiosClient = axios.create({
-    baseURL: 'http://127.0.0.1:5012/api'
+    baseURL: 'http://127.0.0.1:1337/api'
 });
 
 export async  function sendLogout() : Promise<any>{

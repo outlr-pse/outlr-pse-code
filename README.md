@@ -1,5 +1,5 @@
 <div style="text-align:center;">
-  <img src="./Logo.svg" style="width:66%; height:auto;"  alt="Outlr-Logo"/>
+  <img src="./Logo.png" style="width:66%; height:66%;"  alt="Outlr-Logo"/>
 </div>
 
 # PSE Implementation

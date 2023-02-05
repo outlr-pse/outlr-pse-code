@@ -1,12 +1,12 @@
-"""Defines the /experiment API endpoints.
+"""Defines the experiment API endpoints.
 
 Endpoints defined:
-    validate-dataset
-    validate-ground-truth
-    get-result/<exp_id>
-    get-all
-    create
-    download-result/<exp_id>
+    /validate-dataset
+    /validate-ground-truth
+    /get-result/<exp_id>
+    /get-all
+    /create
+    /download-result/<exp_id>
 """
 import json
 from pathlib import Path

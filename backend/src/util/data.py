@@ -5,7 +5,6 @@ from models.dataset.dataset import Dataset
 
 
 def csv_to_dataset(name: str, dataset: str) -> Dataset:
-
     """Converts a CSV string to a Dataset object.
     Args:
         name (str): The name of the dataset.
@@ -20,26 +19,24 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
     return dataset
 
 
-def csv_to_ndarray(groundtruth: str) -> np.ndarray:
-    """Converts a CSV string to a groundtruth array.
+def csv_to_ndarray(csv: str) -> np.ndarray:
+    """Converts a CSV file to a numpy ndarray.
     Args:
-        groundtruth (str): The path to the CSV file.
+        csv (str): The path to the CSV file.
     Returns:
-        np.ndarray: The groundtruth array.
+        np.ndarray: The numpy ndarray array.
     """
-    df = pd.read_csv(groundtruth)
+    df = pd.read_csv(csv)
 
     return df.to_numpy(dtype=int)
 
 
 def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
-
-    """Converts a CSV string to a Dataset object.
+    """Converts numpy ndarray to a CSV file.
     Args:
-        name (str): The name of the dataset.
-        dataset (str): The path to the CSV file.
+        path (str): The path to the CSV file.
+        arr (np.ndarray): The numpy ndarray array.
     Returns:
-        Dataset: The Dataset object.
-
+        None
     """
     pd.DataFrame(arr).to_csv(path, index=False, header=False)

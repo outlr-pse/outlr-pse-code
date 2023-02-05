@@ -91,7 +91,7 @@ backend-test:
 frontend-test:
   stage: test
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  image: python3.10-nodejs19
+  image: python-nodejs:python3.10-nodejs19
   before_script:
     - cd backend
     - pip3 install -r requirements.txt

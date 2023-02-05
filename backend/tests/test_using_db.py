@@ -23,6 +23,7 @@ class TestDBAccess(unittest.TestCase):
         exp.subspace_logic = {"a": 1}
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]
+        exp.dataset_name = "datasatasat"
         return exp
 
     @classmethod

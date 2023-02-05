@@ -63,7 +63,8 @@ class Subspace(Base):
             "id": self.id,
             "name": self.name,
             "columns": self.columns if self.columns is not None else [],
-            "outliers": [outlier.index for outlier in self.outliers]
+            "outliers": [outlier.index for outlier in self.outliers],
+            "roc_curve": None
         }
 
 

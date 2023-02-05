@@ -33,8 +33,11 @@
     "tol": 0.5,
     "contamination": 0.1
   },
-  "running": false,
-  "accuracy": 0.97,
-  "execution_date": "2023-01-27T00:20:17.102Z",
-  "execution_time": 20
+  "experiment_result": {
+    "id": 23,
+    "running": false,
+    "accuracy": 0.97,
+    "execution_date": "2023-01-27T00:20:17.102Z",
+    "execution_time": 20
+  }
 }

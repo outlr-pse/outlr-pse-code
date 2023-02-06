@@ -65,4 +65,3 @@ def token_revoked_callback(header, payload):
 @app.route('/api/status', methods=['GET'])
 def status() -> Response:
     return jsonify({'status': 'running'})
-

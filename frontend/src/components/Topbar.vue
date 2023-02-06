@@ -11,24 +11,33 @@
          </div>
 
          <div v-else>
-           <Button text="Log in" :button-type="ButtonType.TRANSPARENT" />
+           <Button text="Log in" :button-type="ButtonType.TRANSPARENT"  @buttonClick="this.$router.push('/login')"/>
            <div style="width:2px; height:auto; display:inline-block;" />
-           <Button style="display: inline-block" @click="() => this.$router.push('/signup')" style-classes="outline" button-height="45px" button-width="104px" text="Sign up" />
+           <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="() => this.$router.push('/signup')"/>
          </div>
        </div>
      </div>
 </template>
 
 <script>
-import {ButtonType} from "./basic/button/ButtonType";
 import Button from "./basic/button/Button.vue";
+import {ButtonType} from "./basic/button/ButtonType";
+import {RouterLink} from "vue-router";
 
 export default {
   name: "Topbar",
-  components: {Button},
   computed: {
     ButtonType() {
       return ButtonType
+    }
+  },
+  components: {
+    Button,
+    RouterLink
+  },
+  methods: {
+    push() {
+      this.$router.push('/login')
     }
   }
 }

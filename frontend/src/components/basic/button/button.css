@@ -40,9 +40,8 @@ button:focus-visible {
 
 }
 .outline {
-  background-color: var(--color-background);
   border-color: var(--color-stroke);
-
+  background-color: transparent;
 }
 .transparent {
     background-color: transparent;

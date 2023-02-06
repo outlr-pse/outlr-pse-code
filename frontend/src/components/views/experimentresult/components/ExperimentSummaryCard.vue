@@ -4,10 +4,10 @@
       Summary
     </div>
     <div style="border: 1px solid var(--color-stroke);"></div>
-    <div style="height: 20vh; width: 25vw;padding-left: 2vw;padding-top: 2.5vh; padding-bottom: 2.5vh">
+    <div class="content">
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.odm') }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.odm') + ":" }}
         </div>
         <div>
           {{ experiment.odm.name }}
@@ -15,15 +15,15 @@
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult.accuracy }}
+          {{ experiment.experimentResult.accuracy + "%" }}
         </div>
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') + ":" }}
         </div>
         <div>
           {{
@@ -35,15 +35,15 @@
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.executionTime') }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.executionTime') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult.executionTime }}
+          {{ time }}
         </div>
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') + ":" }}
         </div>
         <div>
           {{ experiment.experimentResult.resultSpace.outliers.length }}
@@ -69,13 +69,28 @@ import {ExperimentResult} from "../../../../models/results/ExperimentResult";
 export default defineComponent({
   name: "ExperimentSummaryCard",
   components: {Card},
+  computed: {
+    time() {
+      let time = this.experiment.experimentResult?.executionTime;
+      if (time == null) {
+        return "0h 0m 0s 0ms 0µs";
+      }
+      let hours = Math.floor(time / 3600000000);
+      let minutes = Math.floor((time % 3600000000) / 60000000);
+      let seconds = Math.floor(((time % 3600000000) % 60000000) / 1000000);
+      let milliseconds = Math.floor(((time % 3600000000) % 60000000) % 1000000 / 1000);
+      let microseconds = Math.floor((((time % 3600000000) % 60000000) % 1000000) % 1000);
+      return  (hours != 0? hours + "h " : "")
+          + (minutes != 0? minutes + "m " : "")
+          + (seconds != 0? seconds + "s " : "")
+          + (milliseconds != 0? milliseconds + "ms " : "")
+          + (microseconds != 0? microseconds + "µs" : "");
+    }
+  },
   props: {
     experiment: {
       type: Experiment,
-      required: false,
-      default: () => {
-        return Experiment.fromJSON("{\"id\":3,\"name\":\"ExampleExperiment\",\"dataset_name\":\"ExampleDataset\",\"odm\":{\"name\":\"COPOD\",\"hyper_parameters\":[{\"name\":\"contamination\",\"type\":\"numeric\",\"optional\":true},{\"name\":\"n_jobs\",\"type\":\"integer\",\"optional\":true}]},\"param_values\":{\"contamination\":0.1,\"n_jobs\":-1},\"subspace_logic\":{\"operation\":{\"operator\":\"or\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":1,\"name\":\"S1\",\"columns\":[2,3],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}}]}},{\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}}]}}]}},\"experiment_result\":{\"accuracy\":null,\"execution_date\":\"2018-01-01T00:00:00.000Z\",\"execution_time\":29,\"result_space\":{\"id\":13,\"name\":\"Result\",\"columns\":[],\"outliers\":[9,10,15,28,34],\"roc_curve\":null}}}")
-      },
+      required: true,
     },
   },
 })
@@ -92,7 +107,7 @@ export default defineComponent({
 
 .row {
   display: grid;
-  grid-template-columns: 75% 1fr;
+  grid-template-columns: 37vh 1fr;
   text-align: left;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;
@@ -100,6 +115,12 @@ export default defineComponent({
 
 .textLeft {
   color: var(--color-stroke);
+}
+
+.content {
+  height: 20vh;
+  width: max-content;
+  padding: 2.5vh 2vw;
 }
 
 </style>

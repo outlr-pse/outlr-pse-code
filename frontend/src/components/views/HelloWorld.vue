@@ -4,6 +4,7 @@ import {Languages} from "../../language/Languages";
 import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
 import Tip from "../basic/Tip.vue";
+import ExperimentSummaryCard from "./experimentresult/components/ExperimentSummaryCard.vue";
 
 defineProps<{ msg: string }>()
 
@@ -13,6 +14,8 @@ const count = ref(0)
 
 <template>
 
+
+  <ExperimentSummaryCard/>
   <Tip text="Hello Simon mach einfach irgendwas einfach irgendwas genau irgenwdas an text schreibst du jetzt da hin und noch bisschen mehr als nur irgendwas"></Tip>
 
   <Button text="Run experiment" :button-type="ButtonType.ACTIVE" :size="[421, 78]" :text-size="[30, 900]"/>

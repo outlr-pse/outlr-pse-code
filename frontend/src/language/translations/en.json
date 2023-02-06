@@ -1,6 +1,15 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "odm": "ODM",
+        "accuracy": "Accuracy",
+        "executionDate": "Execution Date",
+        "executionTime": "Execution Time",
+        "detectedOutliers": "Number of detected outliers"
+      }
+    }
   }
 }

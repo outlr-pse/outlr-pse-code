@@ -86,6 +86,8 @@ backend-test:
       - pip3 install python-dotenv
       - cd backend
       - pip3 install -r requirements.txt
+      - pip3 install combo
+      - pip3 install suod
   script:
     - python3 -m unittest discover tests
 

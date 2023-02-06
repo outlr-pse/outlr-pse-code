@@ -1,10 +1,10 @@
 <template>
-dashboard
+
 </template>
 
-<script lang="ts">
+<script>
 export default {
-  name: "Dashboard"
+  name: "DashboardTable"
 }
 </script>
 

@@ -18,7 +18,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult.accuracy + "%" }}
+          {{ experiment.experimentResult?.accuracy + "%" }}
         </div>
       </div>
       <div class="row">
@@ -27,9 +27,9 @@
         </div>
         <div>
           {{
-            experiment.experimentResult.executionDate.getDay()
-            + "." + (experiment.experimentResult.executionDate.getMonth() + 1)
-            + "." + experiment.experimentResult.executionDate.getFullYear()
+            experiment.experimentResult?.executionDate.getDay()
+            + "." + (experiment.experimentResult?.executionDate.getMonth() + 1)
+            + "." + experiment.experimentResult?.executionDate.getFullYear()
           }}
         </div>
       </div>
@@ -46,7 +46,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult.resultSpace.outliers.length }}
+          {{ experiment.experimentResult?.resultSpace.outliers.length }}
         </div>
       </div>
     </div>

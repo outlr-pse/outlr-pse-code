@@ -38,6 +38,10 @@ def get_user(user_id: int) -> User | None:
     return session.get(User, user_id)
 
 
+def get_user_by_username(username: str) -> User | None:
+    return session.query(User).filter_by(name=username).first()
+
+
 def add_odm(odm: ODM):
     session.add(odm)
     session.commit()

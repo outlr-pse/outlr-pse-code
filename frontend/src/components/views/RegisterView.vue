@@ -1,5 +1,5 @@
 <template>
-
+Register View
 </template>
 
 <script>

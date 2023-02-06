@@ -1,5 +1,5 @@
 <template>
-  Welcome!
+  Landing page
 </template>
 
 <script>

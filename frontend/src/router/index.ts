@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from "../components/views/LandingPageView.vue";
+import store from "../store";
 const routes = [
   {
     path: '/',
@@ -32,6 +33,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/experiment',
+    name: "create-experiment-fallback",
+    component: () => import('../components/views/CreateExperimentView.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/create',
     name: "create-experiment",
     component: () => import('../components/views/CreateExperimentView.vue'),
@@ -48,7 +55,7 @@ const router = createRouter({
   routes
 })
 
-/*
+
 router.beforeEach((to, from, next) => {
   if ((to.path === '/login' || to.path === '/register') && store.getters['auth/is_authenticated']) {
     next('/')
@@ -62,7 +69,6 @@ router.beforeEach((to, from, next) => {
 
   next();
 })
-*/
 
 
 export default router

@@ -22,6 +22,6 @@ class HyperParameter(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "param_type": self.param_type,
+            "type": self.param_type,
             "optional": self.optional
         }

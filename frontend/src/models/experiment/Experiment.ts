@@ -18,6 +18,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     odm: ODM;
     subspaceLogic: SubspaceLogic | null;
     experimentResult: ExperimentResult | null;
+    running: boolean = false;
 
     constructor(name: string,
                 datasetName: string | null,
@@ -33,6 +34,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         this.odm = odm;
         this.subspaceLogic = subspaceLogic != undefined ? subspaceLogic : null;
         this.experimentResult = null;
+        this.running = false;
     }
 
     /**
@@ -56,7 +58,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      * @param json
      */
     public static fromJSON(json: string): Experiment {
-        let experiment = new Experiment("", "", null, null, new ODM(0,"", []));
+        let experiment = new Experiment("", "", null, null, new ODM(0, "", []));
         experiment.deserialize(json);
         return experiment;
     }
@@ -71,12 +73,17 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         let subspaceMap = new Map<number, Subspace>();
         let outlierMap = new Map<number, Outlier>();
 
-        if(jsonObject.subspace_logic != null){
+        if (jsonObject.subspace_logic != null) {
             this.subspaceLogic = SubspaceLogic.fromJSONObject(jsonObject.subspace_logic, subspaceMap, outlierMap);
         } else {
             this.subspaceLogic = null;
         }
-        this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experiment_result, subspaceMap, outlierMap);
+        if (jsonObject.experiment_result != undefined) {
+            this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experiment_result, subspaceMap, outlierMap);
+            this.running = false;
+        } else {
+            this.running = true
+        }
 
     }
 

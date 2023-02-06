@@ -6,7 +6,6 @@ import {Outlier} from "./Outlier";
  * This class represents an experiment result.
  */
 export class ExperimentResult implements JSONSerializable {
-    running: boolean;
     accuracy: number | null;
     executionDate: Date;
     executionTime: number;
@@ -14,14 +13,12 @@ export class ExperimentResult implements JSONSerializable {
     outliers: Outlier[];
     resultSpace: Subspace | undefined
 
-    constructor(running: boolean,
-                accuracy: number,
+    constructor(accuracy: number,
                 executionDate: Date,
                 executionTime: number,
                 subspaces: Subspace[],
                 outliers: Outlier[],
                 resultSpace?: Subspace) {
-        this.running = running;
         this.accuracy = accuracy;
         this.executionDate = executionDate;
         this.executionTime = executionTime;
@@ -47,7 +44,6 @@ export class ExperimentResult implements JSONSerializable {
         }
 
         return new ExperimentResult(
-            jsonObject.running,
             jsonObject.accuracy,
             new Date(jsonObject.execution_date),
             jsonObject.execution_time,

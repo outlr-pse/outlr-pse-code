@@ -22,7 +22,7 @@ describe('Experiment', () => {
         expect(experiment.odm.hyperParameters[1].paramType).toBe("integer");
         expect(experiment.odm.hyperParameters[1].optional).toBe(true);
         expect(experiment.odm.hyperParameters[1].value).toBe(-1);
-        expect(experiment.experimentResult?.running).toBe(false);
+        expect(experiment.running).toBe(false);
         expect(experiment.experimentResult?.accuracy).toBe(0.1);
         expect(experiment.experimentResult?.executionTime).toBe(900);
     })

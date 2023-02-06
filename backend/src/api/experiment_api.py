@@ -13,11 +13,10 @@ from pathlib import Path
 
 from flask import Blueprint, Response, jsonify, send_file, request
 
-
-from backend.src.api.models import error
+import api.error as error
 import random
 
-from backend.src.init_mock_database import mock_database
+from init_mock_database import mock_database
 
 experiment_api = Blueprint('experiment', __name__)
 

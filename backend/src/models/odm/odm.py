@@ -31,6 +31,13 @@ class ODM(Base):
             'deprecated': self.deprecated
         }
 
+    def to_json_no_params(self) -> dict:
+        """Converts the ODM object to a JSON object ignoring the hyper parameters and deprecated flag"""
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
     def check_params(self, args: dict[str, Any]) -> bool:
         """Checks if the given parameters are valid for this ODM"""
         for param in self.hyper_parameters:

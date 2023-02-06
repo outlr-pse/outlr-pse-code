@@ -27,17 +27,18 @@ class Subspace(Base):
         id (int): Primary key
         columns (list[int]): The column indices that define this subspace
         name (Optional[str]): An optional name (assigned by the user)
-        experiment_result (ExperimentResult): The ExperimentResult that this subspace belongs to
+        experiment_result (Optional[ExperimentResult]): The ExperimentResult that this subspace belongs to.
+            Is None for the result space
         outliers (list[Outlier]): The Outliers in this Subspace
     """
     __tablename__ = SUBSPACE_TABLE_NAME
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    columns = mapped_column(ARRAY(Integer))
+    columns = mapped_column(ARRAY(Integer), default=[])
     name: Mapped[Optional[str]]
 
-    experiment_result_id: Mapped[int] = mapped_column(ForeignKey(f"{EXPERIMENT_RESULT_TABLE_NAME}.id"))
-    experiment_result: Mapped['ExperimentResult'] = relationship(
+    experiment_result_id: Mapped[Optional[int]] = mapped_column(ForeignKey(f"{EXPERIMENT_RESULT_TABLE_NAME}.id"))
+    experiment_result: Mapped[Optional['ExperimentResult']] = relationship(
         back_populates="subspaces",
         foreign_keys=[experiment_result_id]
     )

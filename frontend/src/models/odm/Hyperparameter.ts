@@ -20,35 +20,35 @@ export class Hyperparameter {
         this.optional = optional;
     }
 
-
-    public static fromJSONCreateExp(json: any): Hyperparameter {
+    /**
+     * This method creates a hyperparameter from a JSON string.
+     * @param json The JSON string.
+     * @param valuesJson The JSON string containing the hyperparameter values.
+     */
+    public static fromJSON(json: any, valuesJson?: any): Hyperparameter {
         let hyperparameter = new Hyperparameter(0, "", "", HyperparameterType.STRING, false);
-        hyperparameter.deserialize(json);
+        if (valuesJson) {
+            hyperparameter.deserialize(json, valuesJson);
+        } else {
+            hyperparameter.deserialize(json);
+        }
         return hyperparameter;
+
     }
 
-    deserialize(json: any): void {
+    /**
+     * This method deserializes the Hyperparameter from a JSON string.
+     * When the valuesJson parameter is given, th values of the hyperparameter are inserted.
+     * @param json
+     * @param valuesJson
+     */
+    deserialize(json: any, valuesJson?: any): void {
         this.id = json.id;
         this.name = json.name;
         this.paramType = getHyperparameterType(json.type);
         this.optional = json.optional;
-    }
-
-    /**
-     * This method creates a hyperparameter from a JSON string.
-     * @param json
-     * @param valuesJson
-     */
-    public static fromJSON(json: any, valuesJson: any): Hyperparameter {
-        let hyperparameter = new Hyperparameter(0, "", "", HyperparameterType.STRING, false);
-        hyperparameter.deserializeParam(json, valuesJson);
-        return hyperparameter;
-    }
-
-    deserializeParam(json: any, valuesJson: any): void {
-        this.name = json.name;
-        this.paramType = json.type
-        this.optional = json.optional;
-        this.value = valuesJson[json.name];
+        if (valuesJson) {
+            this.value = valuesJson[json.name];
+        }
     }
 }

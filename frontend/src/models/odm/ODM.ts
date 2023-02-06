@@ -1,11 +1,10 @@
 import {Hyperparameter} from "./Hyperparameter";
-import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
 /**
  * This class represents an ODM.
  */
-export class ODM implements JSONSerializable, JSONDeserializable {
+export class ODM implements JSONSerializable {
     id: number
     name: string;
     hyperParameters: Hyperparameter[];
@@ -31,32 +30,34 @@ export class ODM implements JSONSerializable, JSONDeserializable {
         };
     }
 
-    public static fromJsonCreateExp(json: any): ODM {
-        let odm = new ODM(0, "", []);
-        odm.deserialize(json);
-        return odm;
-    }
-
-    deserialize(json: any): void {
-        this.id = json.id;
-        this.name = json.name;
-    }
-
-
     /**
      * This method creates an ODM from a JSON string.
-     * @param json
+     * @param json The JSON string.
+     * @param valuesJson The JSON string containing the hyperparameter values.
      */
-    public static fromJSON(json: any, valuesJson: any): ODM {
+    public static fromJSON(json: any, valuesJson?: any): ODM {
         let odm = new ODM(0, "", []);
-        odm.deserializeODM(json, valuesJson);
+        if (valuesJson) {
+            odm.deserialize(json, valuesJson);
+        } else {
+            odm.deserialize(json);
+        }
         return odm;
     }
 
-    deserializeODM(json: any, valuesJson: any): void {
+    /**
+     * This method deserializes the ODM from a JSON string.
+     * When the valuesJson parameter is given, the hyperparameters are also deserialized.
+     * @param json  The JSON string.
+     * @param valuesJson The JSON string containing the hyperparameter values.
+     */
+    deserialize(json: any, valuesJson?: any): void {
+        this.id = json.id;
         this.name = json.name;
-        for (let param of json.hyper_parameters) {
-            this.hyperParameters?.push(Hyperparameter.fromJSON(param, valuesJson));
+        if (valuesJson) {
+            for (let param of json.hyper_parameters) {
+                this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+            }
         }
     }
 

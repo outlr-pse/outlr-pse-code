@@ -52,6 +52,12 @@ token_not_valid = {
     "status": 401,
 }
 
+token_not_provided_on_identity_check = {
+    "error": "token_not_provided_on_identity_check",
+    "message": "No token was not provided for identity check",
+    "status": 202,
+}
+
 user_look_up_failed = {
     "error": "user_look_up_failed",
     "message": "The user look up failed",

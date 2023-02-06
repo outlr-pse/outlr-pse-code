@@ -79,12 +79,12 @@ describe('Authentication',  function () {
         const username = "SCH3LOM0"
         const password = "abcd1"
         const response2 = await register(username, password)
-        let responseL = response2
         //const response = await register(username, password)
         expect(response2.error).toBeDefined()
         //TO-DO
         //expect(response.error.error).toEqual(ErrorType.UserManagementError)
-        expect(await getIdentity()).toEqual({})
+        const response = await getIdentity()
+        expect(response).toEqual({})
         await notAuthenticated()
     })
 

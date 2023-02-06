@@ -126,10 +126,12 @@ def register() -> (Response, int):
     return jsonify(user={"username": user.name, "access_token": access_token},
                    message=f'Successfully registered user - Welcome {user.name}!', status=200)
 
-
-# @user_management_api.route('/logout', methods=['POST'])
-# jwt_required()
-# def logout() -> (Response, int):
+@user_management_api.route('/logout', methods=['POST'])
+@jwt_required()
+def logout() -> (Response, int):
+    username = get_jwt_identity()
+    token = get_token()
+    return jsonify(user={"username": username, "access_token": token}, message="Logged out", status=200)
 #    """
 #    Requires JWT token. Logs out the user connected to the JWT Token, which means deleting the access token
 #    connected to the user.
@@ -161,12 +163,12 @@ def get_token_identity() -> (Response, int):
     username = get_jwt_identity()
     if username is None:
         response = jsonify(user={}, error=error.token_not_provided_on_identity_check),\
-            error.token_not_provided_on_identity_check.status
+            error.token_not_provided_on_identity_check["status"]
         return response
     user = database_access.get_user_by_username(username)
     if user is None:
         response = jsonify(user={}, error=error.token_not_provided_on_identity_check), \
-            error.token_not_provided_on_identity_check.status
+            error.token_not_provided_on_identity_check["status"]
         return response
     else:
         token = get_token()

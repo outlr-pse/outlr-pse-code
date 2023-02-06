@@ -2,7 +2,7 @@
   <Card v-if="show">
     <div class="tip">
       {{ text }}
-      <span class="material-icons md-dark icon" @click="this.show = !this.show"> close </span>
+      <span class="material-icons md-dark icon" @click="show = !show"> close </span>
     </div>
   </Card>
 </template>

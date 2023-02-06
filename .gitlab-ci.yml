@@ -106,20 +106,16 @@ frontend-test:
     DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
   before_script:
  # install Python
-    - apt-get install software-properties-common
-    - add-apt-repository ppa:deadsnakes/ppa
-    - apt-get update
-    - apt-get install -y python3.10 python3-pip
-    - python3.10 -V  # Print out python version for debugging
-    - python3.10 -m pip install virtualenv
+    - python3 -V  # Print out python version for debugging
+    - pip install virtualenv
     - virtualenv venv
     - source venv/bin/activate
-    - python3.10 -m pip install requests
-    - python3.10 -m pip install python-dotenv
+    - pip install requests
+    - pip install python-dotenv
     - cd backend
-    - python3.10 -m pip install -r requirements.txt
+    - pip install -r requirements.txt
     - cd src
-    - python3.10 __init__.py
+    - python3 __init__.py
     - cd ../..
   script:
     - cd frontend

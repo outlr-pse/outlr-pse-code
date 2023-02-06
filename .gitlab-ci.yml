@@ -94,7 +94,7 @@ frontend-test:
   services:
     - postgres:12.4
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
-  image: node:19-buster
+  image: nikolaik/python-nodejs:python3.10-nodejs19
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
     PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"

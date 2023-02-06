@@ -4,7 +4,7 @@
 
 <script lang="ts">
 export default {
-  name: "HomeView"
+  name: "LandingPageView"
 }
 </script>
 

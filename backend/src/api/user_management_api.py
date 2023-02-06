@@ -126,6 +126,7 @@ def register() -> (Response, int):
     return jsonify(user={"username": user.name, "access_token": access_token},
                    message=f'Successfully registered user - Welcome {user.name}!', status=200)
 
+
 @user_management_api.route('/logout', methods=['POST'])
 @jwt_required()
 def logout() -> (Response, int):

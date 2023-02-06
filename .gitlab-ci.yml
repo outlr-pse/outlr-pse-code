@@ -114,7 +114,7 @@ frontend-test:
     - cd backend
     - pip install -r requirements.txt
     - cd src
-    - nohup python3 __init__.py
+    - nohup python3 __init__.py &
     - cd ../..
   script:
     - cd frontend

@@ -47,34 +47,63 @@ stages:          # List of stages for jobs, and their order of execution
 #    - docker build -t testfront .
 #    - docker run -p 8080:8080 --rm --name frontend testfront
 
+setup_db:
+  image: postgres:12.4
+  services:
+    - postgres:12.4
+  variables:
+    POSTGRES_DB: outlr
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 12345678
+  script:
+    - export PGPASSWORD=$POSTGRES_PASSWORD
+
+
+frontend-build:
+    stage: build
+    image: node:latest
+    script:
+        - cd frontend
+        - npm install
+        - npm run build
+
 backend-test:
-  image: python:latest
+  image: python:3.10-bullseye
   stage: test
+  services:
+    - postgres:12.4
   # Change pip's cache directory to be inside the project directory since we can
   # only cache local items.
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
+    PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
   # Pip's cache doesn't store the python packages
   # https://pip.pypa.io/en/stable/reference/pip_install/#caching
   #
   # If you want to also cache the installed packages, you have to install
   # them in a virtualenv and cache it as well.
+    POSTGRES_DB: outlr
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: 12345678
+    DB_HOST: postgres
+    JWT_SECRET_KEY: secret_key
+    DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
+
   cache:
     paths:
       - .cache/pip
       - venv/
+  before_script:
+      - python3 -V  # Print out python version for debugging
+      - echo $PYTHONPATH
+      - pip3 install virtualenv
+      - virtualenv venv
+      - source venv/bin/activate
+      - pip3 install requests
+      - pip3 install python-dotenv
+      - cd backend
+      - pip3 install -r requirements.txt
   script:
-    - python3 -V  # Print out python version for debugging
-#    - echo $PYTHONPATH
-#    - pwd
-    - pip3 install virtualenv
-    - virtualenv venv
-    - source venv/bin/activate
-    - pip3 install requests
-    - pip3 install python-dotenv
-    - cd backend
-    - pip3 install -r requirements.txt
     - python3 -m unittest discover tests
 
 frontend-test:
@@ -83,9 +112,9 @@ frontend-test:
   image: node:latest
   script:
     - cd frontend
-    - yarn global add jest
-    - yarn add --dev jest-junit
-    - yarn add --dev ts-jest @types/jest typescript
+    - npm install -g jest
+    - npm install --save-dev jest-junit
+    - npm install --save-dev ts-jest @types/jest typescript
     - jest --ci --coverage --updateSnapshot
 
 lint-test-job:   # This job also runs in the test stage.

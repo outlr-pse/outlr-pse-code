@@ -46,7 +46,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult?.resultSpace.outliers.length }}
+          {{ experiment.experimentResult?.resultSpace?.outliers?.length }}
         </div>
       </div>
     </div>

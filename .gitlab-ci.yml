@@ -86,6 +86,8 @@ backend-test:
       - pip3 install python-dotenv
       - cd backend
       - pip3 install -r requirements.txt
+      - pip3 install combo
+      - pip3 install suod
   script:
     - python3 -m unittest discover tests
 
@@ -129,12 +131,13 @@ frontend-test:
   dependencies:
     - backend-test
 
-lint-test-job:   # This job also runs in the test stage.
+lint-test:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
+  image: python:3.10-alpine
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - cd backend
+    - pip install flake8
+    - flake8 --ignore=E501,F401 --statistics --count .
 
 
 #deploy-job:      # This job runs in the deploy stage.

@@ -131,10 +131,11 @@ frontend-test:
 
 lint-test-job:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
+  image: python:3.10-alpine
   script:
-    - echo "Linting code... This will take about 10 seconds."
-    - sleep 10
-    - echo "No lint issues found."
+    - cd backend
+    - pip install flake8
+    - flake8 --ignore=E501,F401 --statistics --count .
 
 
 #deploy-job:      # This job runs in the deploy stage.

@@ -35,11 +35,6 @@ export default {
     Button,
     RouterLink
   },
-  methods: {
-    push() {
-      this.$router.push('/login')
-    }
-  }
 }
 </script>
 

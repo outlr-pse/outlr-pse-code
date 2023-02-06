@@ -32,7 +32,7 @@ const count = ref(0)
             "\"operation\":{\"operator\":\"and\",\"operands\":[{\"literal\":{\"subspace\":{\"id\":2,\"name\":\"S2\",\"columns" +
             "\":[0,1,2,3],\"outliers\":[1,7,9,10,15,28,34],\"roc_curve\":null}}},{\"literal\":{\"subspace\":{\"id\":3,\"name" +
             "\":\"S3\",\"columns\":[3,4,5],\"outliers\":[10,11,17,35],\"roc_curve\":null}}}]}}]}}]}},\"experiment_result\":{" +
-            "\"accuracy\":100,\"execution_date\":\"1000-01-01T00:00:00.000Z\",\"execution_time\":99999,\"result_space" +
+            "\"accuracy\":100,\"execution_date\":\"2018-05-11T23:59:59.000Z\",\"execution_time\":99999,\"result_space" +
             "\":{\"id\":13,\"name\":\"Result\",\"columns\":[],\"outliers\":[],\"roc_curve\":null}}}")'/>
 
   <Tip text="Hello Simon mach einfach irgendwas einfach irgendwas genau irgenwdas an text schreibst du jetzt da hin und noch bisschen mehr als nur irgendwas"></Tip>

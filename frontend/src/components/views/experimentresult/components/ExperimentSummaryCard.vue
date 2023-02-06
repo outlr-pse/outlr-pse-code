@@ -26,11 +26,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') + ":" }}
         </div>
         <div>
-          {{
-            experiment?.experimentResult?.executionDate?.getDay()
-            + "." + (experiment?.experimentResult?.executionDate?.getMonth() + 1)
-            + "." + experiment?.experimentResult?.executionDate?.getFullYear()
-          }}
+          {{ date }}
         </div>
       </div>
       <div class="row">
@@ -85,6 +81,9 @@ export default defineComponent({
           + (seconds != 0? seconds + "s " : "")
           + (milliseconds != 0? milliseconds + "ms " : "")
           + (microseconds != 0? microseconds + "µs" : "");
+    },
+    date() {
+      return this.experiment.experimentResult?.executionDate.toLocaleString();
     }
   },
   props: {

@@ -63,6 +63,11 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         return experiment;
     }
 
+    /**
+     * This method deserializes the experiment from a JSON string.
+     * When the experiment result is given, the experiment is not running anymore.
+     * @param json The JSON string.
+     */
     deserialize(json: string): void {
         let jsonObject = JSON.parse(json);
         this.id = jsonObject.id;

@@ -129,7 +129,7 @@ frontend-test:
   dependencies:
     - backend-test
 
-lint-test-job:   # This job also runs in the test stage.
+lint-test:   # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   image: python:3.10-alpine
   script:

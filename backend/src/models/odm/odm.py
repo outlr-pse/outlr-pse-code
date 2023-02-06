@@ -2,6 +2,10 @@
 
 This module contains the ODM model, which is used to store the ODMs.
 
+Note that currently only the attributes of the ODM class are stored in the database.
+Once there are more than just a single type of ODM the database should be setup for class hierarchies.
+See https://docs.sqlalchemy.org/en/20/orm/inheritance.html#single-table-inheritance
+
 """
 from typing import Any
 

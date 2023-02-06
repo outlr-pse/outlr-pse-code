@@ -1,7 +1,6 @@
 import unittest
 
 from models.results import *
-import json
 
 
 res = ExperimentResult(id=12, accuracy=0.89, execution_date=datetime.now(), execution_time=timedelta(minutes=2))
@@ -12,6 +11,8 @@ res.result_space = res_space
 res.subspaces.append(sub2)
 out1 = Outlier(index=3, subspaces=[sub1, sub2], experiment_result=res)
 out2 = Outlier(index=4, experiment_result=res)
+res.outliers.append(out1)
+res.outliers.append(out2)
 sub2.outliers.append(out2)
 
 

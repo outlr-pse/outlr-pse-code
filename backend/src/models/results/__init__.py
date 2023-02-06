@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy import Column, Integer, ARRAY, Table, ForeignKey
+from sqlalchemy import Column, Integer, ARRAY, Table, ForeignKey, ForeignKeyConstraint, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 
 from models.base import Base
 
@@ -16,7 +15,13 @@ subspace_outlier = Table(
     "subspace_outlier",
     Base.metadata,
     Column("subspace_id", ForeignKey(f"{SUBSPACE_TABLE_NAME}.id"), primary_key=True),
-    Column("outlier_index", ForeignKey(f"{OUTLIER_TABLE_NAME}.index"), primary_key=True),
+    Column("outlier_index", Integer, primary_key=True),
+    Column("outlier_experiment_result_id", Integer, primary_key=True),
+    # UniqueConstraint("outlier_index", "outlier_experiment_result_id"),
+    ForeignKeyConstraint(
+        ["outlier_experiment_result_id", "outlier_index"],
+        [f"{OUTLIER_TABLE_NAME}.experiment_result_id", f"{OUTLIER_TABLE_NAME}.index"]
+    ),  # Copied from a StackOverflow answer without knowing what it does
 )
 
 
@@ -44,7 +49,7 @@ class Subspace(Base):
     )
 
     outliers: Mapped[list['Outlier']] = relationship(  # many-to-many
-        secondary=subspace_outlier.name,
+        secondary=subspace_outlier,
         back_populates="subspaces"
     )
 
@@ -83,12 +88,14 @@ class Outlier(Base):
     __tablename__ = OUTLIER_TABLE_NAME
 
     index: Mapped[int] = mapped_column(primary_key=True)
-
-    experiment_result_id: Mapped[int] = mapped_column(ForeignKey(f"{EXPERIMENT_RESULT_TABLE_NAME}.id"))
+    experiment_result_id: Mapped[int] = mapped_column(
+        ForeignKey(f"{EXPERIMENT_RESULT_TABLE_NAME}.id"),
+        primary_key=True
+    )
     experiment_result: Mapped['ExperimentResult'] = relationship(back_populates="outliers")
 
     subspaces: Mapped[list['Subspace']] = relationship(  # many-to-many
-        secondary=subspace_outlier.name,
+        secondary=subspace_outlier,
         back_populates="outliers"
     )
 
@@ -101,6 +108,7 @@ class ExperimentResult(Base):
         accuracy (float): Accuracy of the experiment (percentage of correct answers)
         execution_date (datetime): Date and time when the execution started
         execution_time (timedelta): Duration of the execution
+        experiment_id (
         result_space (Subspace): The subspace that contains the result with applied subspace logic
         subspaces (list[Subspace]): Subspaces that are part of this result. Does not contain the result_space
         outliers (list[Outlier]): Outliers that are part of this result
@@ -120,15 +128,24 @@ class ExperimentResult(Base):
     # back_populates means that the experiment_result attribute of a Subspace will be connected
     # to the subspace attribute of ExperimentResult. Changing one in python also changes the other
     subspaces: Mapped[list['Subspace']] = relationship(
+        # primaryjoin=Subspace.experiment_result_id == id,
         back_populates="experiment_result",
         foreign_keys=[Subspace.experiment_result_id]
     )
-    outliers: Mapped[list['Outlier']] = relationship(back_populates="experiment_result")
+    outliers: Mapped[list['Outlier']] = relationship(
+        back_populates="experiment_result"
+    )
 
-    result_space_id: Mapped[int] = mapped_column(ForeignKey(f"{SUBSPACE_TABLE_NAME}.id"))
+    result_space_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            f"{SUBSPACE_TABLE_NAME}.id",
+            name="foreign_key_result_space"
+        ),
+    )
     result_space: Mapped['Subspace'] = relationship(
         foreign_keys=[result_space_id],
-        post_update=True  # not sure if this is needed
+        #  primaryjoin=result_space_id == Subspace.id,
+        # post_update=True  # might be necessary for writes and deletes to work
     )
 
     def to_json(self) -> dict:

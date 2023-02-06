@@ -9,7 +9,7 @@ Endpoints defined:
 from flask import Blueprint, Response, jsonify, request
 import re
 
-from flask_jwt_extended import create_access_token, get_jwt_identity
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import api.error as error
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -152,6 +152,7 @@ def register() -> (Response, int):
 
 
 @user_management_api.route('/get-token-identity', methods=['GET'])
+@jwt_required(optional=True)
 def get_token_identity() -> (Response, int):
     """
     Returns the user json of the user connected to the provided JWT Token. In the case of a valid JWT Token
@@ -169,7 +170,6 @@ def get_token_identity() -> (Response, int):
         return response
     else:
         token = get_token()
-        assert token is not None
         response = jsonify(user={"username": username, "access_token": token}, message=f'Token is linked to {username}',
                            status=202)
         response.status = 202

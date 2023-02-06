@@ -41,11 +41,6 @@ def expired_token_callback(header, payload):
     return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
 
 
-@jwt.token_in_blocklist_loader
-def token_blocked_callback(header, payload):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
-
-
 @jwt.token_verification_failed_loader
 def token_verification_failed_callback(header, payload):
     return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
@@ -59,6 +54,7 @@ def user_lookup_error_callback(header, payload):
 @jwt.revoked_token_loader
 def token_revoked_callback(header, payload):
     return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+
 
 
 # ENDPOINTS

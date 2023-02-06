@@ -1,4 +1,3 @@
-import init_mock_database
 from api.api import app
 from database.database_access import setup_db
 

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import {Languages} from "../../language/Languages";
 import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
+import Tip from "../basic/Tip.vue";
 
 defineProps<{ msg: string }>()
 
@@ -11,6 +12,8 @@ const count = ref(0)
 
 
 <template>
+
+  <Tip text="Hello Simon mach einfach irgendwas einfach irgendwas genau irgenwdas an text schreibst du jetzt da hin und noch bisschen mehr als nur irgendwas"></Tip>
 
   <Button text="Run experiment" :button-type="ButtonType.ACTIVE" :size="[421, 78]" :text-size="[30, 900]"/>
   <Button text="Create experiment" :button-type="ButtonType.ACTIVE" :size="[188, 45]" :text-size="[-1, -1]"/>
@@ -30,8 +33,8 @@ const count = ref(0)
 
   <h1>{{ $t('message.greeting') }}, {{$t('message.name')}}</h1>
 
-  <div class="card">
-    <Button @buttonClick="$i18n.locale = Languages.GERMAN" :button-type="ButtonType.ACTIVE" :size="[150, 50]"
+  <div class="tip">
+    <Button @buttonClick="count % 2 === 0 ? $i18n.locale = Languages.GERMAN : $i18n.locale = Languages.ENGLISH; count++" :button-type="ButtonType.ACTIVE" :size="[150, 50]"
      :text="'count is: ' + count" />
     <p>
       Edit

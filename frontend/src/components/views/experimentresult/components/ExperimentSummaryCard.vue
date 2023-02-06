@@ -28,7 +28,7 @@
         <div>
           {{
             experiment.experimentResult?.executionDate.getDay()
-            + "." + (experiment.experimentResult?.executionDate.getMonth() + 1)
+            + "." + (experiment.experimentResult?.executionDate?.getMonth() + 1)
             + "." + experiment.experimentResult?.executionDate.getFullYear()
           }}
         </div>

@@ -105,7 +105,6 @@ frontend-test:
     JWT_SECRET_KEY: secret_key
     DATABASE_URL: postgresql://postgres:12345678@postgres:5432/outlr
   before_script:
- # install Python
     - python3 -V  # Print out python version for debugging
     - pip install virtualenv
     - virtualenv venv
@@ -115,7 +114,7 @@ frontend-test:
     - cd backend
     - pip install -r requirements.txt
     - cd src
-    - python3 __init__.py
+    - nohup python3 __init__.py
     - cd ../..
   script:
     - cd frontend

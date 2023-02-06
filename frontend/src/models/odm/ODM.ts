@@ -1,17 +1,18 @@
 import {Hyperparameter} from "./Hyperparameter";
-import {JSONDeserializable} from "../JSONDeserializable";
 import {JSONSerializable} from "../JSONSerializable";
 
 /**
  * This class represents an ODM.
  */
-export class ODM implements JSONSerializable, JSONDeserializable {
+export class ODM implements JSONSerializable {
+    id: number
     name: string;
-    hyperparameters: Hyperparameter[];
+    hyperParameters: Hyperparameter[];
 
-    constructor(name: string, hyperparameters: Hyperparameter[]) {
+    constructor(id: number, name: string, hyperParameters: Hyperparameter[]) {
+        this.id = id;
         this.name = name;
-        this.hyperparameters = hyperparameters;
+        this.hyperParameters = hyperParameters;
     }
 
     /**
@@ -19,26 +20,45 @@ export class ODM implements JSONSerializable, JSONDeserializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
+        let hyperParametersJSON: { [key: number]: string } = {};
+        for (let param of this.hyperParameters) {
+            hyperParametersJSON[param.id] = param.value;
+        }
         return {
-            name: this.name,
-            hyperparameters: this.hyperparameters
+            id: this.id,
+            hyper_parameters: hyperParametersJSON
         };
     }
 
     /**
      * This method creates an ODM from a JSON string.
-     * @param json
+     * @param json The JSON string.
+     * @param valuesJson The JSON string containing the hyperparameter values.
      */
-    public static fromJSON(json: string): ODM {
-        let odm = new ODM("", []);
-        odm.deserialize(json);
+    public static fromJSON(json: any, valuesJson?: any): ODM {
+        let odm = new ODM(0, "", []);
+        if (valuesJson) {
+            odm.deserialize(json, valuesJson);
+        } else {
+            odm.deserialize(json);
+        }
         return odm;
     }
 
-    deserialize(json: string): void {
-        let jsonObject = JSON.parse(json);
-        this.name = jsonObject.name;
-        this.hyperparameters = jsonObject.hyperparameters;
+    /**
+     * This method deserializes the ODM from a JSON string.
+     * When the valuesJson parameter is given, the hyperparameters are also deserialized.
+     * @param json  The JSON string.
+     * @param valuesJson The JSON string containing the hyperparameter values.
+     */
+    deserialize(json: any, valuesJson?: any): void {
+        this.id = json.id;
+        this.name = json.name;
+        if (valuesJson) {
+            for (let param of json.hyper_parameters) {
+                this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+            }
+        }
     }
 
     serialize(): string {

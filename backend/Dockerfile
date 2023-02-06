@@ -16,11 +16,7 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc
 
-# lint
 RUN pip install --upgrade pip
-RUN pip install flake8==5.0.4
-COPY . /usr/src/app/
-RUN flake8 --ignore=E501,F401 .
 
 # install python dependencies
 COPY ./requirements.txt .

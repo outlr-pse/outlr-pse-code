@@ -37,7 +37,7 @@ export class Subspace implements JSONSerializable {
             name: this.name,
             columns: this.columns,
             outliers: outlierIndices,
-            rocCurve: this.rocCurve
+            roc_curve: this.rocCurve
         };
     }
     serialize(): string {
@@ -52,7 +52,7 @@ export class Subspace implements JSONSerializable {
      */
     static fromJSONObject(jsonObject: any, outlierMap: Map<number, Outlier>): Subspace {
         let newSubspace = new Subspace(jsonObject.id, jsonObject.name, jsonObject.columns);
-        newSubspace.rocCurve = jsonObject.rocCurve;
+        newSubspace.rocCurve = jsonObject.roc_curve;
         newSubspace.outliers = [];
         for (let jsonOutlier of jsonObject.outliers) {
             let outlier = null;

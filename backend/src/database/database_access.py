@@ -48,7 +48,7 @@ def get_odm(odm_id: int) -> ODM | None:
 
 
 def get_all_odms() -> list[Type[ODM]]:
-    return session.query(ODM).all()
+    return session.query(ODM).filter_by(deprecated=False).all()
 
 
 def setup_db() -> None:

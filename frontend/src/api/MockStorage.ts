@@ -3,7 +3,6 @@
  * {@link DataRetrievalService.storage}. Following class models such a Storage by implementing {@link Storage}
  */
 export class MockStorage implements Storage {
-
     [name: string]: any;
 
     readonly length: number;
@@ -32,5 +31,4 @@ export class MockStorage implements Storage {
         this.length = 0
         this.store = new Map()
     }
-
 }

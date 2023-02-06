@@ -23,7 +23,7 @@ class TestHyperParameter(unittest.TestCase):
         self.hp = HyperParameter(id=1, name='test_hp', param_type='int', optional=True)
 
     def test_to_json(self):
-        expected_result = {'id': 1, 'name': 'test_hp', 'param_type': 'int', 'optional': True}
+        expected_result = {'id': 1, 'name': 'test_hp', 'type': 'int', 'optional': True}
         self.assertDictEqual(self.hp.to_json(), expected_result)
 
     def test_attributes(self):
@@ -40,6 +40,8 @@ class TestODM(unittest.TestCase):
     def test_to_json(self):
         expected_result = {'id': 1, 'name': 'test_odm', 'hyper_parameters': [], 'deprecated': False}
         self.assertDictEqual(self.odm.to_json(), expected_result)
+        expected_result = {'id': 1, 'name': 'test_odm'}
+        self.assertDictEqual(self.odm.to_json_no_params(), expected_result)
 
     def test_hyper_parameters(self):
         hp1 = HyperParameter(id=1, name='hp1')

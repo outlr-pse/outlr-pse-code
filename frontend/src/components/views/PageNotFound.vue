@@ -2,7 +2,7 @@
 Page not found!
 </template>
 
-<script>
+<script lang="ts">
 </script>
 
 <style scoped>

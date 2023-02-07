@@ -122,8 +122,11 @@ def register() -> (Response, int):
 
     password_hashed = generate_password_hash(password, 'sha256')
     user = User(name=username, password=password_hashed)
+    # check if username is already linked to User in database
     if database_access.get_user_by_username(username) is not None:
         return jsonify(error=error.username_already_taken), error.username_already_taken["status"]
+
+    # no User in database with username -> create a User with provided username in the database
     database_access.add_user(user)
     access_token = create_access_token(identity=user.name)
     return jsonify(user={"username": user.name, "access_token": access_token})

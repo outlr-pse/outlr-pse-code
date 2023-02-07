@@ -64,7 +64,7 @@ a {
   border-radius: 12px;
   border: 1px solid var(--color-stroke);
   font-size: 14px;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 
@@ -83,7 +83,7 @@ a {
   border-radius: 12px;
   border: 1px solid var(--color-stroke);
   font-size: 14px;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 

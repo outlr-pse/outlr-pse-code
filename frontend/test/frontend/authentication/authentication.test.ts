@@ -21,7 +21,7 @@ async function checkAuthenticationSuccessful(response: { error?: any; user: { us
 }
 
 async function notAuthenticated() {
-        expect(store.getters["auth/username"]).toEqual("")
+        expect(store.getters["auth/username"]).toEqual("Not logged in")
         expect(store.getters["auth/isAuthenticated"]).toEqual(false)
         expect(storage.getItem('access_token')).not.toBeDefined()
         expect((await getIdentity()).username).not.toBeDefined()

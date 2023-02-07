@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 from numpy.typing import *
 
-import models.subspacelogic as subspacelogic
 from models.json_error import JSONError
-
 from models.experiment import Subspace
+
 
 class SubspaceLogic(ABC):
     """This interface represents the subspace logic.
@@ -72,10 +71,10 @@ class SubspaceLogic(ABC):
                             "Every JSON must have the shape of the following example: {operation: {...}}")
         logic_type = next(iter(json.keys()))  # get the single key from the dict
         match logic_type:
-            case subspacelogic.operation.Operation.JSON_KEY:
-                return subspacelogic.operation.Operation.from_client_json(json[logic_type], existing_subspaces)
-            case subspacelogic.literal.Literal.JSON_KEY:
-                return subspacelogic.literal.Literal.from_client_json(json[logic_type], existing_subspaces)
+            case Operation.JSON_KEY:
+                return Operation.from_client_json(json[logic_type], existing_subspaces)
+            case Literal.JSON_KEY:
+                return Literal.from_client_json(json[logic_type], existing_subspaces)
             case _: raise JSONError(
                 f"SubspaceLogic JSON (client) contained an unknown type of subspace logic: {logic_type}"
             )
@@ -106,10 +105,14 @@ class SubspaceLogic(ABC):
 
         logic_type = next(iter(json.keys()))  # get the single key from the dict
         match logic_type:
-            case subspacelogic.operation.Operation.DATABASE_JSON_KEY:
-                return subspacelogic.operation.Operation.from_database_json(json[logic_type], subspaces)
-            case subspacelogic.literal.Literal.DATABASE_JSON_KEY:
-                return subspacelogic.literal.Literal.from_database_json(json[logic_type], subspaces)
+            case Operation.DATABASE_JSON_KEY:
+                return Operation.from_database_json(json[logic_type], subspaces)
+            case Literal.DATABASE_JSON_KEY:
+                return Literal.from_database_json(json[logic_type], subspaces)
             case _: raise JSONError(
                 f"SubspaceLogic JSON (database) contained an unknown type of subspace logic: {logic_type}"
             )
+
+
+from models.subspacelogic.literal import Literal
+from models.subspacelogic.operation import Operation

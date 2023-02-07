@@ -1,3 +1,8 @@
+"""
+This module contains all models relating to experiments and their results
+Because of the relations between the classes in the database it is easier if all of them are in the same file
+"""
+
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -35,7 +40,8 @@ class Subspace(Base):
         id (int): Primary key
         columns (list[int]): The column indices that define this subspace
         name (Optional[str]): An optional name (assigned by the user)
-        experiment_result (Optional[ExperimentResult]): The ExperimentResult that this subspace belongs to.
+        experiment_id (int): The id of the experiment that this subspace belongs to. See attribute ``experiment``
+        experiment (Optional[Experiment]): The Experiment that this subspace belongs to.
             Is None for the result space
         outliers (list[Outlier]): The Outliers in this Subspace
     """
@@ -127,7 +133,6 @@ class ExperimentResult(Base):
         execution_time (timedelta): Duration of the execution
         experiment_id (
         result_space (Subspace): The subspace that contains the result with applied subspace logic
-        subspaces (list[Subspace]): Subspaces that are part of this result. Does not contain the result_space
         outliers (list[Outlier]): Outliers that are part of this result
     Example:
         You can create an instance of this class like this:
@@ -200,6 +205,7 @@ class Experiment(Base):
         dataset_size (int): Total number of datapoints (rows) in the dataset. Needed for SubspaceLogic evaluation
         odm_id (int): ID of the odm. See attribute ``odm``
         odm (ODM): ODM that for used in this experiment
+        subspaces (list[Subspace]): Subspaces that belong to this experiment. Does not contain the result_space
         experiment_result (Optional[ExperimentResult]): Result of the experiment.
             Is None if the experiment has not yet been run
         dataset (Dataset): Dataset. This attribute is not stored in the database
@@ -229,17 +235,14 @@ class Experiment(Base):
     # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
     dataset = None
 
-    # TODO subspace_logic property that (lazily) converts between db json and actual subspace logic instance
-    # Can be implemented with the feature backend/models-subspacelogic
-    # https://docs.sqlalchemy.org/en/20/orm/mapped_attributes.html#using-descriptors-and-hybrids
     @hybrid_property
-    def subspace_logic(self) -> 'SubspaceLogic':
+    def subspace_logic(self) -> 'models.subspacelogic.SubspaceLogic':
         """Property subspace_logic (SubspaceLogic)"""
         subspace_map = {subspace.id: subspace for subspace in self.subspaces}
-        return SubspaceLogic.from_database_json(self._subspace_logic, subspace_map)
+        return models.subspacelogic.SubspaceLogic.from_database_json(self._subspace_logic, subspace_map)
 
     @subspace_logic.setter
-    def subspace_logic(self, subspace_logic: 'SubspaceLogic'):
+    def subspace_logic(self, subspace_logic: 'models.subspacelogic.SubspaceLogic'):
         self._subspace_logic = subspace_logic.to_database_json()
 
     def to_json(self) -> dict:
@@ -262,4 +265,4 @@ class Experiment(Base):
             true_outliers=json['true_outliers']
         )
 
-from models.subspacelogic.subspacelogic import SubspaceLogic  # must be at the end because of circular import
+import models.subspacelogic  # must be at the end because of circular import

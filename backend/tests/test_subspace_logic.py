@@ -1,5 +1,7 @@
 import unittest
+import numpy as np
 
+from models.subspacelogic import SubspaceLogic
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator

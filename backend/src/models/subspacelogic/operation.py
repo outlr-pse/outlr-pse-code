@@ -2,7 +2,8 @@ from itertools import chain
 from numpy.typing import ArrayLike
 
 from models.subspacelogic.operator import Operator
-from models.subspacelogic.subspacelogic import *
+from models.subspacelogic import SubspaceLogic, Subspace
+from models.json_error import JSONError
 
 
 class Operation(SubspaceLogic):

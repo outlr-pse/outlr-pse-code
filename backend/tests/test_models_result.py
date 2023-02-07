@@ -1,6 +1,8 @@
 import unittest
+from datetime import datetime, timedelta
 
-from models.experiment import *
+from models.experiment import ExperimentResult, Experiment, Subspace, Outlier
+from models.subspacelogic.literal import Literal
 
 exp = Experiment(id=123)
 res = ExperimentResult(
@@ -121,3 +123,9 @@ class TestResultModels(unittest.TestCase):
         self.assertEqual(_sub1.id, sub1.id)
         self.assertEqual(_sub1.columns, sub1.columns)
         self.assertEqual(_sub1.name, sub1.name)
+
+    def test_subspace_logic(self):
+        self.assertIn(sub1, exp.subspaces, msg="This is necessary for the following test case to work")
+        exp.subspace_logic = Literal(sub1)
+        self.assertIs(type(exp.subspace_logic), Literal)
+        self.assertEqual(exp.subspace_logic.subspace.columns, sub1.columns)

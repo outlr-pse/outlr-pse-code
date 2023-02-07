@@ -1,6 +1,8 @@
-from models.subspacelogic.subspacelogic import *
 import numpy as np
 from numpy.typing import ArrayLike
+
+from models.json_error import JSONError
+from models.subspacelogic import SubspaceLogic, Subspace
 
 
 class Literal(SubspaceLogic):

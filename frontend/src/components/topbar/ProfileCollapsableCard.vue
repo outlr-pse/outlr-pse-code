@@ -6,7 +6,7 @@
            width="13" :style="rotatedImage"/>
       <div class="card">
 
-        <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>Overleafer</b></p>
+        <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>{{ store.getters["auth/username"] }}</b></p>
         <div class="separator"></div>
         <a href="./logout">Logout <i class="material-icons md-light"
                      style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
@@ -17,9 +17,14 @@
 </template>
 
 <script>
+import store from "../../store";
+
 export default {
   name: "AppearingCard",
   computed: {
+    store() {
+      return store
+    },
     rotatedImage() {
       return {
         transform: 'rotate(' + this.rotation + 'deg)'

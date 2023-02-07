@@ -37,8 +37,14 @@ export default {
   },
   data() {
     return {
-      buttonStyle: "createExperimentTopBar",
-      rotation: 90
+      buttonStyle: {
+        type: String,
+        default: "createExperimentTopBar"
+      },
+      rotation: {
+        type: Number,
+        default: 90
+      }
     }
   },
   methods: {
@@ -55,7 +61,7 @@ export default {
         // return this.$store.getters['auth/is_authenticated'];
         return false;
       },
-    rotatedImage() {
+    rotatedImage() : { transform: string; }{
       return {
         transform: 'rotate(' + this.rotation + 'deg)'
       }
@@ -75,7 +81,7 @@ export default {
   position: fixed;
   background-color: var(--color-topbar);
   color: #fff;
-  font-size: 14 px;
+  font-size: 14px;
   display: grid;
   grid-template-columns: 1fr 1fr; /* two columns: logo, buttons */
   grid-gap: 10px; /* gap between cells, kann man weglassen */

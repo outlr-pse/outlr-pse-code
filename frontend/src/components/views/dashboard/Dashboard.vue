@@ -1,12 +1,10 @@
 <template>
   <div class="dashboard">
     <h1>Dashboard</h1>
-
     <Tip text="This tip is useless."/>
-    <div v-for="experiment in experiments" :key="experiment.id">
-      {{ experiment.name }}
-
-    </div>
+    <DashboardTable
+        :data="tableData"
+        @rowClick="onRowClick"/>
   </div>
 </template>
 
@@ -15,21 +13,25 @@ import Tip from "../../basic/Tip.vue";
 import {defineComponent} from "vue";
 import {Experiment} from "../../../models/experiment/Experiment";
 import {requestAllExperiments} from "../../../api/APIRequests";
+import DashboardTable from "./components/DashboardTable.vue";
 
 export default defineComponent({
   name: "Dashboard",
-  components: {Tip},
+  components: {DashboardTable, Tip},
   data() {
     return {
-      tableHeaders: [],
-      tableData: [],
-      filteredTableData: [],
-      experiments: [Experiment]
+      tableHeaders: [] as string[],
+      tableData: [] as [number, string[]][],
+      experiments: [] as Experiment[],
+
     }
   },
   methods: {
     applySearch(searchTerm: string) {
 
+    },
+    onRowClick(row: string[]){
+      console.log(row)
     },
     onExperimentClick(experiment: Experiment) {
       this.$router.push({name: 'Experiment', params: {id: experiment.id}})
@@ -37,6 +39,36 @@ export default defineComponent({
   },
   async mounted() {
     this.experiments = await requestAllExperiments();
+    this.tableHeaders = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
+
+    for (let experiment of this.experiments) {
+      if (experiment.running) {
+        this.tableData.push([
+          experiment.id ? experiment.id : 0,
+          [
+            experiment.name,
+            experiment.datasetName,
+            experiment.odm.name,
+            "Running",
+            "",
+            "",
+          ]
+        ])
+      } else {
+        this.tableData.push([
+          experiment.id ? experiment.id : 0,
+          [
+            experiment.name,
+            experiment.datasetName,
+            experiment.odm.name,
+            experiment.odm.hyperParameters[0].name,
+            experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
+            experiment.experimentResult?.accuracy + "%",
+          ]])
+      }
+
+    }
+
   }
 })
 </script>

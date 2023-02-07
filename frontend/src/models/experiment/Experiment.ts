@@ -12,7 +12,7 @@ import {Outlier} from "../results/Outlier";
 export class Experiment implements JSONSerializable, JSONDeserializable {
     id: number | null;
     name: string;
-    datasetName: string | null;
+    datasetName: string;
     dataset: File | null;
     groundTruth: File | null;
     odm: ODM;
@@ -21,7 +21,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     running: boolean = false;
 
     constructor(name: string,
-                datasetName: string | null,
+                datasetName: string,
                 dataset: File | null,
                 groundTruth: File | null,
                 odm: ODM,

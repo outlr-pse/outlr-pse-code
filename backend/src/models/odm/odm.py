@@ -2,6 +2,10 @@
 
 This module contains the ODM model, which is used to store the ODMs.
 
+Note that currently only the attributes of the ODM class are stored in the database.
+Once there are more than just a single type of ODM the database should be setup for class hierarchies.
+See https://docs.sqlalchemy.org/en/20/orm/inheritance.html#single-table-inheritance
+
 """
 from typing import Any
 
@@ -25,6 +29,13 @@ class ODM(Base):
             'name': self.name,
             'hyper_parameters': [hp.to_json() for hp in self.hyper_parameters],
             'deprecated': self.deprecated
+        }
+
+    def to_json_no_params(self) -> dict:
+        """Converts the ODM object to a JSON object ignoring the hyper parameters and deprecated flag"""
+        return {
+            'id': self.id,
+            'name': self.name,
         }
 
     def check_params(self, args: dict[str, Any]) -> bool:

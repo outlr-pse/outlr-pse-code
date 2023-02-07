@@ -1,9 +1,11 @@
 import unittest
+from datetime import datetime, timedelta
+
 import database.database_access as db
 from models.user.user import User
 from models.experiment.experiment import Experiment
-from models.results import *
-from models.odm.odm import ODM, HyperParameter
+from models.results import ExperimentResult, Subspace, Outlier
+from models.odm.odm import HyperParameter
 from models.base import Base
 
 

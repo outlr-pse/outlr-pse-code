@@ -1,6 +1,7 @@
 import unittest
+from datetime import datetime, timedelta
 
-from models.results import *
+from models.results import ExperimentResult, Subspace, Outlier
 
 
 res = ExperimentResult(id=12, accuracy=0.89, execution_date=datetime.now(), execution_time=timedelta(minutes=2))
@@ -105,4 +106,3 @@ class TestResultModels(unittest.TestCase):
             },
             res.to_json()
         )
-

@@ -92,22 +92,12 @@ def login() -> (Response, int):
     password were correct a user json (with the jwt token connected to the user) and the status code "200 OK"
     is returned, status code "401 Unauthorized" otherwise.
     """
-    data = request.get_json()
-    if not data:
-        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+    error = handle_user_input()
+    if error:
+        return error
 
-    if "username" not in data:
-        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
-
-    if "password" not in data:
-        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
-    username = data['username']
-    password = data['password']
-    if username is None or not validate_username(username):
-        return jsonify(error=error.invalid_username), error.invalid_username["status"]
-    if password is None or not validate_password(password):
-        return jsonify(error=error.invalid_password), error.invalid_password["status"]
-
+    username = request.json["username"]
+    password = request.json["password"]
     user = database_access.get_user_by_username(username)
 
     if not check_password_hash(user.password, password):
@@ -123,22 +113,12 @@ def register() -> (Response, int):
     into the database if username and password are valid and returns a user json
     (with the jwt token connected to the user), otherwise "409 Conflict"
     """
-    data = request.get_json()
-    if not data:
-        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+    error = handle_user_input()
+    if error:
+        return error
 
-    if "username" not in data:
-        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
-
-    if "password" not in data:
-        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
-
-    username = data['username']
-    password = data['password']
-    if username is None or not validate_username(username):
-        return jsonify(error=error.invalid_username), error.invalid_username["status"]
-    if password is None or not validate_password(password):
-        return jsonify(error=error.invalid_password), error.invalid_password["status"]
+    username = request.json["username"]
+    password = request.json["password"]
 
     password_hashed = generate_password_hash(password, 'sha256')
     user = User(name=username, password=password_hashed)

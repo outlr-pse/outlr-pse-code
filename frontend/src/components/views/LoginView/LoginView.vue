@@ -16,7 +16,7 @@
               <input @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
             </div>
             <div class="submit-field">
-              <Button @buttonClick="tryLoginSubmit" text="Submit"></Button>
+              <Button class="buttonStyling" @buttonClick="tryLoginSubmit" text="Submit"></Button>
             </div>
           </div>
         </div>
@@ -140,6 +140,10 @@ export default defineComponent({
 .submit-field {
   color: var(--color-text);
   margin: 1.5vw;
+}
+
+.buttonStyling{
+  color: var(--color-text)
 }
 
 </style>

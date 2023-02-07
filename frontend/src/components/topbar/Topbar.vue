@@ -1,25 +1,26 @@
 <template>
-     <div class="TopBar">
-       <img alt="Outlr logo" @click="() => this.$router.push('/')" class="logo" src="../../assets/OutlrLogo.svg" width="125"/>
+  <div class="TopBar">
+    <img alt="Outlr logo" @click="$router.push('/')" class="logo" src="../../assets/OutlrLogo.svg"
+         width="125"/>
 
-        <div style = "justify-self: end">
-          <div v-if="is_authenticated" style="display: flex; align-items: center">
-            <div v-if="this.$route.path !== '/create'" style="display: inline-block">
-              <Button text="Create Experiment" :button-type="ButtonType.ACTIVE" :size="[200,40]"
-                      @buttonClick="() => this.$router.push('/create')" :text-size="[15,700]" />
-            </div>
-            <AppearingCard/>
-            <div style="width:30px; height:auto; display:inline-block;" />
-         </div>
+    <div style="justify-self: end">
+      <div v-if="is_authenticated" style="display: flex; align-items: center">
+        <div v-if="$route.path !== '/create'" style="display: inline-block">
+          <Button text="Create Experiment" :button-type="ButtonType.ACTIVE" :size="[200,40]"
+                  @buttonClick="() => $router.push('/create')" :text-size="[15,700]"/>
+        </div>
+        <AppearingCard/>
+        <div style="width:30px; height:auto; display:inline-block;"/>
+      </div>
 
-         <div v-else>
-           <Button text="Log in" :button-type="ButtonType.TRANSPARENT"  @buttonClick="this.$router.push('/login')"/>
-           <div style="width:5px; height:auto; display:inline-block;" />
-           <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="this.$router.push('/signup')"/>
-           <div style="width:15px; height:auto; display:inline-block;" />
-         </div>
-       </div>
-     </div>
+      <div v-else>
+        <Button text="Log in" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
+        <div style="width:5px; height:auto; display:inline-block;"/>
+        <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/signup')"/>
+        <div style="width:15px; height:auto; display:inline-block;"/>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -28,6 +29,8 @@ import {ButtonType} from "../basic/button/ButtonType";
 import {RouterLink} from "vue-router";
 import AppearingCard from "./ProfileCollapsableCard.vue";
 import {defineComponent} from "vue";
+import store from "../../store";
+
 
 export default defineComponent({
   name: "Topbar",
@@ -52,9 +55,13 @@ export default defineComponent({
     ButtonType() {
       return ButtonType
     },
-    is_authenticated() : boolean {
-        return this.$store.getters['auth/is_authenticated'];
-      },
+    store() {
+      return store
+    },
+    is_authenticated(): boolean {
+      // return store.getters['auth/is_authenticated'];
+      return true;
+    },
   }
 })
 </script>

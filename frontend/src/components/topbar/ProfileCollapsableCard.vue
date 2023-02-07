@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="circle"/>
     <div class="card-container">
-      <img alt="arrow" @click="() => this.$router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
+      <img alt="arrow" @click="() => $router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
            width="13" :style="rotatedImage"/>
       <div class="card">
 

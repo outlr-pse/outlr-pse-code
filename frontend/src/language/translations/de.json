@@ -1,6 +1,10 @@
 {
   "message": {
     "greeting": "Hallo",
-    "name": "Deutschland"
+    "name": "Deutschland",
+    "login-view": {
+      "welcome": "Wilkommen zurück!",
+      "login": "Bitte melden Sie sich an"
+    }
   }
 }

@@ -1,6 +1,10 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "login-view": {
+      "welcome": "Welcome back!",
+      "login": "Please sign into your account"
+    }
   }
 }

@@ -16,7 +16,6 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "Dropdown",
   data() {
     return {
       isOpen: false,

@@ -54,7 +54,7 @@ body {
   --color-purple-button: var(--palette-purple-85);
   --color-disabled-button: var(--palette-grey-4);
   --color-close-button: #D64751;
-  --color-topbar: rgb(47, 41, 58, 0.95);
+  --color-topbar: rgb(47, 41, 58, 0.66);
 }
 
 /* add colors for light mode here */

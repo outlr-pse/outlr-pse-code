@@ -61,11 +61,28 @@ def validate_password(password: str) -> bool:
     return bool(re.match(password_regex, password))
 
 
-def handle_user_input() -> Response | (str, str):
+def handle_user_input() -> (Response, int):
     """
     Validates, whether user passed a username and a password with the request and that these are valid. If they are
-    not a response is returned, which should be sent to - otherwise a tuple containing username and plaintext password
+    not a response is returned, which should explains the problem - otherwise None is returned
     """
+    data = request.get_json()
+    if not data:
+        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+
+    if "username" not in data:
+        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
+
+    if "password" not in data:
+        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
+    username = data['username']
+    password = data['password']
+    if username is None or not validate_username(username):
+        return jsonify(error=error.invalid_username), error.invalid_username["status"]
+    if password is None or not validate_password(password):
+        return jsonify(error=error.invalid_password), error.invalid_password["status"]
+
+    return None
 
 
 @user_management_api.route('/login', methods=['POST'])

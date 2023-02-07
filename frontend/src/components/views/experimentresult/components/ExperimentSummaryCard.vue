@@ -1,7 +1,7 @@
 <template>
   <Card>
     <div class="summary">
-      Summary
+      {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
     </div>
     <div style="border: 1px solid var(--color-stroke);"></div>
     <div class="content">

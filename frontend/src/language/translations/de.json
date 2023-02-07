@@ -4,6 +4,7 @@
     "name": "Deutschland",
     "experimentResultView": {
       "experimentSummaryCard": {
+        "summary": "Zusammenfassung",
         "odm": "ODM",
         "accuracy": "Genauigkeit",
         "executionDate": "Ausführungsdatum",

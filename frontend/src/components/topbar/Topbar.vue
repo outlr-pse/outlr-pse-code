@@ -53,8 +53,7 @@ export default defineComponent({
       return ButtonType
     },
     is_authenticated() : boolean {
-        // return this.$store.getters['auth/is_authenticated'];
-        return true;
+        return this.$store.getters['auth/is_authenticated'];
       },
   }
 })

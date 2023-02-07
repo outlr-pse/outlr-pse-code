@@ -236,3 +236,21 @@ export async function requestODM(odmId:number) : Promise<any>{
         return errorOther
     }
 }
+
+export async function requestAllExperiments(): Promise<any>{
+    /**
+     * Sends request to back-end to respond with all experiments
+     */
+    try {
+        return await axiosClient.get('/experiment/get-all', {headers: authHeader()})
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+                const serverError = error as AxiosError;
+                if (serverError && serverError.response) {
+                    return serverError.response.data;
+                }
+            }
+        return errorOther
+    }
+}

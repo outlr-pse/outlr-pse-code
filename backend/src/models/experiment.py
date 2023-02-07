@@ -11,7 +11,6 @@ from models.odm.odm import ODM
 
 from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy.ext.hybrid import hybrid_property
 
 
 EXPERIMENT_TABLE_NAME = "experiment"
@@ -218,7 +217,7 @@ class Experiment(Base):
     name: Mapped[str]
     true_outliers = mapped_column(ARRAY(Integer))
     param_values = mapped_column(JSON)
-    _subspace_logic = mapped_column(JSON)
+    _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
     dataset_size: Mapped[int]
 
@@ -234,16 +233,29 @@ class Experiment(Base):
 
     # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
     dataset = None
+    _subspace_logic = None
 
-    @hybrid_property
+    @property
     def subspace_logic(self) -> 'models.subspacelogic.SubspaceLogic':
         """Property subspace_logic (SubspaceLogic)"""
-        subspace_map = {subspace.id: subspace for subspace in self.subspaces}
-        return models.subspacelogic.SubspaceLogic.from_database_json(self._subspace_logic, subspace_map)
+        if self._subspace_logic is None:
+            subspace_map = {subspace.id: subspace for subspace in self.subspaces}
+            self._subspace_logic = models.subspacelogic.SubspaceLogic.from_database_json(
+                self._subspace_logic_json,
+                subspace_map
+            )
+            self._subspace_logic_json = None
+        return self._subspace_logic
 
     @subspace_logic.setter
     def subspace_logic(self, subspace_logic: 'models.subspacelogic.SubspaceLogic'):
-        self._subspace_logic = subspace_logic.to_database_json()
+        self._subspace_logic = subspace_logic
+
+    def update_subspace_logic_json(self):
+        if self._subspace_logic is not None:
+            self._subspace_logic_json = self._subspace_logic.to_database_json()
+        else:
+            assert self._subspace_logic_json is not None
 
     def to_json(self) -> dict:
         return {

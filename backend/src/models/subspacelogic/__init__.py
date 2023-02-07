@@ -1,14 +1,20 @@
 from abc import ABC, abstractmethod
 from numpy.typing import *
 
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from models.json_error import JSONError
 from models.experiment import Subspace
+from models.base import Base
 
 
 class SubspaceLogic(ABC):
     """This interface represents the subspace logic.
     This class is part of a composite pattern.
     """
+
+    # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+
 
     @abstractmethod
     def get_subspaces(self) -> set['Subspace']:

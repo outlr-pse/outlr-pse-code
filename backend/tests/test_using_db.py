@@ -3,6 +3,7 @@ import database.database_access as db
 from models.user.user import User
 from models.experiment import *
 from models.subspacelogic.literal import Literal
+from models.subspacelogic.operation import Operation, Operator
 from models.odm.odm import ODM, HyperParameter
 from models.base import Base
 
@@ -134,6 +135,10 @@ class TestExperimentWithResult(unittest.TestCase):
         self.res.outliers.append(self.out1)
         self.res.outliers.append(self.out2)
         self.sub2.outliers.append(self.out2)
+        self.exp.subspace_logic = Operation(
+            operator=Operator.LOGICAL_AND,
+            operands=[Literal(self.sub1), Literal(self.sub2), Literal(self.sub1)]
+        )
 
         db.add_experiment(self.exp)
         self.assertEqual(1, 1, msg="Assert that the code doesn't raise an exception")

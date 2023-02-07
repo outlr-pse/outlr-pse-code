@@ -20,6 +20,19 @@ session: Session = Session()
 
 def add_experiment(experiment: Experiment) -> Experiment:
     session.add(experiment)
+
+    # The following ensures that the subspace logic has all the correct subspace ids.
+    # It might be better to store the subspace logic as a class hierarchy instead of as a json.
+    # That way SQLAlchemy would load the correct ids on its own
+    subspaces_without_ids = [subspace for subspace in experiment.subspaces if subspace.id is None]
+    if len(subspaces_without_ids) > 0:
+        # Subspace logic must be reevaluated with new ids
+        session.flush()  # assigns ids to everything
+        for subspace in subspaces_without_ids:  # load new ids
+            session.refresh(subspace)
+        experiment.update_subspace_logic_json()  # needs subspace ids to be correct
+        session.add(experiment)
+
     session.commit()
     return experiment
 

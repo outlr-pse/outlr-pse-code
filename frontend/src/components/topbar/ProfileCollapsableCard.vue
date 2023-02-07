@@ -2,17 +2,16 @@
   <div class="profile">
     <div class="circle"/>
     <div class="card-container">
-      <div class="visibility">
-        <div class="card">
-
-          <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>Overleafer</b></p>
-          <div class="separator"></div>
-          <a>Logout <i class="material-icons md-light"
-                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
-        </div>
-      </div>
       <img alt="arrow" @click="() => this.$router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
            width="13" :style="rotatedImage"/>
+      <div class="card">
+
+        <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>Overleafer</b></p>
+        <div class="separator"></div>
+        <a href="./logout">Logout <i class="material-icons md-light"
+                     style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
+      </div>
+
     </div>
   </div>
 </template>
@@ -39,26 +38,21 @@ export default {
   align-items: center
 }
 
-/*.profile:hover .card-container {*/
-/*  display: none;*/
-/*}*/
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 .card-container {
   position: relative;
   margin-left: 15px;
 }
 
-.visibility{
-  display: none;
-}
 
-.profile:hover .visibility{
+.profile:hover .card, .card:hover {
   display: block;
-}
-
-/*.profile:hover .card, .card:hover {*/
-.card {
   position: absolute;
-  display: block;
+  opacity: 100;
   top: calc(var(--top-bar-height) / 2 - 10px);
   left: -100px;
   right: 0;
@@ -70,14 +64,27 @@ export default {
   border-radius: 12px;
   border: 1px solid var(--color-stroke);
   font-size: 14px;
-  transition: all 6s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
 
 
-/*.card {*/
-/*  display: none;*/
-
-/*}*/
+.card {
+  opacity: 0;
+  display: block;
+  position: absolute;
+  top: calc(var(--top-bar-height) / 2 - 10px);
+  left: -100px;
+  right: 0;
+  bottom: 0;
+  width: 110px;
+  height: 110px;
+  background-color: rgb(47, 41, 58, 0.70);
+  z-index: 100;
+  border-radius: 12px;
+  border: 1px solid var(--color-stroke);
+  font-size: 14px;
+  transition: all 0.5s ease-in-out;
+}
 
 
 .arrow {

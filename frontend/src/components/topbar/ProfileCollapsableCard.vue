@@ -1,0 +1,113 @@
+<template>
+  <div class="profile">
+    <div class="circle"/>
+    <div class="card-container">
+      <div class="visibility">
+        <div class="card">
+
+          <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>Overleafer</b></p>
+          <div class="separator"></div>
+          <a>Logout <i class="material-icons md-light"
+                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
+        </div>
+      </div>
+      <img alt="arrow" @click="() => this.$router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
+           width="13" :style="rotatedImage"/>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "AppearingCard",
+  computed: {
+    rotatedImage() {
+      return {
+        transform: 'rotate(' + this.rotation + 'deg)'
+      }
+    }
+  }
+}
+</script>
+
+
+<style scoped>
+
+.profile {
+  margin-left: 15px;
+  display: flex;
+  align-items: center
+}
+
+/*.profile:hover .card-container {*/
+/*  display: none;*/
+/*}*/
+.card-container {
+  position: relative;
+  margin-left: 15px;
+}
+
+.visibility{
+  display: none;
+}
+
+.profile:hover .visibility{
+  display: block;
+}
+
+/*.profile:hover .card, .card:hover {*/
+.card {
+  position: absolute;
+  display: block;
+  top: calc(var(--top-bar-height) / 2 - 10px);
+  left: -100px;
+  right: 0;
+  bottom: 0;
+  width: 110px;
+  height: 110px;
+  background-color: rgb(47, 41, 58, 0.70);
+  z-index: 100;
+  border-radius: 12px;
+  border: 1px solid var(--color-stroke);
+  font-size: 14px;
+  transition: all 6s ease-in-out;
+}
+
+
+/*.card {*/
+/*  display: none;*/
+
+/*}*/
+
+
+.arrow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 50%);
+}
+
+.circle {
+  width: var(--top-bar-circle-size);
+  height: var(--top-bar-circle-size);
+  line-height: var(--top-bar-circle-size);
+  border-radius: 50%;
+  text-align: center;
+  font-size: 23px;
+  display: inline-block;
+  background-color: var(--color-main);
+  margin-left: 40px;
+  margin-right: 7px;
+}
+
+.circle::before {
+  content: "U";
+}
+
+.separator {
+  width: 90px;
+  height: 1px;
+  background-color: var(--color-lines);
+  margin: 0 10px;
+}
+</style>

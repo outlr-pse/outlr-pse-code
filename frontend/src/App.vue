@@ -1,13 +1,13 @@
 <template>
   <div id="app">
-    <TopBar/>
+    <Topbar/>
     <RouterView class="routerView"/>
   </div>
 </template>
 
 <script lang="ts">
 
-import TopBar from "./components/TopBar.vue";
+import Topbar from "./components/topbar/Topbar.vue";
 
 export default {
   data() {
@@ -17,7 +17,7 @@ export default {
   },
 
   components: {
-    TopBar
+    Topbar
   },
 
 }

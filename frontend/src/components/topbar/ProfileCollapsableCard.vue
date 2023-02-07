@@ -9,29 +9,41 @@
         <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>{{ store.getters["auth/username"] }}</b></p>
         <div class="separator"></div>
         <a href="./logout">Logout <i class="material-icons md-light"
-                     style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
+                                     style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
       </div>
 
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import store from "../../store";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: "AppearingCard",
-  computed: {
-    store() {
-      return store
-    },
-    rotatedImage() {
-      return {
-        transform: 'rotate(' + this.rotation + 'deg)'
+  data() {
+    return {
+      rotation: {
+        type: Number,
+        default: 90
       }
+    }
+  },
+
+computed: {
+  store()
+  {
+    return store
+  },
+  rotatedImage() : {transform: string}
+  {
+    return {
+      transform: 'rotate(' + this.rotation + 'deg)'
     }
   }
 }
+})
 </script>
 
 

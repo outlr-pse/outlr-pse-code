@@ -27,8 +27,9 @@ import Button from "../basic/button/Button.vue";
 import {ButtonType} from "../basic/button/ButtonType";
 import {RouterLink} from "vue-router";
 import AppearingCard from "./ProfileCollapsableCard.vue";
+import {defineComponent} from "vue";
 
-export default {
+export default defineComponent({
   name: "Topbar",
   components: {
     AppearingCard,
@@ -48,10 +49,10 @@ export default {
     }
   },
   methods: {
-    ClickAction() {
-      this.buttonStyle = this.buttonStyle === "" ? "createExperimentTopBar" : "";
-      console.log("Button Clicked");
-    }
+    // ClickAction() {
+    //   this.buttonStyle = this.buttonStyle === "" ? "createExperimentTopBar" : "";
+    //   console.log("Button Clicked");
+    // }
   },
   computed: {
     ButtonType() {
@@ -59,15 +60,10 @@ export default {
     },
     is_authenticated() : boolean {
         // return this.$store.getters['auth/is_authenticated'];
-        return false;
+        return true;
       },
-    rotatedImage() : { transform: string; }{
-      return {
-        transform: 'rotate(' + this.rotation + 'deg)'
-      }
-    }
   }
-}
+})
 </script>
 
 <style scoped>

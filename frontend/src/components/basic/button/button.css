@@ -8,9 +8,9 @@ button {
   transition: border-color 0.25s;
 }
 
-button:hover {
-  border: 3px solid var(--color-selected);
-}
+/*button:hover {*/
+/*  border: 3px solid var(--color-selected);*/
+/*}*/
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

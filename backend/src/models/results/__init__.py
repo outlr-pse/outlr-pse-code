@@ -84,7 +84,7 @@ class Outlier(Base):
             The corresponding id (attribute experiment_result_id) is a primary key
         subspaces (list[Subspace]): All subspaces that this Outlier instance is an outlier in
     """
-    
+
     __tablename__ = OUTLIER_TABLE_NAME
 
     index: Mapped[int] = mapped_column(primary_key=True)

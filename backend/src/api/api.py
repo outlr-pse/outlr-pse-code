@@ -56,7 +56,7 @@ def token_revoked_callback(header, payload):
     return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
 
 
-# ENDPOINTS
+# endpoints
 @app.route('/api/status', methods=['GET'])
 def status() -> Response:
     return jsonify({'status': 'running'})

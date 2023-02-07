@@ -54,7 +54,7 @@ token_not_valid = {
 
 token_not_provided_on_identity_check = {
     "error": "token_not_provided_on_identity_check",
-    "message": "No token was not provided for identity check",
+    "message": "No token was provided for identity check",
     "status": 202,
 }
 

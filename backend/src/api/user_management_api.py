@@ -61,6 +61,13 @@ def validate_password(password: str) -> bool:
     return bool(re.match(password_regex, password))
 
 
+def handle_user_input() -> Response | (str, str):
+    """
+    Validates, whether user passed a username and a password with the request and that these are valid. If they are
+    not a response is returned, which should be sent to - otherwise a tuple containing username and plaintext password
+    """
+
+
 @user_management_api.route('/login', methods=['POST'])
 def login() -> (Response, int):
     """
@@ -89,8 +96,7 @@ def login() -> (Response, int):
     if not check_password_hash(user.password, password):
         return jsonify(error=error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
     access_token = create_access_token(identity=user.name)
-    return jsonify(user={"username": user.name, "access_token": access_token},
-                   message=f'Successfully registered user - Welcome {user.name}!', status=200)
+    return jsonify(user={"username": user.name, "access_token": access_token})
 
 
 @user_management_api.route('/register', methods=['POST'])
@@ -123,8 +129,7 @@ def register() -> (Response, int):
         return jsonify(error=error.username_already_taken), error.username_already_taken["status"]
     database_access.add_user(user)
     access_token = create_access_token(identity=user.name)
-    return jsonify(user={"username": user.name, "access_token": access_token},
-                   message=f'Successfully registered user - Welcome {user.name}!', status=200)
+    return jsonify(user={"username": user.name, "access_token": access_token})
 
 
 @user_management_api.route('/logout', methods=['POST'])
@@ -133,25 +138,6 @@ def logout() -> (Response, int):
     username = get_jwt_identity()
     token = get_token()
     return jsonify(user={"username": username, "access_token": token}, message="Logged out", status=200)
-#    """
-#    Requires JWT token. Logs out the user connected to the JWT Token, which means deleting the access token
-#    connected to the user.
-#    """
-#    headers = request.headers
-#    if headers is None:
-#        return jsonify(error=error.no_header_provided), error.no_header_provided["status"]
-#    bearer = headers.get('Authorization')
-#
-#    if bearer is None or len(bearer) < 1:
-#        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
-#    token = bearer.split()[1]
-#    user_to_token = mock_database.get_user_by_token(int(token))
-#
-#    if user_to_token is not None:
-#        user_to_token.delete_token()
-#        return jsonify(user=user_to_token.to_json(), message="Logged out", status=200)
-#    else:
-#        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
 
 
 @user_management_api.route('/get-token-identity', methods=['GET'])
@@ -173,7 +159,6 @@ def get_token_identity() -> (Response, int):
         return response
     else:
         token = get_token()
-        response = jsonify(user={"username": username, "access_token": token}, message=f'Token is linked to {username}',
-                           status=202)
+        response = jsonify(user={"username": username, "access_token": token})
         response.status = 202
         return response

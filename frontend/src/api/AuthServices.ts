@@ -68,7 +68,7 @@ export async function login(username : string, password : string){
             return response
         }
 
-        const userJson = response.data.user
+        const userJson = response.data
         if (userJson == null) {
             return errorOther
         }
@@ -101,7 +101,7 @@ export async function register(username : string, password : string){
             return response
         }
 
-        const userJson = response.data.user
+        const userJson = response.data
         if (userJson == null) {
             return errorOther
         }
@@ -132,15 +132,8 @@ export async function logout() {
                 return response
             }
 
-            const userJson = response.data.user
-            if (userJson == null) {
-                return errorOther
-            }
-
-            if ("username" in userJson) {
-                storage.removeItem("access_token")
-                await store.dispatch("auth/unsetAuthenticated")
-            }
+            storage.removeItem("access_token")
+            await store.dispatch("auth/unsetAuthenticated")
             return response.data
         } catch (error) {
             return errorOther

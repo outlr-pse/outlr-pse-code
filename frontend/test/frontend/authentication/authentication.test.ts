@@ -3,31 +3,31 @@ import {getIdentity} from "../../../src/api/DataRetrievalService";
 import store from "../../../src/store";
 import {axiosClient, storage} from "../../../src/api/APIRequests";
 
-async function checkAuthenticationSuccessful(response: { error?: any; user: { username?: any; access_token?: any; }; }, username: string){
-        expect(response.error).not.toBeDefined()
+async function checkAuthenticationSuccessful(response: { error?: any; username?: any; access_token?: any;}, username: string) {
+    expect(response.error).not.toBeDefined()
 
-        expect(response.user.username).toBeDefined()
-        expect(response.user.access_token).toBeDefined()
-        expect(response.user.username).toBeDefined()
+    expect(response.username).toBeDefined()
+    expect(response.access_token).toBeDefined()
+    expect(response.username).toBeDefined()
 
 
-        expect(storage.getItem('access_token')).not.toBeNull()
-        expect((await getIdentity()).username).toBeDefined()
-        expect((await getIdentity()).username).toEqual(username)
+    expect(storage.getItem('access_token')).not.toBeNull()
+    expect((await getIdentity()).username).toBeDefined()
+    expect((await getIdentity()).username).toEqual(username)
 
-        // Vuex store auth states correctly set
-        expect(store.getters["auth/username"]).toEqual(username)
-        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+    // Vuex store auth states correctly set
+    expect(store.getters["auth/username"]).toEqual(username)
+    expect(store.getters["auth/isAuthenticated"]).toEqual(true)
 }
 
 async function notAuthenticated() {
-        expect(store.getters["auth/username"]).toEqual("")
-        expect(store.getters["auth/isAuthenticated"]).toEqual(false)
-        expect(storage.getItem('access_token')).not.toBeDefined()
-        expect((await getIdentity()).username).not.toBeDefined()
+    expect(store.getters["auth/username"]).toEqual("")
+    expect(store.getters["auth/isAuthenticated"]).toEqual(false)
+    expect(storage.getItem('access_token')).not.toBeDefined()
+    expect((await getIdentity())).not.toBeDefined()
 }
 
-describe('Authentication',  function () {
+describe('Authentication', function () {
 
     beforeEach(() => {
             logout()
@@ -57,12 +57,11 @@ describe('Authentication',  function () {
         LOGOUT
          */
         const response_logout = await logout()
-        expect(response_logout.user.access_token).toBeDefined()
-        expect(response_logout.error).not.toBeDefined()
+        expect(response_logout).toEqual("")
         await notAuthenticated()
-       /*
-       LOGIN
-        */
+        /*
+        LOGIN
+         */
         const response_login = await login(username, password)
         await checkAuthenticationSuccessful(response_login, username)
     })
@@ -84,7 +83,7 @@ describe('Authentication',  function () {
         //TO-DO
         //expect(response.error.error).toEqual(ErrorType.UserManagementError)
         const response = await getIdentity()
-        expect(response).toEqual({})
+        expect(response).not.toBeDefined()
         await notAuthenticated()
     })
 

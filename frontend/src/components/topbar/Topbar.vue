@@ -16,7 +16,7 @@
       <div v-else>
         <Button text="Log in" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
         <div style="width:5px; height:auto; display:inline-block;"/>
-        <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/signup')"/>
+        <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
         <div style="width:15px; height:auto; display:inline-block;"/>
       </div>
     </div>

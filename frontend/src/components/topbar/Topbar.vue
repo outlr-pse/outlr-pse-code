@@ -48,12 +48,6 @@ export default defineComponent({
       }
     }
   },
-  methods: {
-    // ClickAction() {
-    //   this.buttonStyle = this.buttonStyle === "" ? "createExperimentTopBar" : "";
-    //   console.log("Button Clicked");
-    // }
-  },
   computed: {
     ButtonType() {
       return ButtonType

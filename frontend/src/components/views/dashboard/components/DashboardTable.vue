@@ -1,15 +1,16 @@
 <template>
-  <div class="tableBox">
+  <div style="height: 50vh">
+    <div class="tableBox">
     <BaseTable :style="{ width: '100%'}">
       <template #header>
-        <tr>
-          <td v-for="header in headers" @click="headerClick(header)" class="firstRow">
+        <tr class="firstRow">
+          <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
             {{ header }}
           </td>
         </tr>
       </template>
       <template #body>
-        <tr v-for="row in data" @click="rowClick(row[0])" class="tableData">
+        <tr v-for="row in filteredData" @click="rowClick(row[0])" class="tableData">
           <td v-for="cell in row[1]">
             {{ cell }}
           </td>
@@ -17,91 +18,201 @@
       </template>
     </BaseTable>
   </div>
+  </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "vue";
 import BaseTable from "../../../basic/BaseTable.vue";
 import {Experiment} from "../../../../models/experiment/Experiment";
+import {requestAllExperiments} from "../../../../api/APIRequests";
+import Card from "../../../basic/Card.vue";
+import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
+import {DashboardSortColumn, getDashboardSortColumnLabel} from "./DashboardSortColumn";
 
 export default defineComponent({
-  components: {BaseTable},
+  components: {Card, BaseTable},
   data() {
     return {
       headers: [] as string[],
-      tableData: [] as [number, string[]][],
+      data: [] as [number, string[]][],
+      filteredData: [] as [number, string[]][],
+      experiments: [] as Experiment[],
+      experimentMap: new Map<number, Experiment>(),
+      shownParams: [] as Hyperparameter[]
     }
   },
   props: {
-    data: {
-      type: Array as () => [number, string[]][],
-      required: true,
+    searchTerm: {
+      type: String,
+      required: true
     },
+    currentSorting: {
+      type: String,
+      required: true
+    }
   },
-  mounted() {
+
+  watch: {
+    searchTerm: function (newSearchTerm: string) {
+      this.filteredData = this.data.filter((row) => {
+        for (let cell of row[1]) {
+          if (cell.toLowerCase().includes(newSearchTerm.toLowerCase())) {
+              return true
+            }
+        }
+        return false
+      })
+    },
+    currentSorting: function (newSorting: DashboardSortColumn) {
+      console.log("hello im watching currentSorting")
+      this.tableSort(newSorting)
+    }
+  },
+  async mounted() {
+    this.experiments = await requestAllExperiments();
     this.headers = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
+
+    for (let experiment of this.experiments) {
+      this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
+      if (experiment.running) {
+        this.data.push([
+          experiment.id ? experiment.id : 0,
+          [
+            experiment.name,
+            experiment.datasetName,
+            experiment.odm.name,
+            "Running . . .",
+            "",
+            "",
+          ]
+        ])
+      } else {
+        let hyperParamString = ""
+        for (let param of experiment.odm.hyperParameters) {
+          hyperParamString += param.name + ": " + param.value + ", "
+        }
+
+        this.data.push([
+          experiment.id ? experiment.id : 0,
+          [
+            experiment.name,
+            experiment.datasetName,
+            experiment.odm.name,
+            hyperParamString,
+            experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
+            experiment.experimentResult?.accuracy + "%",
+          ]])
+      }
+    }
+    this.filteredData = this.data
+
   },
   methods: {
     headerClick(header: string) {
-      this.$emit('headerClick', header)
+      let sortColumn = getDashboardSortColumnLabel(header)
+      this.tableSort(sortColumn)
     },
     rowClick(row: number) {
-      this.$emit('rowClick', row)
-    }
+      this.$router.push("/experiment/" + row)
+    },
+    tableSort(sortColumn: DashboardSortColumn) {
+      if (sortColumn === DashboardSortColumn.NAME) {
+        this.filteredData.sort((a, b) => {
+          return a[1][0].localeCompare(b[1][0])
+        })
+      } else if (sortColumn === DashboardSortColumn.DATASET) {
+        this.filteredData.sort((a, b) => {
+          return a[1][1].localeCompare(b[1][1])
+        })
+      } else if (sortColumn === DashboardSortColumn.ODM) {
+        this.filteredData.sort((a, b) => {
+          return a[1][2].localeCompare(b[1][2])
+        })
+      } else if (sortColumn === DashboardSortColumn.HYPERPARAMETER) {
+        this.filteredData.sort((a, b) => {
+          return a[1][3].localeCompare(b[1][3])
+        })
+      } else if (sortColumn === DashboardSortColumn.DATE) {
+        this.filteredData.sort((a, b) => {
+          return a[1][4].localeCompare(b[1][4])
+        })
+      } else if (sortColumn === DashboardSortColumn.ACCURACY) {
+        this.filteredData.sort((a, b) => {
+          return a[1][5].localeCompare(b[1][5])
+        })
+      }
+    },
+
   }
 })
 </script>
 
 <style scoped>
+
 .tableBox {
   height: max-content;
-  max-height: 60vh;
-  width: 90vw;
+  max-height: 50vh;
+  width: 80vw;
   border-style: solid;
   border-radius: 7px;
-  border-width: 1px;
-  border-color: var(--color-stroke);
+  border-width: 2px;
+  border-color: var(--color-table-border);
   overflow: auto;
 }
 
 table {
   width: 100%;
   height: 100%;
-  border-radius: 15px;
+  position: sticky;
 }
 
-table, tr, td {
+th {
+  position: sticky;
+  top: 0;
+}
+
+table, th, tr, td {
   border-collapse: collapse;
-  border: 1px solid var(--color-stroke);
+  border-bottom: 1px solid var(--color-table-border);
 }
 
 tr {
   text-align: left;
-  height: 100%;
 }
 
 tr td {
   padding: 0.5em;
 }
 
+td {
+  max-width: 20vw;
+  max-height: 1vh;
+
+}
+
+.firstRow {
+  position: sticky;
+  top: 0;
+}
+
+
 tr:nth-child(odd).tableData {
   background-color: var(--color-background);
 }
 
 tr:nth-child(even).tableData {
-  background-color: var(--color-lines);
+  background-color: var(--color-table-secondary);
 }
 
-.firstRow {
+.headerCells {
   background-color: var(--color-cell-background);
-  position: sticky;
-  top: 0;
-  border: 1px solid var(--color-stroke);
+  border: 1px solid var(--color-table-border);
 
 }
 
-td:hover.firstRow {
-  background-color: var(--palette-purple-7);
+td:hover.headerCells {
+  background-color: var(--color-table-header);
   cursor: pointer;
 }
 

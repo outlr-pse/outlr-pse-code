@@ -1,10 +1,14 @@
 <template>
+
   <div class="dashboard">
-    <h1>Dashboard</h1>
-    <Tip text="This tip is useless."/>
-    <DashboardTable
-        :data="tableData"
-        @rowClick="onRowClick"/>
+     <h1>
+    Dashboard
+  </h1>
+    <div class="searchBar">
+      <search-bar @search-term-changed="applySearch" class="left"/>
+      <sort-column-selector class="right" @onSortColumnSelected="applySort"/>
+    </div>
+    <DashboardTable :search-term="searchTerm" class="dashboard-table" :current-sorting="sortColumn"/>
   </div>
 </template>
 
@@ -14,62 +18,28 @@ import {defineComponent} from "vue";
 import {Experiment} from "../../../models/experiment/Experiment";
 import {requestAllExperiments} from "../../../api/APIRequests";
 import DashboardTable from "./components/DashboardTable.vue";
+import SearchBar from "./components/SearchBar.vue";
+import SortColumnSelector from "./components/SortColumnSelector.vue";
+import {DashboardSortColumn} from "./components/DashboardSortColumn";
 
 export default defineComponent({
   name: "Dashboard",
-  components: {DashboardTable, Tip},
+  components: {SortColumnSelector, SearchBar, DashboardTable, Tip},
   data() {
     return {
-      tableHeaders: [] as string[],
-      tableData: [] as [number, string[]][],
-      experiments: [] as Experiment[],
-
+      searchTerm: "",
+      sortColumn: DashboardSortColumn.DATE
     }
   },
   methods: {
     applySearch(searchTerm: string) {
-
-    },
-    onRowClick(row: string[]){
-      console.log(row)
-    },
-    onExperimentClick(experiment: Experiment) {
-      this.$router.push({name: 'Experiment', params: {id: experiment.id}})
+      this.searchTerm = searchTerm;
+  },
+    applySort(sortColumn: DashboardSortColumn) {
+      console.log(sortColumn)
+      this.sortColumn = sortColumn;
     }
   },
-  async mounted() {
-    this.experiments = await requestAllExperiments();
-    this.tableHeaders = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
-
-    for (let experiment of this.experiments) {
-      if (experiment.running) {
-        this.tableData.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            "Running",
-            "",
-            "",
-          ]
-        ])
-      } else {
-        this.tableData.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            experiment.odm.hyperParameters[0].name,
-            experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-            experiment.experimentResult?.accuracy + "%",
-          ]])
-      }
-
-    }
-
-  }
 })
 </script>
 
@@ -78,10 +48,32 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: end;
   height: 100%;
   width: 100%;
+}
 
+.dashboard-table {
+  margin-top: 2vh;
+  margin-bottom: 5vh;
+}
+
+.searchBar {
+  width: 80vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: "searchBar sortOption";
+
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  display: flex;
+  justify-content: flex-end;
 }
 
 </style>

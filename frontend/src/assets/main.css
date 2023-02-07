@@ -55,6 +55,9 @@ body {
   --color-purple-button: var(--palette-purple-85);
   --color-disabled-button: var(--palette-grey-4);
   --color-close-button: #D64751;
+  --color-table-secondary: #2e2e2e;
+  --color-table-border: #4f4f4f;
+  --color-table-header: rgba(171, 135, 241, 0.73);
 }
 
 /* add colors for light mode here */

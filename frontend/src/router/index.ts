@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/login',
     name: 'login-page',
-    component: () => import("../components/views/LoginView.vue"),
+    component: () => import("../components/views/LoginView/LoginView.vue"),
     meta: { requiresAuth: false }
   },
   {

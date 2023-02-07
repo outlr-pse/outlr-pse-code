@@ -73,6 +73,20 @@ class Subspace(Base):
             "roc_curve": None
         }
 
+    @staticmethod
+    def from_client_json(json: dict) -> 'Subspace':
+        """
+        Parse Subspace form json that was received from a client
+        Args:
+            json: JSON dict. Only id, columns and name are read.
+                Currently, clients cannot send other attributes, like for example outliers
+        """
+        return Subspace(
+            id=json.get("id"),  # Can be None
+            columns=list(set(json["columns"])),
+            name=json.get("name"),  # Can be None
+        )
+
 
 class Outlier(Base):
     """

@@ -4,7 +4,7 @@ from numpy.typing import *
 
 import models.subspacelogic as subspacelogic
 from models.json_error import JSONError
-from models.results.subspace_outlier import Subspace
+from models.results import Subspace, Outlier
 
 
 class SubspaceLogic(ABC):
@@ -22,11 +22,14 @@ class SubspaceLogic(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self) -> ArrayLike:
+    def evaluate(self, dataset_size: int) -> ArrayLike:
         """
         Evaluates the subspace logic.
         It is required that all subspaces contained in this subspace logic have their result in the
         Subspace.outliers attribute. See SubspaceLogic.get_subspaces
+
+        Args:
+            dataset_size (int): The size of the dataset. Needed to know size of arrays for calculation
 
         Returns:
             A numpy array where the element at index i is 1 if and only if the datapoint at index i in the dataset
@@ -35,9 +38,9 @@ class SubspaceLogic(ABC):
         pass
 
     @abstractmethod
-    def to_json(self) -> dict:
+    def to_client_json(self) -> dict:
         """
-        Converts to SubspaceLogic to a dictionary that represents a json.
+        Convert SubspaceLogic to a dictionary that represents a json to be sent to a client.
 
         The resulting JSON is of the shape ``{logic_type: {...}}``, where ``logic_type`` determines the subclass.
 
@@ -47,13 +50,20 @@ class SubspaceLogic(ABC):
         pass
 
     @staticmethod
-    def from_json(json: dict) -> 'SubspaceLogic':
+    def from_client_json(json: dict, existing_subspaces: dict[frozenset, Subspace]) -> 'SubspaceLogic':
         """
-        Create a SubspaceLogic from JSON (in the form of a dict).
+        Create a SubspaceLogic from JSON that was received from a client (in the form of a dict).
 
         A JSON must be of the shape ``{logic_type: {...}}``, where ``logic_type`` determines the subclass.
-        The ``SubspaceLogic`` (base) class is responsible for checking ``logic_type`` and then calls ``from_json`` on the
+        The ``SubspaceLogic`` (base) class is responsible for checking ``logic_type``
+        and then calls ``from_client_json`` on the
         given subclass, where only the ``{...}`` part of the JSON above is passed.
+
+        Args:
+            json (dict): JSON dict
+            existing_subspaces (dict[int | frozenset, Subspace]):
+                Dict that maps subspace columns to Subspace objects.
+                Used so that subspaces that occur multiple times in the subspace logic are created only once
 
         Raises:
             JSONError: Raises a ``JSONError`` when the given ``json`` cannot be parsed to a ``SubspaceLogic``
@@ -64,8 +74,44 @@ class SubspaceLogic(ABC):
         logic_type = next(iter(json.keys()))  # get the single key from the dict
         match logic_type:
             case subspacelogic.operation.Operation.JSON_KEY:
-                return subspacelogic.operation.Operation.from_json(json[logic_type])
+                return subspacelogic.operation.Operation.from_client_json(json[logic_type], existing_subspaces)
             case subspacelogic.literal.Literal.JSON_KEY:
-                return subspacelogic.literal.Literal.from_json(json[logic_type])
-            case _: raise JSONError(f"SubspaceLogic JSON contained an unknown type of subspace logic: {logic_type}")
+                return subspacelogic.literal.Literal.from_client_json(json[logic_type], existing_subspaces)
+            case _: raise JSONError(
+                f"SubspaceLogic JSON (client) contained an unknown type of subspace logic: {logic_type}"
+            )
+
+    def to_database_json(self) -> dict:
+        """
+        Convert SubspaceLogic to a JSON dict that can be stored in the database
+        """
+        pass
+
+    @staticmethod
+    def from_database_json(json: dict, subspaces: dict[int, Subspace]) -> 'SubspaceLogic':
+        """
+        Create a new SubspaceLogic from a json dict that was read from the database
+        Args:
+            json: JSON dict (from the database)
+            subspaces: Maps subspace ids to Subspace objects.
+            Must contain all Subspaces that occur in the subspace logic. Otherwise, an error is raised
+
+        Raises:
+            JSONError: Raises an Error if there is a subspace in the subspace logic
+                that was not found in the ``subspace`` dict argument
+            JSONError: Raises a ``JSONError`` when the given ``json`` cannot be parsed to a ``SubspaceLogic``
+        """
+        if len(json.keys()) != 1:
+            raise JSONError("SubspaceLogic JSON contained other than a single key at the top level." +
+                            "Every JSON must have the shape of the following example: {operation: {...}}")
+
+        logic_type = next(iter(json.keys()))  # get the single key from the dict
+        match logic_type:
+            case subspacelogic.operation.Operation.DATABASE_JSON_KEY:
+                return subspacelogic.operation.Operation.from_database_json(json[logic_type], subspaces)
+            case subspacelogic.literal.Literal.DATABASE_JSON_KEY:
+                return subspacelogic.literal.Literal.from_database_json(json[logic_type], subspaces)
+            case _: raise JSONError(
+                f"SubspaceLogic JSON (database) contained an unknown type of subspace logic: {logic_type}"
+            )
 

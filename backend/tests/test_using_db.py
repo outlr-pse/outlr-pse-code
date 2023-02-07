@@ -25,6 +25,7 @@ class TestDBAccess(unittest.TestCase):
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]
         exp.dataset_name = "datasatasat"
+        exp.dataset_size = 20
         outlier = Outlier(index=2)
         exp.experiment_result = ExperimentResult(
             accuracy=0.89,
@@ -124,6 +125,12 @@ class TestExperimentWithResult(unittest.TestCase):
         self.sub2.outliers.append(self.out2)
         u = User(name="overleafer", password="nix")
         db.add_user(u)
-        self.exp = Experiment(experiment_result=self.res, user_id=u.id, name="Experiment #1203", odm_id=1)
+        self.exp = Experiment(
+            experiment_result=self.res,
+            user_id=u.id,
+            name="Experiment #1203",
+            odm_id=1,
+            dataset_size=20,
+        )
         db.add_experiment(self.exp)
         self.assertEqual(1, 1, msg="Assert that the code doesn't raise an exception")

@@ -106,3 +106,9 @@ class TestResultModels(unittest.TestCase):
             res.to_json()
         )
 
+    def test_subspace_from_json(self):
+        _sub1 = Subspace.from_client_json(sub1.to_json())
+        # See help(Subspace.from_client_json) to find out what attributes are read from the json
+        self.assertEqual(_sub1.id, sub1.id)
+        self.assertEqual(_sub1.columns, sub1.columns)
+        self.assertEqual(_sub1.name, sub1.name)

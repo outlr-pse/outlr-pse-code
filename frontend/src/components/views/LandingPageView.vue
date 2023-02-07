@@ -12,7 +12,7 @@
 
 
     <div v-else class="signUp">
-      <Button style="display: inline-block" @buttonClick="redirect('register')"
+      <Button style="display: inline-block; margin-top: 30px" @buttonClick="redirect('register')"
               :button-type="ButtonType.DARKPURPLESIGNUP" text="Sign up" :size="[140,70] " />
       <div style="width: 40px; height:auto; display:inline-block;" />
      <Button style="display: inline-block; cursor: not-allowed"  :button-type="ButtonType.OUTLINE" text="Try it out" :size="[140,70]" />
@@ -82,8 +82,7 @@ export default defineComponent( {
       return ButtonType
     },
     isAuthenticated() : boolean {
-        // return store.getters['auth/is_authenticated'];
-      return true;
+      return store.getters['auth/is_authenticated'];
     }
   }
 })

@@ -1,16 +1,41 @@
+from typing import Optional
+
 from models.base import Base
+from models.odm.odm import ODM
+from models.results import ExperimentResult
+
 from sqlalchemy import ForeignKey, Integer, JSON, ARRAY
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 
 class Experiment(Base):
-    __tablename__: str = 'experiments'
+    __tablename__: str = 'experiment'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     name: Mapped[str]
-    subspace_logic = mapped_column(JSON)
-    odm_params = mapped_column(JSON)
     true_outliers = mapped_column(ARRAY(Integer))
+    param_values = mapped_column(JSON)
+    _subspace_logic = mapped_column(JSON)
+    dataset_name: Mapped[Optional[str]]
+
+    odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
+    odm: Mapped['ODM'] = relationship()
+
+    experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+
+    # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
+    dataset = None
+
+    # TODO subspace_logic property that (lazily) converts between db json and actual subspace logic instance
+    # Can be implemented with the feature backend/models-subspacelogic
+    # https://docs.sqlalchemy.org/en/20/orm/mapped_attributes.html#using-descriptors-and-hybrids
+    @property
+    def subspace_logic(self):
+        return self._subspace_logic
+
+    @subspace_logic.setter
+    def subspace_logic(self, subspace_logic: any):
+        self._subspace_logic = subspace_logic
 
     def to_json(self) -> dict:
         return {

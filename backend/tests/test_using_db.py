@@ -1,8 +1,8 @@
 import unittest
 import database.database_access as db
-from database.database_access import session
 from models.user.user import User
 from models.experiment.experiment import Experiment
+from models.results import *
 from models.odm.odm import ODM, HyperParameter
 from models.base import Base
 
@@ -10,7 +10,7 @@ from models.base import Base
 def setUpModule() -> None:
     Base.metadata.drop_all(bind=db.engine, checkfirst=True)
     Base.metadata.create_all(bind=db.engine)
-    # db.setup_db()
+    db.setup_db()
 
 
 class TestDBAccess(unittest.TestCase):
@@ -20,9 +20,20 @@ class TestDBAccess(unittest.TestCase):
         exp = Experiment()
         exp.user_id = user_id
         exp.name = name
+        exp.odm_id = 1
         exp.subspace_logic = {"a": 1}
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]
+        exp.dataset_name = "datasatasat"
+        outlier = Outlier(index=2)
+        exp.experiment_result = ExperimentResult(
+            accuracy=0.89,
+            execution_date=datetime.now(),
+            execution_time=timedelta(minutes=2),
+            subspaces=[Subspace(name="one subspace", columns=[1], outliers=[outlier])],
+            outliers=[outlier],
+            result_space=Subspace(name="result", outliers=[outlier])
+        )
         return exp
 
     @classmethod
@@ -79,14 +90,40 @@ class TestDBAccess(unittest.TestCase):
     #     self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
 
 
-# class TestODMProvider(unittest.TestCase):
-#     def test_scraper(self):
-#         odms = db.get_all_odms()
-#         odm_names = [odm.name for odm in odms]
-#         self.assertIn('cd.CD', odm_names)
-#         self.assertIn('hbos.HBOS', odm_names)
-#         self.assertIn('anogan.AnoGAN', odm_names)
-#         self.assertIn('abod.ABOD', odm_names)
-#         self.assertIn('alad.ALAD', odm_names)
-#         self.assertIn('rod.ROD', odm_names)
-#         self.assertIn('knn.KNN', odm_names)
+class TestODMProvider(unittest.TestCase):
+    def test_scraper(self):
+        odms = db.get_all_odms()
+        odm_names = [odm.name for odm in odms]
+        self.assertIn('cd.CD', odm_names)
+        self.assertIn('hbos.HBOS', odm_names)
+        self.assertIn('anogan.AnoGAN', odm_names)
+        self.assertIn('abod.ABOD', odm_names)
+        self.assertIn('alad.ALAD', odm_names)
+        self.assertIn('rod.ROD', odm_names)
+        self.assertIn('knn.KNN', odm_names)
+        db.setup_db()
+
+
+class TestExperimentWithResult(unittest.TestCase):
+
+    def test_experiment_with_result(self):
+        self.res = ExperimentResult(
+            accuracy=0.89,
+            execution_date=datetime.now(), execution_time=timedelta(minutes=2)
+        )
+        self.res_space = Subspace(columns=None, name="result")
+        self.sub1 = Subspace(columns=[0, 1, 3])
+        self.res.subspaces.append(self.sub1)
+        self.sub2 = Subspace(columns=[32])
+        self.res.result_space = self.res_space
+        self.res.subspaces.append(self.sub2)
+        self.out1 = Outlier(index=3, subspaces=[self.sub1, self.sub2])
+        self.out2 = Outlier(index=4)
+        self.res.outliers.append(self.out1)
+        self.res.outliers.append(self.out2)
+        self.sub2.outliers.append(self.out2)
+        u = User(name="overleafer", password="nix")
+        db.add_user(u)
+        self.exp = Experiment(experiment_result=self.res, user_id=u.id, name="Experiment #1203", odm_id=1)
+        db.add_experiment(self.exp)
+        self.assertEqual(1, 1, msg="Assert that the code doesn't raise an exception")

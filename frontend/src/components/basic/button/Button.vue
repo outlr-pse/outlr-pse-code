@@ -45,7 +45,7 @@ export default defineComponent({
       textSize:{
         type: Object as () => [number, CSSProperties['fontWeight']],
         required: false,
-        default: [20, 500],
+        default: [16, 500],
       }
     },
   methods: {

@@ -7,15 +7,14 @@ from models.user.user import User
 
 # TODO: Add more tests for Experiment, ODM and User
 class TestUser(unittest.TestCase):
-    def test_deserialize(self):
+    def test_serialize(self):
         user_json = {
-            "name": "overleafer"
+            "username": "overleafer",
+            "access_token": "jwt"
         }
 
-        user = User.from_json(user_json)
-        user.id = 0
-        user_json["id"] = user.id
-        self.assertEqual(user.to_json(), user_json)
+        user = User(name="overleafer")
+        self.assertEqual(user.to_json("jwt"), user_json)
 
 
 class TestHyperParameter(unittest.TestCase):
@@ -23,7 +22,7 @@ class TestHyperParameter(unittest.TestCase):
         self.hp = HyperParameter(id=1, name='test_hp', param_type='int', optional=True)
 
     def test_to_json(self):
-        expected_result = {'id': 1, 'name': 'test_hp', 'param_type': 'int', 'optional': True}
+        expected_result = {'id': 1, 'name': 'test_hp', 'type': 'int', 'optional': True}
         self.assertDictEqual(self.hp.to_json(), expected_result)
 
     def test_attributes(self):
@@ -40,6 +39,8 @@ class TestODM(unittest.TestCase):
     def test_to_json(self):
         expected_result = {'id': 1, 'name': 'test_odm', 'hyper_parameters': [], 'deprecated': False}
         self.assertDictEqual(self.odm.to_json(), expected_result)
+        expected_result = {'id': 1, 'name': 'test_odm'}
+        self.assertDictEqual(self.odm.to_json_no_params(), expected_result)
 
     def test_hyper_parameters(self):
         hp1 = HyperParameter(id=1, name='hp1')

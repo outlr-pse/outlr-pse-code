@@ -3,7 +3,10 @@
     <h1>Dashboard</h1>
 
     <Tip text="This tip is useless."/>
+    <div v-for="experiment in experiments" :key="experiment.id">
+      {{ experiment.name }}
 
+    </div>
   </div>
 </template>
 
@@ -11,11 +14,12 @@
 import Tip from "../../basic/Tip.vue";
 import {defineComponent} from "vue";
 import {Experiment} from "../../../models/experiment/Experiment";
+import {requestAllExperiments} from "../../../api/APIRequests";
 
 export default defineComponent({
   name: "Dashboard",
   components: {Tip},
-  data(){
+  data() {
     return {
       tableHeaders: [],
       tableData: [],
@@ -24,15 +28,15 @@ export default defineComponent({
     }
   },
   methods: {
-    applySearch(searchTerm: string){
+    applySearch(searchTerm: string) {
 
     },
-    onExperimentClick(experiment: Experiment){
+    onExperimentClick(experiment: Experiment) {
       this.$router.push({name: 'Experiment', params: {id: experiment.id}})
     }
   },
-  mounted(){
-    this.experiments =
+  async mounted() {
+    this.experiments = await requestAllExperiments();
   }
 })
 </script>

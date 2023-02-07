@@ -117,9 +117,9 @@ export default defineComponent({
 }
 
 .content {
-  height: 20vh;
+  height: max-content;
   width: max-content;
-  padding: 2.5vh 2vw;
+  padding: 2.5vh 2vw 1vh;
 }
 
 </style>

@@ -1,4 +1,4 @@
-from typing import Type, Iterator
+from typing import Type, Iterator, Optional
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -34,12 +34,18 @@ def add_user(user: User) -> User:
     return user
 
 
-def get_user(user_id: int) -> User | None:
-    return session.get(User, user_id)
+def get_user(user: int | str) -> Optional[User]:
+    """Returns the user with the given id or name.
 
+    Args:
+        user: Either the user id as an int or the user's name as a str.
 
-def get_user_by_username(username: str) -> User | None:
-    return session.query(User).filter_by(name=username).first()
+    Returns:
+        The user or None if no such user exists.
+    """
+    if isinstance(user, str):
+        return session.query(User).filter_by(name=user).first()
+    return session.get(User, user)
 
 
 def add_odm(odm: ODM):

@@ -68,21 +68,30 @@ def handle_user_input() -> (Response, int):
     """
     data = request.get_json()
     if not data:
-        return jsonify(error=error.no_data_provided), error.no_data_provided["status"]
+        return jsonify(error.no_data_provided), error.no_data_provided["status"]
 
     if "username" not in data:
-        return jsonify(error=error.no_username_provided), error.no_username_provided["status"]
+        return jsonify(error.no_username_provided), error.no_username_provided["status"]
 
     if "password" not in data:
-        return jsonify(error=error.no_password_provided), error.no_password_provided["status"]
+        return jsonify(error.no_password_provided), error.no_password_provided["status"]
     username = data['username']
     password = data['password']
     if username is None or not validate_username(username):
-        return jsonify(error=error.invalid_username), error.invalid_username["status"]
+        return jsonify(error.invalid_username), error.invalid_username["status"]
     if password is None or not validate_password(password):
-        return jsonify(error=error.invalid_password), error.invalid_password["status"]
+        return jsonify(error.invalid_password), error.invalid_password["status"]
 
     return None
+
+
+def invalidate_token(token: str) -> None:
+    """
+    Invalidates the token provided in the last HTTP request.
+    Tokens currently only automatically expire after a certain time period.
+    Invalidating them manually requires storing them in the database which is not implemented yet.
+    """
+    pass
 
 
 @user_management_api.route('/login', methods=['POST'])
@@ -98,12 +107,12 @@ def login() -> (Response, int):
 
     username = request.json["username"]
     password = request.json["password"]
-    user = database_access.get_user_by_username(username)
+    user = database_access.get_user(username)
 
     if not check_password_hash(user.password, password):
-        return jsonify(error=error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
-    access_token = create_access_token(identity=user.name)
-    return jsonify(user={"username": user.name, "access_token": access_token})
+        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
+    access_token = create_access_token(identity=user.id)
+    return jsonify(username=user.name, access_token=access_token)
 
 
 @user_management_api.route('/register', methods=['POST'])
@@ -123,42 +132,36 @@ def register() -> (Response, int):
     password_hashed = generate_password_hash(password, 'sha256')
     user = User(name=username, password=password_hashed)
     # check if username is already linked to User in database
-    if database_access.get_user_by_username(username) is not None:
-        return jsonify(error=error.username_already_taken), error.username_already_taken["status"]
+    if database_access.get_user(username):
+        return jsonify(error.username_already_taken), error.username_already_taken["status"]
 
     # no User in database with username -> create a User with provided username in the database
     database_access.add_user(user)
-    access_token = create_access_token(identity=user.name)
-    return jsonify(user={"username": user.name, "access_token": access_token})
+    access_token = create_access_token(identity=user.id)
+    return jsonify(user.to_json(access_token))
 
 
 @user_management_api.route('/logout', methods=['POST'])
 @jwt_required()
 def logout() -> (Response, int):
-    username = get_jwt_identity()
-    token = get_token()
-    return jsonify(user={"username": username, "access_token": token}, message="Logged out", status=200)
+    if token := get_token():
+        invalidate_token(token)
+
+    return '', 200
 
 
 @user_management_api.route('/get-token-identity', methods=['GET'])
-@jwt_required(optional=True)
+@jwt_required()
 def get_token_identity() -> (Response, int):
     """
-    Returns the user json of the user connected to the provided JWT Token. In the case of a valid JWT Token
-    "202 Accepted" is returned with the user json, otherwise an empty user json and "200 OK" is returned
+    In the case of a valid JWT Token
+    the username and the access token are returned with status code "202 Accepted".
     """
-    username = get_jwt_identity()
-    if username is None:
-        response = jsonify(user={}, error=error.token_not_provided_on_identity_check),\
-            error.token_not_provided_on_identity_check["status"]
-        return response
-    user = database_access.get_user_by_username(username)
-    if user is None:
-        response = jsonify(user={}, error=error.token_not_provided_on_identity_check), \
-            error.token_not_provided_on_identity_check["status"]
-        return response
-    else:
-        token = get_token()
-        response = jsonify(user={"username": username, "access_token": token})
-        response.status = 202
-        return response
+    user_id = get_jwt_identity()
+    token = get_token()
+    user = database_access.get_user(user_id)
+    if not user:
+        return jsonify(error.token_not_valid), error.token_not_valid["status"]
+    response = jsonify(user.to_json(token))
+    response.status = 202
+    return response

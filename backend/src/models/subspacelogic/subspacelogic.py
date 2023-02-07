@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
-import numpy as np
 from numpy.typing import *
 
 import models.subspacelogic as subspacelogic
 from models.json_error import JSONError
-from models.results import Subspace, Outlier
 
+from models.experiment import Subspace
 
 class SubspaceLogic(ABC):
     """This interface represents the subspace logic.
@@ -13,7 +12,7 @@ class SubspaceLogic(ABC):
     """
 
     @abstractmethod
-    def get_subspaces(self) -> set[Subspace]:
+    def get_subspaces(self) -> set['Subspace']:
         """
         Get subspaces
         Returns:
@@ -50,7 +49,7 @@ class SubspaceLogic(ABC):
         pass
 
     @staticmethod
-    def from_client_json(json: dict, existing_subspaces: dict[frozenset, Subspace]) -> 'SubspaceLogic':
+    def from_client_json(json: dict, existing_subspaces: dict[frozenset, 'Subspace']) -> 'SubspaceLogic':
         """
         Create a SubspaceLogic from JSON that was received from a client (in the form of a dict).
 
@@ -88,7 +87,7 @@ class SubspaceLogic(ABC):
         pass
 
     @staticmethod
-    def from_database_json(json: dict, subspaces: dict[int, Subspace]) -> 'SubspaceLogic':
+    def from_database_json(json: dict, subspaces: dict[int, 'Subspace']) -> 'SubspaceLogic':
         """
         Create a new SubspaceLogic from a json dict that was read from the database
         Args:
@@ -114,4 +113,3 @@ class SubspaceLogic(ABC):
             case _: raise JSONError(
                 f"SubspaceLogic JSON (database) contained an unknown type of subspace logic: {logic_type}"
             )
-

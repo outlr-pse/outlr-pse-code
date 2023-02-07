@@ -1,11 +1,15 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy import Column, Integer, ARRAY, Table, ForeignKey, ForeignKeyConstraint, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from models.base import Base
+from models.odm.odm import ODM
 
+from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy.ext.hybrid import hybrid_property
+
+
+EXPERIMENT_TABLE_NAME = "experiment"
 EXPERIMENT_RESULT_TABLE_NAME = "experiment_result"
 SUBSPACE_TABLE_NAME = "subspace"
 OUTLIER_TABLE_NAME = "outlier"
@@ -17,11 +21,10 @@ subspace_outlier = Table(
     Column("subspace_id", ForeignKey(f"{SUBSPACE_TABLE_NAME}.id"), primary_key=True),
     Column("outlier_index", Integer, primary_key=True),
     Column("outlier_experiment_result_id", Integer, primary_key=True),
-    # UniqueConstraint("outlier_index", "outlier_experiment_result_id"),
     ForeignKeyConstraint(
         ["outlier_experiment_result_id", "outlier_index"],
         [f"{OUTLIER_TABLE_NAME}.experiment_result_id", f"{OUTLIER_TABLE_NAME}.index"]
-    ),  # Copied from a StackOverflow answer without knowing what it does
+    ),
 )
 
 
@@ -42,10 +45,10 @@ class Subspace(Base):
     columns = mapped_column(ARRAY(Integer), default=[])
     name: Mapped[Optional[str]]
 
-    experiment_result_id: Mapped[Optional[int]] = mapped_column(ForeignKey(f"{EXPERIMENT_RESULT_TABLE_NAME}.id"))
-    experiment_result: Mapped[Optional['ExperimentResult']] = relationship(
+    experiment_id: Mapped[Optional[int]] = mapped_column(ForeignKey(f"{EXPERIMENT_TABLE_NAME}.id"))
+    experiment: Mapped[Optional['Experiment']] = relationship(
         back_populates="subspaces",
-        foreign_keys=[experiment_result_id]
+        foreign_keys=[experiment_id]
     )
 
     outliers: Mapped[list['Outlier']] = relationship(  # many-to-many
@@ -98,7 +101,7 @@ class Outlier(Base):
             The corresponding id (attribute experiment_result_id) is a primary key
         subspaces (list[Subspace]): All subspaces that this Outlier instance is an outlier in
     """
-    
+
     __tablename__ = OUTLIER_TABLE_NAME
 
     index: Mapped[int] = mapped_column(primary_key=True)
@@ -138,27 +141,17 @@ class ExperimentResult(Base):
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
     experiment_id: Mapped[int] = mapped_column(ForeignKey("experiment.id"))
+    experiment: Mapped['Experiment'] = relationship(back_populates="experiment_result")
 
-    # back_populates means that the experiment_result attribute of a Subspace will be connected
-    # to the subspace attribute of ExperimentResult. Changing one in python also changes the other
-    subspaces: Mapped[list['Subspace']] = relationship(
-        # primaryjoin=Subspace.experiment_result_id == id,
-        back_populates="experiment_result",
-        foreign_keys=[Subspace.experiment_result_id]
-    )
     outliers: Mapped[list['Outlier']] = relationship(
         back_populates="experiment_result"
     )
 
     result_space_id: Mapped[int] = mapped_column(
-        ForeignKey(
-            f"{SUBSPACE_TABLE_NAME}.id",
-            name="foreign_key_result_space"
-        ),
+        ForeignKey(f"{SUBSPACE_TABLE_NAME}.id", name="foreign_key_result_space"),
     )
     result_space: Mapped['Subspace'] = relationship(
         foreign_keys=[result_space_id],
-        #  primaryjoin=result_space_id == Subspace.id,
         # post_update=True  # might be necessary for writes and deletes to work
     )
 
@@ -191,3 +184,82 @@ class ExperimentResult(Base):
     @staticmethod
     def microseconds(duration: timedelta) -> int:
         return int(duration.total_seconds() * 1000000 + duration.microseconds)
+
+
+class Experiment(Base):
+    """
+    Represent an Experiment.
+    Attributes:
+        id (int): Primary key
+        user_id (int): ID of the user that created this experiment
+        name (str): Name, assigned by user
+        true_outliers: The indices of the datapoints that are outliers according to a ground-truth file
+        param_values: Contains all hyperparameter values that the user selected
+        _subspace_logic: Subspace logic as JSON. Use the property ``subspace_logic`` instead
+        dataset_name (Optional[str])): Name the user assigned to the dataset
+        dataset_size (int): Total number of datapoints (rows) in the dataset. Needed for SubspaceLogic evaluation
+        odm_id (int): ID of the odm. See attribute ``odm``
+        odm (ODM): ODM that for used in this experiment
+        experiment_result (Optional[ExperimentResult]): Result of the experiment.
+            Is None if the experiment has not yet been run
+        dataset (Dataset): Dataset. This attribute is not stored in the database
+    """
+
+    __tablename__ = EXPERIMENT_TABLE_NAME
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    name: Mapped[str]
+    true_outliers = mapped_column(ARRAY(Integer))
+    param_values = mapped_column(JSON)
+    _subspace_logic = mapped_column(JSON)
+    dataset_name: Mapped[Optional[str]]
+    dataset_size: Mapped[int]
+
+    odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
+    odm: Mapped['ODM'] = relationship()
+
+    subspaces: Mapped[list['Subspace']] = relationship(
+         back_populates="experiment",
+         foreign_keys=[Subspace.experiment_id]
+    )
+
+    experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+
+    # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
+    dataset = None
+
+    # TODO subspace_logic property that (lazily) converts between db json and actual subspace logic instance
+    # Can be implemented with the feature backend/models-subspacelogic
+    # https://docs.sqlalchemy.org/en/20/orm/mapped_attributes.html#using-descriptors-and-hybrids
+    @hybrid_property
+    def subspace_logic(self) -> 'SubspaceLogic':
+        """Property subspace_logic (SubspaceLogic)"""
+        subspace_map = {subspace.id: subspace for subspace in self.subspaces}
+        return SubspaceLogic.from_database_json(self._subspace_logic, subspace_map)
+
+    @subspace_logic.setter
+    def subspace_logic(self, subspace_logic: 'SubspaceLogic'):
+        self._subspace_logic = subspace_logic.to_database_json()
+
+    def to_json(self) -> dict:
+        return {
+            'id': self.id,
+            'name': self.name,
+            'subspace_logic': self.subspace_logic,
+            'odm': self.odm.to_json(),
+            'odm_params': self.odm_params,
+            'true_outliers': self.true_outliers
+        }
+
+    @classmethod
+    def from_json(cls, json: dict):
+        return cls(
+            name=json['name'],
+            subspace_logic=json['subspace_logic'],
+            odm=json['odm'],
+            odm_params=json['odm_params'],
+            true_outliers=json['true_outliers']
+        )
+
+from models.subspacelogic.subspacelogic import SubspaceLogic  # must be at the end because of circular import

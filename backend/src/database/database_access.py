@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
-from models.experiment.experiment import Experiment
+from models.experiment import Experiment
 from models.odm.hyper_parameter import HyperParameter
 from models.odm.odm import ODM
 from models.user.user import User

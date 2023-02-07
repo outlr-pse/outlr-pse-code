@@ -1,9 +1,9 @@
 import unittest
 
-from models.subspacelogic.literal import *
-from models.subspacelogic.operation import *
+from models.subspacelogic.literal import Literal
+from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
-from models.results import ExperimentResult, Subspace, Outlier
+from models.experiment import ExperimentResult, Subspace, Outlier
 
 
 # don't modify these variables

@@ -53,7 +53,7 @@ export default {
     },
     is_authenticated() : boolean {
         // return this.$store.getters['auth/is_authenticated'];
-        return true;
+        return false;
       },
     rotatedImage() {
       return {
@@ -75,7 +75,7 @@ export default {
   position: fixed;
   background-color: var(--color-topbar);
   color: #fff;
-  font-size: 16px;
+  font-size: 14 px;
   display: grid;
   grid-template-columns: 1fr 1fr; /* two columns: logo, buttons */
   grid-gap: 10px; /* gap between cells, kann man weglassen */

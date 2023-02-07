@@ -2,7 +2,6 @@ import unittest
 
 from models.results import *
 
-
 res = ExperimentResult(id=12, accuracy=0.89, execution_date=datetime.now(), execution_time=timedelta(minutes=2))
 res_space = Subspace(id=2343, columns=None, name="result")
 sub1 = Subspace(id=23, experiment_result=res, columns=[0, 1, 3])
@@ -105,4 +104,3 @@ class TestResultModels(unittest.TestCase):
             },
             res.to_json()
         )
-

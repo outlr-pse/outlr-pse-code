@@ -21,6 +21,10 @@ export default defineComponent({
       type: Number,
       default: null
   },
+    optional: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     wrongInput() {
@@ -33,6 +37,11 @@ export default defineComponent({
   watch: {
     value: function () {
       this.$emit("input-change", this.value, this.parameterId)
+    }
+  },
+  mounted() {
+    if(!this.optional){
+      this.$el.style.border = "1px solid var(--color-input-optional)";
     }
   }
 })

@@ -5,7 +5,11 @@
     "experimentCreate": {
       "defaultFileField" : "Upload a file",
       "dataset" : "Dataset",
-      "groundtruth" : "Groundtruth"
+      "groundtruth" : "Groundtruth",
+      "logicHint": "Text for subspace logic hint",
+      "paramHint": "empty field --> default value is used,\nred border --> invalid input type,\nblue border --> parameter is not optional and needs a value,\ngray border --> type is allowed but can still be incorrect"
+
+
 
     }
   }

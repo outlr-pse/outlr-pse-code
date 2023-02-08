@@ -138,7 +138,7 @@ def create() -> (Response, int):
 
 
 @experiment_api.route('/download-result/<int:exp_id>', methods=['GET'])
-# jwt_required()
+@jwt_required()
 def download_result(exp_id: int) -> (Response, int):
     """
     Requires a jwt access token. Expects the experiment id in the request.
@@ -146,7 +146,7 @@ def download_result(exp_id: int) -> (Response, int):
     from the given experiment and status code "200 OK". If there is no
     experiment with the given ID it returns "404 Not Found".
     """
-    user_id = 1
+    user_id = get_jwt_identity()
     exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
     if exp is None:
         return error.no_experiment_with_id, error.no_experiment_with_id["status"]

@@ -5,16 +5,16 @@
         <div style="display: flex; align-items: center;">
           <p contenteditable="true" @input="onExperimentInput" class="exp-name"> {{ editableName }} </p>
           <i class="material-icons md-light" style="margin-left: auto; color: var(--color-stroke);
-           align-self: flex-end; margin-bottom: 15px">border_color</i>
+           align-self: flex-end; margin-bottom: 15px; font-size: 20px">border_color</i>
         </div>
         <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines);  margin: 0 10px;"></div>
 
-        <p>{{ experimentName }}</p> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
+        <div style="height: 100px">{{ experimentName }}</div> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
       </div>
       <Card style="width: 30vw; display: flex; flex-direction: column; ">
         <h2> Upload Files</h2>
-        <UploadFileField input-name="Dashboard" />
-        <UploadFileField input-name="Groundtruth" />
+        <UploadFileField :input-name="$t('message.experimentCreate.dataset')" />
+        <UploadFileField :input-name="$t('message.experimentCreate.groundtruth')" />
       </Card>
 
 
@@ -49,9 +49,8 @@ export default defineComponent({
   components: {UploadFileField, Dropdown, Card},
   data() {
     return {
-      editableName: 'Experiment 3425',
-      experimentName: 'Experiment 3425',
-      preview: "null",
+      editableName: 'Experiment',
+      experimentName: 'Experiment',
     }
   },
   methods: {

@@ -4,8 +4,8 @@
       <BaseTable :style="{ width: '100%'}">
         <template #header>
           <tr class="firstRow">
-            <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
-              {{ header }}
+            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]">
+              {{ header[0] }}
             </td>
           </tr>
         </template>
@@ -28,18 +28,19 @@ import {Experiment} from "../../../../models/experiment/Experiment";
 import {requestAllExperiments} from "../../../../api/APIRequests";
 import Card from "../../../basic/Card.vue";
 import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
-import {DashboardSortColumn, getDashboardSortColumnLabel} from "./DashboardSortColumn";
+import {DashboardSortColumn} from "./DashboardSortColumn";
 
 export default defineComponent({
   components: {Card, BaseTable},
   data() {
     return {
-      headers: [] as string[],
+      headers: [] as [string, DashboardSortColumn][],
       data: [] as [number, string[]][],
       filteredData: [] as [number, string[]][],
       experiments: [] as Experiment[],
       experimentMap: new Map<number, Experiment>(),
-      shownParams: [] as Hyperparameter[]
+      shownParams: [] as Hyperparameter[],
+      headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6']
     }
   },
   props: {
@@ -70,14 +71,22 @@ export default defineComponent({
   },
   async mounted() {
     this.experiments = await requestAllExperiments();
+    let headerShown = [
+      this.$t('message.dashboard.name'),
+      this.$t('message.dashboard.dataset'),
+      this.$t('message.dashboard.odm'),
+      this.$t('message.dashboard.hyperparameters'),
+      this.$t('message.dashboard.date'),
+      this.$t('message.dashboard.accuracy')
+    ]
     this.headers = [
-      'message.dashboard.name',
-      'message.dashboard.dataset',
-      'message.dashboard.odm',
-      'message.dashboard.hyperparameters',
-      'message.dashboard.date',
-      'message.dashboard.accuracy'
-    ].map(key => this.$t(key));
+        [headerShown[0], DashboardSortColumn.NAME],
+        [headerShown[1], DashboardSortColumn.DATASET],
+        [headerShown[2], DashboardSortColumn.ODM],
+        [headerShown[3], DashboardSortColumn.HYPERPARAMETER],
+        [headerShown[4], DashboardSortColumn.DATE],
+        [headerShown[5], DashboardSortColumn.ACCURACY]
+    ]
 
     for (let experiment of this.experiments) {
       this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
@@ -115,9 +124,8 @@ export default defineComponent({
 
   },
   methods: {
-    headerClick(header: string) {
-      let sortColumn = getDashboardSortColumnLabel(header)
-      this.tableSort(sortColumn)
+    headerClick(header: DashboardSortColumn) {
+      this.tableSort(header)
     },
     rowClick(row: number) {
       this.$router.push("/experiment/" + row)
@@ -192,9 +200,7 @@ tr td {
 }
 
 td {
-  max-width: 20vw;
   max-height: 1vh;
-
 }
 
 .firstRow {
@@ -211,15 +217,33 @@ tr:nth-child(even).tableData {
   background-color: var(--color-table-secondary);
 }
 
-.headerCells {
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6 {
   background-color: var(--color-cell-background);
   border: 1px solid var(--color-table-border);
 
 }
 
-td:hover.headerCells {
+td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.col-6 {
   background-color: var(--color-table-header);
   cursor: pointer;
+}
+.col-1{
+  width: 15%;
+}
+.col-2{
+  width: 15%;
+}
+.col-3{
+  width: 10%;
+}
+.col-4{
+  width: 42%;
+}
+.col-5{
+  width: 15%;
+}
+.col-6{
+  width: 3%;
 }
 
 .tableData td:hover {

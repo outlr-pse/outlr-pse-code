@@ -131,6 +131,8 @@ export async function logout() {
     try {
             const response = await sendLogout()
             if (response.error != null) {
+                storage.clear()
+                await store.dispatch("auth/unsetAuthenticated")
                 return response
             }
 
@@ -138,6 +140,7 @@ export async function logout() {
             await store.dispatch("auth/unsetAuthenticated")
             return response.data
         } catch (error) {
+            storage.clear()
             return errorOther
         }
 }

@@ -34,6 +34,11 @@ describe('Authentication', function () {
         }
     )
 
+    test('registering', async () => {
+        const response = register("schlomo12345", "TestPasswordValid0!")
+        let response2 = response
+    })
+
     test('test connection to backend', async () => {
         const response = axiosClient.get("/status")
         const data = (await response).data

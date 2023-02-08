@@ -1,23 +1,38 @@
 <template>
   <div style="height: 50vh">
     <div class="tableBox">
-    <BaseTable :style="{ width: '100%'}">
-      <template #header>
-        <tr class="firstRow">
-          <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
-            {{ header }}
-          </td>
-        </tr>
-      </template>
-      <template #body>
-        <tr v-for="row in filteredData" @click="rowClick(row[0])" class="tableData">
-          <td v-for="cell in row[1]">
-            {{ cell }}
-          </td>
-        </tr>
-      </template>
-    </BaseTable>
-  </div>
+      <BaseTable :style="{ width: '100%'}">
+        <template #header>
+          <tr class="firstRow">
+            <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
+              {{ header }}
+            </td>
+          </tr>
+        </template>
+        <template #body>
+          <tr v-for="(row, rowIndex) in filteredData" @click="rowClick(row[0])" class="tableData">
+            <td v-for="(cell, cellIndex) in row[1]" :key="cellIndex" @click="cellClick(row[0], rowIndex, cellIndex)">
+              <div v-if="cellIndex === 0" class="cell">
+                <Icon class="material-icons md-dark icon"
+                      style="font-size: 2.5vh; font-weight: 100; color: var(--color-stroke)"
+                      @click="iconClick(row[0], rowIndex)">chevron_right
+                </Icon>
+                {{ cell }}
+              </div>
+              <div v-else class="cell">
+                 <div v-if="showDetails && rowIndex === selectedRow" class="details">
+                  {{ cell }}
+                </div>
+                <div v-else>
+                  {{ cell }}
+                </div>
+              </div>
+
+            </td>
+          </tr>
+        </template>
+      </BaseTable>
+    </div>
   </div>
 </template>
 
@@ -39,7 +54,9 @@ export default defineComponent({
       filteredData: [] as [number, string[]][],
       experiments: [] as Experiment[],
       experimentMap: new Map<number, Experiment>(),
-      shownParams: [] as Hyperparameter[]
+      shownParams: [] as Hyperparameter[],
+      showDetails: false,
+      selectedRow: -1
     }
   },
   props: {
@@ -58,8 +75,8 @@ export default defineComponent({
       this.filteredData = this.data.filter((row) => {
         for (let cell of row[1]) {
           if (cell.toLowerCase().includes(newSearchTerm.toLowerCase())) {
-              return true
-            }
+            return true
+          }
         }
         return false
       })
@@ -69,53 +86,31 @@ export default defineComponent({
       this.tableSort(newSorting)
     }
   },
-  async mounted() {
-    this.experiments = await requestAllExperiments();
-    this.headers = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
-
-    for (let experiment of this.experiments) {
-      this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
-      if (experiment.running) {
-        this.data.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            "Running . . .",
-            "",
-            "",
-          ]
-        ])
-      } else {
-        let hyperParamString = ""
-        for (let param of experiment.odm.hyperParameters) {
-          hyperParamString += param.name + ": " + param.value + ", "
-        }
-
-        this.data.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            hyperParamString,
-            experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-            experiment.experimentResult?.accuracy + "%",
-          ]])
-      }
-    }
-    this.filteredData = this.data
-
-  },
   methods: {
     headerClick(header: string) {
       let sortColumn = getDashboardSortColumnLabel(header)
       this.tableSort(sortColumn)
     },
     rowClick(row: number) {
-      this.$router.push("/experiment/" + row)
+      //this.$router.push("/experiment/" + row)
     },
+    cellClick(id: number, rowIndex: number, cellIndex: number) {
+      if (cellIndex == 0) {
+        return
+      } else {
+        this.$router.push("/experiment/" + id)
+      }
+    },
+    iconClick(id: number, rowIndex: number) {
+      let experiment = this.experimentMap.get(id)
+      if (experiment) {
+        this.showDetails = !this.showDetails
+        this.selectedRow = rowIndex
+        this.shownParams = experiment.odm.hyperParameters
+      }
+    },
+
+
     tableSort(sortColumn: DashboardSortColumn) {
       if (sortColumn === DashboardSortColumn.NAME) {
         this.filteredData.sort((a, b) => {
@@ -143,8 +138,46 @@ export default defineComponent({
         })
       }
     },
+  },
+  async mounted() {
+      this.experiments = await requestAllExperiments();
+      this.headers = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
 
-  }
+      for (let experiment of this.experiments) {
+        this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
+        if (experiment.running) {
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              "Running . . .",
+              "",
+              "",
+            ]
+          ])
+        } else {
+          let hyperParamString = ""
+          for (let param of experiment.odm.hyperParameters) {
+            hyperParamString += param.name + ": " + param.value + ", "
+          }
+
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              hyperParamString,
+              experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
+              experiment.experimentResult?.accuracy + "%",
+            ]])
+        }
+      }
+      this.filteredData = this.data
+
+    }
 })
 </script>
 
@@ -186,9 +219,18 @@ tr td {
 }
 
 td {
-  max-width: 20vw;
-  max-height: 1vh;
+  max-width: 7vw;
 
+}
+
+.cell {
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+}
+.details{
+  white-space: normal;
 }
 
 .firstRow {

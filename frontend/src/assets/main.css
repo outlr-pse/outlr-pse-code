@@ -42,11 +42,23 @@ h1 {
 }
 
 h2 {
-    margin: 10px
+    margin: 10px;
+    font-weight: 600;
 }
 
 h3 {
-    margin: 10px
+    margin: 10px;
+    font-weight: 600;
+}
+
+h4 {
+    margin: 10px;
+    font-weight: 600;
+}
+
+h5 {
+    margin: 10px;
+    font-weight: 600;
 }
 
 

@@ -34,7 +34,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin: 25px;
+  margin: 25px 0px 0px 5px;
 }
 
 .input {

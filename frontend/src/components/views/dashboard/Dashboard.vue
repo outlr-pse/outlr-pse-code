@@ -1,12 +1,11 @@
 <template>
 
   <div class="dashboard">
-     <h1>
-    Dashboard
-  </h1>
+    <h1>
+      Dashboard
+    </h1>
     <div class="searchBar">
       <search-bar @search-term-changed="applySearch" class="left"/>
-      <sort-column-selector class="right" @onSortColumnSelected="applySort"/>
     </div>
     <DashboardTable :search-term="searchTerm" class="dashboard-table" :current-sorting="sortColumn"/>
   </div>
@@ -34,11 +33,7 @@ export default defineComponent({
   methods: {
     applySearch(searchTerm: string) {
       this.searchTerm = searchTerm;
-  },
-    applySort(sortColumn: DashboardSortColumn) {
-      console.log(sortColumn)
-      this.sortColumn = sortColumn;
-    }
+    },
   },
 })
 </script>
@@ -55,7 +50,7 @@ export default defineComponent({
 
 .dashboard-table {
   margin-top: 2vh;
-  margin-bottom: 5vh;
+  margin-bottom: 7vh;
 }
 
 .searchBar {
@@ -66,14 +61,9 @@ export default defineComponent({
   grid-template-areas: "searchBar sortOption";
 
 }
-
 .left {
   text-align: left;
 }
 
-.right {
-  display: flex;
-  justify-content: flex-end;
-}
 
 </style>

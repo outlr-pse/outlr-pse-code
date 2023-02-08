@@ -1,6 +1,17 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "dashboard": {
+      "search": "Search...",
+      "clear": "Clear",
+      "name": "Name",
+      "dataset": "Dataset",
+      "odm": "ODM",
+      "hyperparameters": "Hyperparameters",
+      "date": "Date",
+      "accuracy": "Accuracy",
+      "running": "Running . . ."
+    }
   }
 }

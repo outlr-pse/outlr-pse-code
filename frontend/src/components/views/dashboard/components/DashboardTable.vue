@@ -1,23 +1,23 @@
 <template>
   <div style="height: 50vh">
     <div class="tableBox">
-    <BaseTable :style="{ width: '100%'}">
-      <template #header>
-        <tr class="firstRow">
-          <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
-            {{ header }}
-          </td>
-        </tr>
-      </template>
-      <template #body>
-        <tr v-for="row in filteredData" @click="rowClick(row[0])" class="tableData">
-          <td v-for="cell in row[1]">
-            {{ cell }}
-          </td>
-        </tr>
-      </template>
-    </BaseTable>
-  </div>
+      <BaseTable :style="{ width: '100%'}">
+        <template #header>
+          <tr class="firstRow">
+            <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
+              {{ header }}
+            </td>
+          </tr>
+        </template>
+        <template #body>
+          <tr v-for="row in filteredData" @click="rowClick(row[0])" class="tableData">
+            <td v-for="cell in row[1]">
+              {{ cell }}
+            </td>
+          </tr>
+        </template>
+      </BaseTable>
+    </div>
   </div>
 </template>
 
@@ -58,23 +58,33 @@ export default defineComponent({
       this.filteredData = this.data.filter((row) => {
         for (let cell of row[1]) {
           if (cell.toLowerCase().includes(newSearchTerm.toLowerCase())) {
-              return true
-            }
+            return true
+          }
         }
         return false
       })
     },
     currentSorting: function (newSorting: DashboardSortColumn) {
-      console.log("hello im watching currentSorting")
       this.tableSort(newSorting)
     }
   },
   async mounted() {
     this.experiments = await requestAllExperiments();
-    this.headers = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
+    this.headers = [
+      'message.dashboard.name',
+      'message.dashboard.dataset',
+      'message.dashboard.odm',
+      'message.dashboard.hyperparameters',
+      'message.dashboard.date',
+      'message.dashboard.accuracy'
+    ].map(key => this.$t(key));
 
     for (let experiment of this.experiments) {
       this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
+      let hyperParamString = ""
+      for (let param of experiment.odm.hyperParameters) {
+        hyperParamString += param.name + ": " + param.value + ", "
+      }
       if (experiment.running) {
         this.data.push([
           experiment.id ? experiment.id : 0,
@@ -82,16 +92,12 @@ export default defineComponent({
             experiment.name,
             experiment.datasetName,
             experiment.odm.name,
+            hyperParamString,
             "Running . . .",
-            "",
             "",
           ]
         ])
       } else {
-        let hyperParamString = ""
-        for (let param of experiment.odm.hyperParameters) {
-          hyperParamString += param.name + ": " + param.value + ", "
-        }
 
         this.data.push([
           experiment.id ? experiment.id : 0,

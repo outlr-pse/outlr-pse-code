@@ -27,19 +27,18 @@ experiment_api = Blueprint('experiment', __name__)
 def validate_dataset() -> (Response, int):
     """
     Requires a JWT access token. Expects a dataset as a CSV file in the
-    request. Returns status code "200 OK" if the dataset was valid, "400
-    Bad Request" with message "Invalid dataset." and an error otherwise.
+    request. Returns status code "200 OK" if the dataset was valid.
     """
     return jsonify(error.not_implemented), error.not_implemented["status"]
 
 
 @experiment_api.route('/validate-ground-truth', methods=['POST'])
-# jwt_required()
+@jwt_required()
 def validate_ground_truth() -> (Response, int):
     """
     Requires a jwt access token. Expects a ground truth file as a CSV file in
     the request. Returns status code "200 OK" if the ground truth file was
-    valid, "400 Bad Request" with message "Invalid dataset." and an error otherwise.
+    valid.
     """
     return jsonify(error.not_implemented), error.not_implemented["status"]
 
@@ -50,8 +49,7 @@ def get_result(exp_id: int) -> (Response, int):
     """
     Requires a jwt access token. Expects the experiment id in the request.
     If the experiment was found, returns status code "200 OK" and the
-    experiment results encoded as json. If there is no experiment with the
-    given ID it returns "404 Not Found".
+    experiment results encoded as json.
     """
     user_id = get_jwt_identity()
     exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
@@ -65,8 +63,7 @@ def get_result(exp_id: int) -> (Response, int):
 def get_all() -> list:
     """
     Requires a jwt access token. Returns a list of all experiments the user
-    has encoded as json and status code "200 OK". In the case of an error, an is returned with status code
-    "400 Bad Request".
+    has encoded as json and status code "200 OK".
     """
     user = db.get_user(get_jwt_identity())
     experiments = user.experiments
@@ -91,7 +88,7 @@ def upload_files() -> (Response, int):
     """
     Requires a jwt access token. Expects a dataset and optionally a ground truth file
     as CSV files in the request. Returns status code "200 OK" if the files
-    were valid.
+    were successfully stored.
     """
     if "dataset" not in request.files:
         return jsonify(error.no_dataset), error.no_dataset["status"]
@@ -117,8 +114,7 @@ def upload_files() -> (Response, int):
 def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
-    the request. Inserts the experiment in the database and runs it. If no experiment was passed, "400 Bad Request"
-    and an error is returned
+    the request. Inserts the experiment in the database and runs it.
     """
     exp_json = request.json
     user_id = get_jwt_identity()
@@ -143,8 +139,7 @@ def download_result(exp_id: int) -> (Response, int):
     """
     Requires a jwt access token. Expects the experiment id in the request.
     If the experiment was found, returns a CSV file with all the outliers
-    from the given experiment and status code "200 OK". If there is no
-    experiment with the given ID it returns "404 Not Found".
+    from the given experiment and status code "200 OK".
     """
     user_id = get_jwt_identity()
     exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
@@ -158,10 +153,22 @@ def download_result(exp_id: int) -> (Response, int):
     return send_file(file, download_name=f'{exp.name}-result.csv', as_attachment=True)
 
 
+user_files = {
+    "dataset": "dataset.csv",
+    "ground_truth": "ground_truth.csv"
+}
+
+
 def data_path(user_id: int, file: str = "") -> str:
+    """ Returns the path to the user data directory or a specific file.
+    Args:
+        user_id: The id of the current user.
+        file: The file to return the path to. If empty, the path to the user's data directory is returned.
+
+    Returns:
+        The path to the user data directory or a specific file.
+    """
     base = f"user_data/{user_id}"
-    if file == "dataset":
-        return f"{base}/dataset.csv"
-    elif file == "ground_truth":
-        return f"{base}/ground_truth.csv"
+    if file in user_files:
+        return f"{base}/{user_files[file]}"
     return base

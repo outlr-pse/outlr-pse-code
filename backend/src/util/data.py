@@ -1,7 +1,6 @@
 from io import BytesIO
 from typing import Optional
 
-import numpy as np
 import pandas as pd
 
 from models.dataset.dataset import Dataset
@@ -10,8 +9,8 @@ from models.dataset.dataset import Dataset
 def csv_to_dataset(name: str, dataset: str) -> Dataset:
     """Converts a CSV string to a Dataset object.
     Args:
-        name (str): The name of the dataset.
-        dataset (str): The path to the CSV file.
+        name: The name of the dataset.
+        dataset: The path to the CSV file.
     Returns:
         Dataset: The Dataset object.
 
@@ -23,11 +22,11 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
 
 
 def csv_to_list(csv: str) -> list:
-    """Converts a CSV file to a numpy ndarray.
+    """Converts a CSV file to a list.
     Args:
-        csv (str): The path to the CSV file.
+        csv: The path to the CSV file.
     Returns:
-        np.ndarray: The numpy ndarray array.
+        list: The list of datapoints.
     """
     df = pd.read_csv(csv, header=None)
 

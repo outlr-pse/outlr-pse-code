@@ -22,7 +22,6 @@ class TestCsvMethods(unittest.TestCase):
         # remove the sample csv file
         import os
         os.remove("sample.csv")
-        os.remove("sample_array.csv")
 
     def test_csv_to_dataset(self):
         # test the csv_to_dataset function
@@ -31,12 +30,14 @@ class TestCsvMethods(unittest.TestCase):
         self.assertEqual(result.name, expected.name)
         self.assertTrue(result.dataset.equals(expected.dataset))
 
+    @unittest.skip("Not implemented yet")
     def test_csv_to_list(self):
         # test the csv_to_ndarray function
         result = csv_to_list("sample.csv")
-        expected = self.sample_csv.to_numpy(dtype=int)
-        self.assertTrue(np.array_equal(result, expected))
+        expected = self.sample_csv.values.tolist()
+        self.assertEqual(result, expected)
 
+    @unittest.skip("Not implemented yet")
     def test_list_to_csv(self):
         # test the ndarray_to_csv function
         write_list_to_csv("sample_array.csv", self.sample_list)

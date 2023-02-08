@@ -11,7 +11,7 @@
       <HyperParametersSection :parameters="hyperparameters"/>
     </div>
     <div class="subspace">
-      <SubspaceSection></SubspaceSection>
+      <SubspaceSection @input-change="" ></SubspaceSection>
     </div>
   </Card>
 </template>

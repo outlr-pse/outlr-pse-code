@@ -2,7 +2,7 @@
   <div class="parameterSection">
     <div class="header">
       ODM Parameters
-      <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
+      <div style="border: 1px solid var(--color-lines); margin-top: .5vh; width: 12vw;"/>
     </div>
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
@@ -59,7 +59,7 @@ export default defineComponent({
   font-size: 1.2vw;
   padding: 5px;
   text-align: left;
-  width: 12vw;
+  width: 98%;
   position: sticky;
   top: 0;
   background-color: var(--color-background);

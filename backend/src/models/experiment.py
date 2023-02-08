@@ -202,6 +202,7 @@ class Experiment(Base):
         _subspace_logic: Subspace logic as JSON. Use the property ``subspace_logic`` instead
         dataset_name (Optional[str])): Name the user assigned to the dataset
         dataset_size (int): Total number of datapoints (rows) in the dataset. Needed for SubspaceLogic evaluation
+        error_json (Optional[dict]): Error that occurred during execution of the experiment
         odm_id (int): ID of the odm. See attribute ``odm``
         odm (ODM): ODM that for used in this experiment
         subspaces (list[Subspace]): Subspaces that belong to this experiment. Does not contain the result_space
@@ -220,6 +221,7 @@ class Experiment(Base):
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
     dataset_size: Mapped[int]
+    error_json: Mapped[Optional[dict]] = mapped_column(JSON)
 
     odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
     odm: Mapped['ODM'] = relationship()
@@ -269,10 +271,12 @@ class Experiment(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'subspace_logic': self.subspace_logic,
+            'subspace_logic': self.subspace_logic.to_client_json(),
             'odm': self.odm.to_json(),
-            'odm_params': self.odm_params,
-            'true_outliers': self.true_outliers
+            'odm_params': self.param_values,
+            # 'true_outliers': self.true_outliers,
+            'dataset_name': self.dataset_name,
+            'error_json': self.error_json,
         }
 
     @classmethod
@@ -281,8 +285,9 @@ class Experiment(Base):
             name=json['name'],
             subspace_logic=json['subspace_logic'],
             odm=json['odm'],
-            odm_params=json['odm_params'],
-            true_outliers=json['true_outliers']
+            param_values=json['odm_params'],
+            # true_outliers=json['true_outliers'],
+            dataset_name=json['dataset_name'],
         )
 
 

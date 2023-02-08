@@ -5,6 +5,16 @@
     "register-view": {
         "title": "Hello!",
         "subtitle": "Please enter your details to create an account!"
+    },
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Summary",
+        "odm": "ODM",
+        "accuracy": "Accuracy",
+        "executionDate": "Execution Date",
+        "executionTime": "Execution Time",
+        "detectedOutliers": "Number of detected outliers"
+      }
     }
   }
 }

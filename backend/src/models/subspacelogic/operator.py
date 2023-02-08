@@ -1,7 +1,7 @@
-from typing import *
+from typing import TypeAlias, Callable
 from enum import Enum
 import numpy as np
-from numpy.typing import *
+from numpy.typing import ArrayLike
 
 OperatorFn: TypeAlias = Callable[[list[ArrayLike]], ArrayLike]
 """OperatorFn type alias.

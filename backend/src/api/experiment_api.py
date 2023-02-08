@@ -113,7 +113,7 @@ def upload_files() -> (Response, int):
 
 
 @experiment_api.route('/create', methods=['POST'])
-# jwt_required()
+@jwt_required()
 def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
@@ -121,7 +121,7 @@ def create() -> (Response, int):
     and an error is returned
     """
     exp_json = request.json
-    user_id = 1
+    user_id = get_jwt_identity()
     exp_json['user_id'] = user_id
 
     if not path_exists(data_path(user_id, "dataset")):

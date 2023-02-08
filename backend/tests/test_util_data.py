@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from models.dataset.dataset import Dataset
-from util.data import csv_to_dataset, csv_to_ndarray, ndarray_to_csv
+from util.data import csv_to_dataset, csv_to_list, list_to_csv
 
 
 class TestCsvMethods(unittest.TestCase):
@@ -15,7 +15,7 @@ class TestCsvMethods(unittest.TestCase):
         cls.sample_csv.to_csv("sample.csv", index=False)
 
         # create a sample numpy array
-        cls.sample_array = np.array([[1, 2, 3], [4, 5, 6]])
+        cls.sample_list = [1, 2, 3, 4, 5, 6]
 
     @classmethod
     def tearDownClass(cls):
@@ -31,15 +31,14 @@ class TestCsvMethods(unittest.TestCase):
         self.assertEqual(result.name, expected.name)
         self.assertTrue(result.dataset.equals(expected.dataset))
 
-    def test_csv_to_ndarray(self):
+    def test_csv_to_list(self):
         # test the csv_to_ndarray function
-        result = csv_to_ndarray("sample.csv")
+        result = csv_to_list("sample.csv")
         expected = self.sample_csv.to_numpy(dtype=int)
         self.assertTrue(np.array_equal(result, expected))
 
-    def test_ndarray_to_csv(self):
+    def test_list_to_csv(self):
         # test the ndarray_to_csv function
-        ndarray_to_csv("sample_array.csv", self.sample_array)
-        result = pd.read_csv("sample_array.csv", header=None)
-        expected = pd.DataFrame(self.sample_array)
-        self.assertTrue(np.array_equal(result, expected))
+        list_to_csv("sample_array.csv", self.sample_list)
+        result = csv_to_list("sample_array.csv")
+        self.assertEqual(result, self.sample_list)

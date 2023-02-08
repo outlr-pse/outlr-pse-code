@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
-from typing import IO
 
 from models.dataset.dataset import Dataset
 
 
-def csv_to_dataset(name: str, dataset: "IO[bytes]") -> Dataset:
+def csv_to_dataset(name: str, dataset: str) -> Dataset:
     """Converts a CSV string to a Dataset object.
     Args:
         name (str): The name of the dataset.
@@ -20,24 +19,24 @@ def csv_to_dataset(name: str, dataset: "IO[bytes]") -> Dataset:
     return dataset
 
 
-def csv_to_ndarray(csv: str) -> np.ndarray:
+def csv_to_list(csv: str) -> list:
     """Converts a CSV file to a numpy ndarray.
     Args:
         csv (str): The path to the CSV file.
     Returns:
         np.ndarray: The numpy ndarray array.
     """
-    df = pd.read_csv(csv)
+    df = pd.read_csv(csv, header=None)
 
-    return df.to_numpy(dtype=int)
+    return df.values.tolist()[0]
 
 
-def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
+def list_to_csv(path: str, data: list[int]) -> None:
     """Converts numpy ndarray to a CSV file.
     Args:
         path (str): The path to the CSV file.
-        arr (np.ndarray): The numpy ndarray array.
+        data (np.ndarray): The numpy ndarray array.
     Returns:
         None
     """
-    pd.DataFrame(arr).to_csv(path, index=False, header=False)
+    pd.DataFrame([data]).to_csv(path, index=False, header=False)

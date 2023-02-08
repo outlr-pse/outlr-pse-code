@@ -123,7 +123,12 @@ class ExperimentResult(Base):
     accuracy: Mapped[float]
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
-    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiment.id"))
+    user_id: Mapped[int]
+    experiment_id: Mapped[int]
+    ForeignKeyConstraint(
+        ["user_id", "experiment_id"],
+        ["experiment.user_id", "experiment.id"]
+    )
 
     # back_populates means that the experiment_result attribute of a Subspace will be connected
     # to the subspace attribute of ExperimentResult. Changing one in python also changes the other

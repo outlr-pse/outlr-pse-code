@@ -1,11 +1,10 @@
 from typing import Optional
+from sqlalchemy import ForeignKey, Integer, JSON, ARRAY
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 from models.base import Base
 from models.odm.odm import ODM
 from models.results import ExperimentResult
-
-from sqlalchemy import ForeignKey, Integer, JSON, ARRAY
-from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 
 class Experiment(Base):
@@ -21,7 +20,9 @@ class Experiment(Base):
     odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
     odm: Mapped['ODM'] = relationship()
 
-    experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+    experiment_result: Mapped["ExperimentResult"] = relationship(
+        foreign_keys=[ExperimentResult.experiment_id, ExperimentResult.user_id],
+        primaryjoin="and_(Experiment.id==ExperimentResult.experiment_id, Experiment.user_id==ExperimentResult.user_id)")
 
     # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
     dataset = None
@@ -51,11 +52,12 @@ class Experiment(Base):
         return exp
 
     @classmethod
-    def from_json(cls, json: dict):
+    def from_json(cls, exp_json: dict):
         return cls(
-            name=json['name'],
-            subspace_logic=json['subspace_logic'],
-            odm=json['odm'],
-            odm_params=json['odm_params'],
-            true_outliers=json['true_outliers']
+            name=exp_json['name'],
+            user_id=exp_json['user_id'],
+            dataset_name=exp_json['dataset_name'],
+            subspace_logic=exp_json['subspace_logic'],
+            odm_id=exp_json['odm']['id'],
+            param_values=exp_json['odm']['hyper_parameters'],
         )

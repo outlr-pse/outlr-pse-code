@@ -70,6 +70,12 @@ invalid_dataset = {
     "status": 422,
 }
 
+no_dataset = {
+    "error": "no_dataset",
+    "message": "No dataset provided. Use the /experiment/upload-files endpoint to upload a dataset",
+    "status": 400,
+}
+
 not_implemented = {
     "error": "not_implemented",
     "message": "This feature is not implemented yet",

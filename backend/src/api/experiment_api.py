@@ -8,9 +8,13 @@ Endpoints defined:
     /create
     /download-result/<exp_id>
 """
+import os
+from os.path import exists as path_exists
+
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
+from models.experiment.experiment import Experiment
 import database.database_access as db
 import util.data as data_utils
 import api.error as error
@@ -69,6 +73,45 @@ def get_all() -> list:
     return [e.to_json(False) for e in experiments]
 
 
+@experiment_api.route('/count', methods=['GET'])
+@jwt_required()
+def count() -> (Response, int):
+    """
+    Requires a jwt access token. Returns the amount of experiments the user
+    has and status code "200 OK".
+    """
+    user = db.get_user(get_jwt_identity())
+    amount = len(user.experiments)
+    return {"amount": amount}, 200
+
+
+@experiment_api.route('/upload-files', methods=['POST'])
+@jwt_required()
+def upload_files() -> (Response, int):
+    """
+    Requires a jwt access token. Expects a dataset and optionally a ground truth file
+    as CSV files in the request. Returns status code "200 OK" if the files
+    were valid.
+    """
+    if "dataset" not in request.files:
+        return jsonify(error.no_dataset), error.no_dataset["status"]
+
+    user_id = get_jwt_identity()
+    if not os.path.exists(data_path(user_id)):
+        os.makedirs(data_path(user_id))
+
+    dataset_file = request.files["dataset"]
+    dataset_file.save(data_path(user_id, "dataset"))
+    dataset_file.close()
+
+    if "ground_truth" in request.files:
+        ground_truth_file = request.files["ground_truth"]
+        ground_truth_file.save(data_path(user_id, "ground_truth"))
+        ground_truth_file.close()
+
+    return "OK", 200
+
+
 @experiment_api.route('/create', methods=['POST'])
 # jwt_required()
 def create() -> (Response, int):
@@ -77,7 +120,21 @@ def create() -> (Response, int):
     the request. Inserts the experiment in the database and runs it. If no experiment was passed, "400 Bad Request"
     and an error is returned
     """
-    return jsonify(error.not_implemented), error.not_implemented["status"]
+    exp_json = request.json
+    user_id = 1
+    exp_json['user_id'] = user_id
+
+    if not path_exists(data_path(user_id, "dataset")):
+        return error.no_dataset, error.no_dataset["status"]
+
+    exp = Experiment.from_json(request.json)
+    # TODO: remove Dataset class
+    exp.dataset = data_utils.csv_to_dataset(exp_json["dataset_name"], data_path(user_id, "dataset"))
+    if path_exists(data_path(user_id, "ground_truth")):
+        exp.true_outliers = data_utils.csv_to_list(data_path(user_id, "ground_truth"))
+    db.add_experiment(exp)
+    # TODO: run experiment
+    return 'OK', 200
 
 
 @experiment_api.route('/download-result/<int:exp_id>', methods=['GET'])
@@ -90,3 +147,12 @@ def download_result(exp_id: int) -> (Response, int):
     experiment with the given ID it returns "404 Not Found".
     """
     return jsonify(error.not_implemented), error.not_implemented["status"]
+
+
+def data_path(user_id: int, file: str = "") -> str:
+    base = f"user_data/{user_id}"
+    if file == "dataset":
+        return f"{base}/dataset.csv"
+    elif file == "ground_truth":
+        return f"{base}/ground_truth.csv"
+    return base

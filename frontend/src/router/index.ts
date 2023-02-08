@@ -17,7 +17,7 @@ const routes = [
   {
     path: '/register',
     name: 'register-page',
-    component: () => import("../components/views/RegisterView.vue"),
+    component: () => import("../components/views/RegisterView/RegisterView.vue"),
     meta: { requiresAuth: false }
   },
   {

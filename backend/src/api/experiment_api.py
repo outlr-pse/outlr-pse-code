@@ -21,6 +21,11 @@ import api.error as error
 
 experiment_api = Blueprint('experiment', __name__)
 
+_user_files = {
+    "dataset": "dataset.csv",
+    "ground_truth": "ground_truth.csv"
+}
+
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
 @jwt_required()
@@ -153,12 +158,6 @@ def download_result(exp_id: int) -> (Response, int):
     return send_file(file, download_name=f'{exp.name}-result.csv', as_attachment=True)
 
 
-user_files = {
-    "dataset": "dataset.csv",
-    "ground_truth": "ground_truth.csv"
-}
-
-
 def data_path(user_id: int, file: str = "") -> str:
     """ Returns the path to the user data directory or a specific file.
     Args:
@@ -169,6 +168,6 @@ def data_path(user_id: int, file: str = "") -> str:
         The path to the user data directory or a specific file.
     """
     base = f"user_data/{user_id}"
-    if file in user_files:
-        return f"{base}/{user_files[file]}"
+    if file in _user_files:
+        return f"{base}/{_user_files[file]}"
     return base

@@ -5,8 +5,8 @@ This file contains the PyODM class, which is a wrapper for the PyOD library.
 """
 from typing import Any
 
-import numpy
 import pandas as pd
+from numpy.typing import NDArray
 
 from models.odm.odm import ODM
 import pyod
@@ -14,7 +14,7 @@ import importlib
 
 
 class PyODM(ODM):
-    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> numpy.ndarray:
+    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
         """Runs the ODM on the given subspace
         Args:
             subspace (DataFrame): The subspace to run the ODM on

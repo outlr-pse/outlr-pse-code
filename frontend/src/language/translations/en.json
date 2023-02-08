@@ -1,6 +1,13 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "topbar": {
+      "createExperiment": "Create Experiment",
+      "logIn": "Log In",
+      "logOut": "Log Out",
+      "signUp": "Sign Up",
+      "signInAs": "Signed in as"
+    }
   }
 }

@@ -6,10 +6,10 @@
            width="13" :style="rotatedImage"/>
       <transition name="fade">
         <div class="card" v-if="showCard" @mouseleave="showCard = false" @mouseenter="showCard = true">
-          <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>{{ store.getters["auth/username"] }}</b></p>
+          <p style=" margin-top: 16px; margin-bottom: 16px">{{$t('message.topbar.signInAs')}} <b>{{ store.getters["auth/username"] }}</b></p>
           <div class="separator"></div>
-          <a href="./logout">Logout <i class="material-icons md-light"
-                                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
+          <div class="hoverMouse" @click="logout">{{ $t('message.topbar.logOut') }} <i class="material-icons md-light"
+                                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></div>
         </div>
       </transition>
     </div>
@@ -24,21 +24,32 @@ export default defineComponent({
   name: "AppearingCard",
   data() {
     return {
-      rotation: {
-        type: Number,
-        default: 90
-      },
+      rotation: 90,
+      // rotation: {
+      //   default: 90,
+      //   type: Number
+      // },
       showCard: false
     }
   },
-
+  methods: {
+    logout() {
+      store.dispatch('auth/logout');
+      this.$router.push('/')
+    }
+  },
   computed: {
     store() {
       return store
     },
     rotatedImage(): { transform: string } {
+      if (this.showCard) {
+        this.rotation = 0
+      } else {
+        this.rotation = 90
+      }
       return {
-        transform: 'rotate(' + this.rotation + 'deg)'
+        transform: 'rotate(' + this.rotation + 'deg)' + 'translate(-50%, 50%)'
       }
     }
   }
@@ -94,6 +105,7 @@ a {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 50%);
+  transform-origin: center center;
 }
 
 .circle {
@@ -118,5 +130,10 @@ a {
   height: 1px;
   background-color: var(--color-lines);
   margin: 0 10px;
+}
+
+.hoverMouse {
+  cursor: pointer;
+
 }
 </style>

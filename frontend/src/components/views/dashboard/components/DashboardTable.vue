@@ -38,7 +38,6 @@ export default defineComponent({
       data: [] as [number, string[]][],
       filteredData: [] as [number, string[]][],
       experiments: [] as Experiment[],
-      experimentMap: new Map<number, Experiment>(),
       shownParams: [] as Hyperparameter[],
       headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6']
     }
@@ -89,7 +88,6 @@ export default defineComponent({
     ]
 
     for (let experiment of this.experiments) {
-      this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
       let hyperParamString = ""
       for (let param of experiment.odm.hyperParameters) {
         hyperParamString += param.name + ": " + param.value + ", "

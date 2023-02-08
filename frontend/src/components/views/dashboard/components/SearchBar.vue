@@ -32,7 +32,6 @@ export default defineComponent({
   methods: {
     clear(){
       this.searchTerm = "";
-      this.$i18n.locale = this.$i18n.locale == Languages.GERMAN ? Languages.ENGLISH : Languages.GERMAN;
     }
   }
 })

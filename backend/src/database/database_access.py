@@ -24,8 +24,8 @@ def add_experiment(experiment: Experiment) -> Experiment:
     return experiment
 
 
-def get_experiment(exp_id: int) -> Experiment | None:
-    return session.get(Experiment, exp_id)
+def get_experiment(user_id: int, exp_id: int) -> Experiment | None:
+    return session.get(Experiment, {'user_id': user_id, 'id': exp_id})
 
 
 def add_user(user: User) -> User:

@@ -8,11 +8,10 @@ Endpoints defined:
 """
 from flask import Blueprint, Response, jsonify, request
 import re
-
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
-import api.error as error
 from werkzeug.security import check_password_hash, generate_password_hash
 
+import api.error as error
 from database import database_access
 from models.user.user import User
 

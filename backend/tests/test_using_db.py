@@ -53,7 +53,7 @@ class TestDBAccess(unittest.TestCase):
         self.assertEqual(4, exp.id)
 
     def test_get_experiment(self) -> None:
-        exp = db.get_experiment(1)
+        exp = db.get_experiment(1, 1)
         self.assertEqual("exp1", exp.name)
         self.assertEqual(1, exp.id)
 

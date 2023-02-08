@@ -57,7 +57,7 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/is_authenticated']) {
+  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
     next('/')
     return;
   }

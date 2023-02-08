@@ -1,7 +1,6 @@
-import {login, logout, register} from "../../../src/api/AuthServices";
-import {getIdentity} from "../../../src/api/DataRetrievalService";
+import {initialValidityCheck, login, logout, register} from "../../../src/api/AuthServices";
 import store from "../../../src/store";
-import {axiosClient, storage} from "../../../src/api/APIRequests";
+import {axiosClient, requestTokenIdentity, storage} from "../../../src/api/APIRequests";
 
 async function checkAuthenticationSuccessful(response: { error?: any; username?: any; access_token?: any;}, username: string) {
     expect(response.error).not.toBeDefined()
@@ -12,8 +11,9 @@ async function checkAuthenticationSuccessful(response: { error?: any; username?:
 
 
     expect(storage.getItem('access_token')).not.toBeNull()
-    expect((await getIdentity()).username).toBeDefined()
-    expect((await getIdentity()).username).toEqual(username)
+    const tokenResponseJson = await requestTokenIdentity()
+    expect(tokenResponseJson.username).toBeDefined()
+    expect(tokenResponseJson.username).toEqual(username)
 
     // Vuex store auth states correctly set
     expect(store.getters["auth/username"]).toEqual(username)
@@ -24,7 +24,7 @@ async function notAuthenticated() {
     expect(store.getters["auth/username"]).toEqual("")
     expect(store.getters["auth/isAuthenticated"]).toEqual(false)
     expect(storage.getItem('access_token')).not.toBeDefined()
-    expect((await getIdentity())).not.toBeDefined()
+    expect((await requestTokenIdentity()).error).toBeDefined()
 }
 
 describe('Authentication', function () {
@@ -51,6 +51,7 @@ describe('Authentication', function () {
          */
 
         const response = await register(username, password)
+        let response2 = response
         await checkAuthenticationSuccessful(response, username)
 
         /*
@@ -82,8 +83,8 @@ describe('Authentication', function () {
         expect(response2.error).toBeDefined()
         //TO-DO
         //expect(response.error.error).toEqual(ErrorType.UserManagementError)
-        const response = await getIdentity()
-        expect(response).not.toBeDefined()
+        const response = await requestTokenIdentity()
+        expect(response.error).toBeDefined()
         await notAuthenticated()
     })
 

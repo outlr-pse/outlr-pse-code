@@ -9,8 +9,8 @@ import {Experiment} from "../models/experiment/Experiment";
 export const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:1337/api'
 });
-
 export const storage = new MockStorage()
+//export const storage = localStorage
 
 export async  function sendLogout() : Promise<any>{
     /**
@@ -86,7 +86,7 @@ export async function requestTokenIdentity() : Promise<any> {
      * token was passed contains user data, otherwise it is an empty JSON.
      */
     try {
-        return await axiosClient.get('/user/get-token-identity',{headers: authHeader()})
+        return (await axiosClient.get('/user/get-token-identity',{headers: authHeader()})).data
     }
     catch(error) {
         if (axios.isAxiosError(error)) {

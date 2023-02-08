@@ -239,19 +239,27 @@ class Experiment(Base):
     def subspace_logic(self) -> 'models.subspacelogic.SubspaceLogic':
         """Property subspace_logic (SubspaceLogic)"""
         if self._subspace_logic is None:
+            # Load _subspace_logic from _subspace_logic_json
             subspace_map = {subspace.id: subspace for subspace in self.subspaces}
             self._subspace_logic = models.subspacelogic.SubspaceLogic.from_database_json(
                 self._subspace_logic_json,
                 subspace_map
             )
-            self._subspace_logic_json = None
         return self._subspace_logic
 
     @subspace_logic.setter
     def subspace_logic(self, subspace_logic: 'models.subspacelogic.SubspaceLogic'):
+        """subspace_logic property setter
+        Note that the internal ``_subspace_logic_json`` is not updated by this setter
+        """
         self._subspace_logic = subspace_logic
+        self._subspace_logic_json = None  # json is now outdated (set no None to make sure nobody thinks its up to date)
 
     def update_subspace_logic_json(self):
+        """
+        Updates the internal ``_subspace_logic_json`` attribute (that is stored in the database)
+        If the subspace_logic property was never set, nothing needs to be updated
+        """
         if self._subspace_logic is not None:
             self._subspace_logic_json = self._subspace_logic.to_database_json()
         else:

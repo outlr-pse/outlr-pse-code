@@ -146,7 +146,16 @@ def download_result(exp_id: int) -> (Response, int):
     from the given experiment and status code "200 OK". If there is no
     experiment with the given ID it returns "404 Not Found".
     """
-    return jsonify(error.not_implemented), error.not_implemented["status"]
+    user_id = 1
+    exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
+    if exp is None:
+        return error.no_experiment_with_id, error.no_experiment_with_id["status"]
+    if exp.experiment_result is None:
+        return error.experiment_not_run, error.experiment_not_run["status"]
+
+    outliers = [o.index for o in exp.experiment_result.result_space.outliers]
+    file = data_utils.write_list_to_csv(outliers)
+    return send_file(file, download_name=f'{exp.name}-result.csv', as_attachment=True)
 
 
 def data_path(user_id: int, file: str = "") -> str:

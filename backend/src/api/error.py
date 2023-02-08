@@ -123,3 +123,9 @@ error_other = {
     "message": "Something went wrong",
     "status": 400,
 }
+
+experiment_not_run = {
+    "error": "experiment_not_run",
+    "message": "The experiment has not been run yet",
+    "status": 400,
+}

@@ -1,3 +1,6 @@
+from io import BytesIO
+from typing import Optional
+
 import numpy as np
 import pandas as pd
 
@@ -31,12 +34,17 @@ def csv_to_list(csv: str) -> list:
     return df.values.tolist()[0]
 
 
-def list_to_csv(path: str, data: list[int]) -> None:
-    """Converts numpy ndarray to a CSV file.
+def write_list_to_csv(data: list[int], path: Optional[str] = None) -> BytesIO | None:
+    """Converts a list of integers to a CSV file.
     Args:
-        path (str): The path to the CSV file.
-        data (np.ndarray): The numpy ndarray array.
+        path: The path to the CSV file.
+        data: The list of datapoints.
     Returns:
-        None
+        BytesIO: In-memory file-like object if `path` is not provided.
+        None: If `path` is provided.
     """
-    pd.DataFrame([data]).to_csv(path, index=False, header=False)
+    path_or_buf = path or BytesIO()
+    pd.DataFrame([data]).to_csv(path_or_buf, index=False, header=False)
+    if not path:
+        path_or_buf.seek(0)
+        return path_or_buf

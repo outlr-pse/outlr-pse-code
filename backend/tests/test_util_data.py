@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from models.dataset.dataset import Dataset
-from util.data import csv_to_dataset, csv_to_list, list_to_csv
+from util.data import csv_to_dataset, csv_to_list, write_list_to_csv
 
 
 class TestCsvMethods(unittest.TestCase):
@@ -39,6 +39,6 @@ class TestCsvMethods(unittest.TestCase):
 
     def test_list_to_csv(self):
         # test the ndarray_to_csv function
-        list_to_csv("sample_array.csv", self.sample_list)
+        write_list_to_csv("sample_array.csv", self.sample_list)
         result = csv_to_list("sample_array.csv")
         self.assertEqual(result, self.sample_list)

@@ -41,10 +41,10 @@ class Experiment(Base):
         return {
             'id': self.id,
             'name': self.name,
-            'subspace_logic': self.subspace_logic,
+            'dataset_name': self.dataset_name,
             'odm': self.odm.to_json(),
-            'odm_params': self.odm_params,
-            'true_outliers': self.true_outliers
+            'param_values': self.param_values,
+            'experiment_result': self.experiment_result.to_json(False),
         }
 
     @classmethod

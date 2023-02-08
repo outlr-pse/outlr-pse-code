@@ -10,12 +10,11 @@ Endpoints defined:
 """
 import json
 from pathlib import Path
-
 from flask import Blueprint, Response, jsonify, send_file, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
+import database.database_access as db
 import api.error as error
-import random
-
 from init_mock_database import mock_database
 
 experiment_api = Blueprint('experiment', __name__)
@@ -116,44 +115,15 @@ def get_result(exp_id: int) -> (Response, int):
 
 @experiment_api.route('/get-all', methods=['GET'])
 # jwt_required()
-def get_all() -> Response:
+def get_all() -> list:
     """
     Requires a jwt access token. Returns a list of all experiments the user
     has encoded as json and status code "200 OK". In the case of an error, an is returned with status code
     "400 Bad Request".
     """
-    headers = request.headers
-    if headers is None:
-        return jsonify(error=error.no_header_provided), error.no_header_provided["status"]
-    bearer = headers.get('Authorization')
-
-    if bearer is None or len(bearer) < 1:
-        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
-    token = bearer.split()[1]
-    user_to_token = mock_database.get_user_by_token(int(token))
-
-    if user_to_token is not None:
-        if no_experiments:
-            response = jsonify(experiment=[], message="No experiments to be retrieved", status=200)
-            return response
-
-        if single_experiment:
-            experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
-            response = jsonify(experiments=[experiment_one], message="Experiment successfully retrieved", status=200)
-            return response
-
-        experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
-        experiment_two = json.load(open(script_location_parent / 'mock_files/experiment_two.json'))
-        experiments = [experiment_one, experiment_two]
-        experiment_array = [experiment_one, experiment_two]
-
-        for i in range(4):
-            experiment_array.append(experiments[random.randint(0, 1)])
-
-        response = jsonify(experiments=experiment_array, message="Experiment(s) successfully retrieved", status=200)
-        return response
-    else:
-        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
+    user = db.get_user(get_jwt_identity())
+    experiments = user.experiments
+    return [e.to_json() for e in experiments]
 
 
 @experiment_api.route('/create', methods=['POST'])

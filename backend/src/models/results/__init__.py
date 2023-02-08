@@ -148,8 +148,8 @@ class ExperimentResult(Base):
         # post_update=True  # might be necessary for writes and deletes to work
     )
 
-    def to_json(self) -> dict:
-        """Convert ExperimentResult to JSON
+    def to_json(self, include_result_space: bool = True) -> dict:
+        """Convert ExperimentResult to JSON.
         Note that the subspaces and outliers are contained in the subspace logic JSON,
         only the result space is contained in the experiment result JSON
         Example:
@@ -166,13 +166,15 @@ class ExperimentResult(Base):
                 }
             }
         """
-        return {
+        result = {
             "id": self.id,
             "accuracy": self.accuracy,
             "execution_date": self.execution_date.isoformat(),  # ISO 8601 format
             "execution_time": ExperimentResult.microseconds(self.execution_time),  # in μs (microseconds)
-            "result_space": self.result_space.to_json()
         }
+        if include_result_space:
+            result["result_space"] = self.result_space.to_json()
+        return result
 
     @staticmethod
     def microseconds(duration: timedelta) -> int:

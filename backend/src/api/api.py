@@ -28,32 +28,32 @@ jwt = JWTManager(app)
 
 @jwt.invalid_token_loader
 def invalid_token_callback(reason):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+    return jsonify(error.token_not_valid), error.token_not_valid["status"]
 
 
 @jwt.unauthorized_loader
 def unauthorized_token_callback(reason):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+    return jsonify(error.token_not_valid), error.token_not_valid["status"]
 
 
 @jwt.expired_token_loader
 def expired_token_callback(header, payload):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+    return jsonify(error.token_not_valid), error.token_not_valid["status"]
 
 
 @jwt.token_verification_failed_loader
 def token_verification_failed_callback(header, payload):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+    return jsonify(error.token_not_valid), error.token_not_valid["status"]
 
 
 @jwt.user_lookup_error_loader
 def user_lookup_error_callback(header, payload):
-    return jsonify(error=error.user_look_up_failed), error.user_look_up_failed["status"]
+    return jsonify(error.user_look_up_failed), error.user_look_up_failed["status"]
 
 
 @jwt.revoked_token_loader
 def token_revoked_callback(header, payload):
-    return jsonify(error=error.token_not_valid), error.token_not_valid["status"]
+    return jsonify(error.token_not_valid), error.token_not_valid["status"]
 
 
 # endpoints

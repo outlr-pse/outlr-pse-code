@@ -1,15 +1,19 @@
 <template>
   <div class="profile" @mouseenter="showCard = true" @mouseleave="showCard = false">
-    <div class="circle"/>
+    <div class="circle"> {{firstCharName}} </div>
     <div class="card-container">
-      <img alt="arrow" @click="() => $router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
-           width="13" :style="rotatedImage"/>
+      <img v-if="showCard" alt="arrow" class="arrow" src="../../assets/pp_arrow.svg"
+           width="17" />
+      <img v-else alt="arrow" class="arrow" src="../../assets/pp_arrow_side.svg"
+           height="17"/>
       <transition name="fade">
         <div class="card" v-if="showCard" @mouseleave="showCard = false" @mouseenter="showCard = true">
-          <p style=" margin-top: 16px; margin-bottom: 16px">{{$t('message.topbar.signInAs')}} <b>{{ store.getters["auth/username"] }}</b></p>
+          <p style=" margin-top: 16px; margin-bottom: 16px">{{ $t('message.topbar.signInAs') }}
+            <b>{{ store.getters["auth/username"] }}</b></p>
           <div class="separator"></div>
           <div class="hoverMouse" @click="logout">{{ $t('message.topbar.logOut') }} <i class="material-icons md-light"
-                                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></div>
+                                                                                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i>
+          </div>
         </div>
       </transition>
     </div>
@@ -24,11 +28,7 @@ export default defineComponent({
   name: "AppearingCard",
   data() {
     return {
-      rotation: 90,
-      // rotation: {
-      //   default: 90,
-      //   type: Number
-      // },
+      rotation: 0,
       showCard: false
     }
   },
@@ -51,6 +51,10 @@ export default defineComponent({
       return {
         transform: 'rotate(' + this.rotation + 'deg)' + 'translate(-50%, 50%)'
       }
+    },
+
+    firstCharName(): string {
+      return this.store.getters["auth/username"].charAt(0).toUpperCase();
     }
   }
 })
@@ -78,6 +82,7 @@ a {
 .fade-enter-active, .fade-leave-active {
   transition: opacity .8s;
 }
+
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
@@ -118,12 +123,12 @@ a {
   display: inline-block;
   background-color: var(--color-main);
   margin-left: 40px;
-  margin-right: 7px;
+  margin-right: 5px;
 }
 
-.circle::before {
-  content: "U";
-}
+/*.circle::before {*/
+/*  content: "U";*/
+/*}*/
 
 .separator {
   width: 90px;

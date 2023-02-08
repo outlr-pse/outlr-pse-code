@@ -59,8 +59,7 @@ export default defineComponent({
       return store
     },
     is_authenticated(): boolean {
-      // return store.getters['auth/is_authenticated'];
-      return true
+      return store.getters['auth/is_authenticated'];
     },
 
   }

@@ -1,8 +1,11 @@
 import unittest
+from datetime import datetime, timedelta
+
 import database.database_access as db
 from models.user.user import User
 from models.experiment.experiment import Experiment
-from models.odm.odm import ODM, HyperParameter
+from models.results import ExperimentResult, Subspace, Outlier
+from models.odm.odm import HyperParameter
 from models.base import Base
 
 
@@ -24,6 +27,15 @@ class TestDBAccess(unittest.TestCase):
         exp.odm_params = {"b": 2}
         exp.true_outliers = [1, 2, 3]
         exp.dataset_name = "datasatasat"
+        outlier = Outlier(index=2)
+        exp.experiment_result = ExperimentResult(
+            accuracy=0.89,
+            execution_date=datetime.now(),
+            execution_time=timedelta(minutes=2),
+            subspaces=[Subspace(name="one subspace", columns=[1], outliers=[outlier])],
+            outliers=[outlier],
+            result_space=Subspace(name="result", outliers=[outlier])
+        )
         return exp
 
     @classmethod
@@ -92,3 +104,28 @@ class TestODMProvider(unittest.TestCase):
         self.assertIn('rod.ROD', odm_names)
         self.assertIn('knn.KNN', odm_names)
         db.setup_db()
+
+
+class TestExperimentWithResult(unittest.TestCase):
+
+    def test_experiment_with_result(self):
+        self.res = ExperimentResult(
+            accuracy=0.89,
+            execution_date=datetime.now(), execution_time=timedelta(minutes=2)
+        )
+        self.res_space = Subspace(columns=None, name="result")
+        self.sub1 = Subspace(columns=[0, 1, 3])
+        self.res.subspaces.append(self.sub1)
+        self.sub2 = Subspace(columns=[32])
+        self.res.result_space = self.res_space
+        self.res.subspaces.append(self.sub2)
+        self.out1 = Outlier(index=3, subspaces=[self.sub1, self.sub2])
+        self.out2 = Outlier(index=4)
+        self.res.outliers.append(self.out1)
+        self.res.outliers.append(self.out2)
+        self.sub2.outliers.append(self.out2)
+        u = User(name="overleafer", password="nix")
+        db.add_user(u)
+        self.exp = Experiment(experiment_result=self.res, user_id=u.id, name="Experiment #1203", odm_id=1)
+        db.add_experiment(self.exp)
+        self.assertEqual(1, 1, msg="Assert that the code doesn't raise an exception")

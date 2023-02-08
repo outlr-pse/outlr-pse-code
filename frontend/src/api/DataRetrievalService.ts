@@ -9,7 +9,7 @@ export async function getIdentity() : Promise<any> {
      */
     try {
         const response = await requestTokenIdentity()
-        return response.data.user
+        return response.data
     }
     catch (error) {
         return errorOther

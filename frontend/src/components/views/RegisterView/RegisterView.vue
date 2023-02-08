@@ -17,7 +17,7 @@
               <input @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
             </div>
             <div class="submit-field">
-              <input class="buttonStyling" @click="tryLoginSubmit" type="button" value="Create account">
+              <input class="buttonStyling" @click="tryRegisterSubmit" type="button" value="Create account">
             </div>
           </div>
         </div>
@@ -34,9 +34,10 @@
 import Card from "../../basic/Card.vue";
 import Button from "../../basic/button/Button.vue";
 import Tip from "../../basic/Tip.vue";
-import {login, validatePassword, validateUsername} from "../../../api/AuthServices";
+import {login, register, validatePassword, validateUsername} from "../../../api/AuthServices";
 import {defineComponent} from "vue";
 import router from "../../../router";
+import store from "../../../store";
 
 export default defineComponent({
   name: "Login",
@@ -51,13 +52,21 @@ export default defineComponent({
     };
   },
   methods: {
-    async tryLoginSubmit() {
-        const response = await login(this.username, this.password)
-        if (response.error != null) {
+    async tryRegisterSubmit() {
+      if (!validateUsername(this.username) || !validatePassword(this.password, this.password)
+        ||  this.password != this.passwordRepeated) {
           this.error = true;
           return;
         }
-        await router.push('/dashboard')
+
+      const response = await register(this.username, this.password)
+      if (response.error != null) {
+        this.error = true;
+        return;
+      }
+      console.log(store.getters["auth/isAuthenticated"])
+      console.log(store.getters["auth/username"])
+      await router.push('/')
     }
   }
 })

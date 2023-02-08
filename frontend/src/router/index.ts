@@ -62,7 +62,7 @@ router.beforeEach((to, from, next) => {
     return;
   }
 
-  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/is_authenticated']) {
+  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/isAuthenticated']) {
     next('/login')
     return;
   }

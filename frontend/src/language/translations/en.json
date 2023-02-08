@@ -1,6 +1,9 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "experimentCreate": {
+      "defaultFileField" : "Upload a file"
+    }
   }
 }

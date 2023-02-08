@@ -9,21 +9,14 @@
         </div>
         <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines);  margin: 0 10px;"></div>
 
-        <p>{{ experimentName }}</p>
+        <p>{{ experimentName }}</p> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
       </div>
       <Card style="width: 30vw; display: flex; flex-direction: column; ">
-        <div class="Dataset">
-          <h3>Dataset</h3>
-          <input type="file" ref="fileInput" @change="onDataSetFileChange"/>
-
-        </div>
-        <div class="Groundtruth file">
-          <h3>Groundtruth</h3>
-          <input style="" type="file" ref="fileInput" @change="onGroundTruthFileChange">
-        </div>
+        <h2> Upload Files</h2>
+        <UploadFileField input-name="Dashboard" />
+        <UploadFileField input-name="Groundtruth" />
       </Card>
 
-        <img :src="preview"/> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
 
     </div>
     <div class="right-half">
@@ -46,13 +39,14 @@
 </template>
 
 <script lang="ts">
-import Card from "../basic/Card.vue";
+import Card from "../../basic/Card.vue";
 import {defineComponent} from "vue";
-import Dropdown from "../basic/Dropdown.vue";
+import Dropdown from "../../basic/Dropdown.vue";
+import UploadFileField from "./Component/UploadFileField.vue";
 
 export default defineComponent({
   name: "CreateExperimentView",
-  components: {Dropdown, Card},
+  components: {UploadFileField, Dropdown, Card},
   data() {
     return {
       editableName: 'Experiment 3425',
@@ -117,15 +111,6 @@ export default defineComponent({
 
 h3 {
   margin: 5px;
-}
-
-.Dataset, .Groundtruth {
-  width: 100%;
-  height: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 25px;
 }
 
 .ODM {

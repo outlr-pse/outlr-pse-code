@@ -10,14 +10,8 @@ class User(Base):
     password: Mapped[str]
     experiments: Mapped[list["Experiment"]] = relationship()
 
-    def to_json(self) -> dict:
+    def to_json(self, jwt_access_token: str) -> dict:
         return {
-            "id": self.id,
-            "name": self.name
+            "username": self.name,
+            "access_token": jwt_access_token
         }
-
-    @classmethod
-    def from_json(cls, json: dict):
-        return cls(
-            name=json["name"]
-        )

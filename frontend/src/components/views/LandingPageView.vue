@@ -2,20 +2,20 @@
   <div class="home">
     <div class="homeLogo">
       <img alt="Outlr logo" style="width: 100%" src="../../assets/OutlrLogo.svg"/>
-      <h1>Effective subspace outlier analysis</h1>
+      <h1>{{ $t('message.landingPage.slogan') }}</h1>
     </div>
 
     <div v-if="isAuthenticated" class="dashboard">
         <Button  @buttonClick="redirect('dashboard')" :button-type="ButtonType.DARKPURPLENAVIGATETODASHBOARD"
-                 text="Navigate to Dashboard" :size="[543,90]" :text-size="[25, 400]" start-icon="expand_more"/>
+                 :text="$t('message.landingPage.navigateDashboard')" :size="[543,90]" :text-size="[25, 400]" start-icon="expand_more"/>
     </div>
 
 
     <div v-else class="signUp">
       <Button style="display: inline-block; margin-top: 30px" @buttonClick="redirect('register')"
-              :button-type="ButtonType.DARKPURPLESIGNUP" text="Sign up" :size="[140,70] " />
+              :button-type="ButtonType.DARKPURPLESIGNUP" :text="$t('message.landingPage.signUp')" :size="[140,70] " />
       <div style="width: 40px; height:auto; display:inline-block;" />
-     <Button style="display: inline-block; cursor: not-allowed"  :button-type="ButtonType.OUTLINE" text="Try it out" :size="[140,70]" />
+     <Button style="display: inline-block; cursor: not-allowed"  :button-type="ButtonType.OUTLINE" :text="$t('message.landingPage.logIn')" :size="[140,70]" />
     </div>
 
   </div>
@@ -72,9 +72,6 @@ export default defineComponent( {
   methods: {
     redirect(path: string) {
       router.push('/' + path)
-    },
-    logout() {
-      store.dispatch('auth/logout')
     }
   },
   computed : {
@@ -82,7 +79,8 @@ export default defineComponent( {
       return ButtonType
     },
     isAuthenticated() : boolean {
-      return store.getters['auth/is_authenticated'];
+      // return store.getters['auth/is_authenticated'];
+      return true;
     }
   }
 })

@@ -1,6 +1,12 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "landingPage": {
+      "slogan": "Effective subspace outlier analysis",
+      "navigateDashboard": "Navigate to dashboard",
+      "signUp": "Sign up",
+      "logIn": "Log in"
+    }
   }
 }

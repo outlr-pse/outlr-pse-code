@@ -10,9 +10,6 @@ class SubspaceLogic(ABC):
     This class is part of a composite pattern.
     """
 
-    # id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-
-
     @abstractmethod
     def get_subspaces(self) -> set['Subspace']:
         """
@@ -70,7 +67,7 @@ class SubspaceLogic(ABC):
             JSONError: Raises a ``JSONError`` when the given ``json`` cannot be parsed to a ``SubspaceLogic``
         """
         if len(json.keys()) != 1:
-            raise JSONError("SubspaceLogic JSON contained other than a single key at the top level." +
+            raise JSONError("SubspaceLogic JSON contained other than a single key at the top level."
                             "Every JSON must have the shape of the following example: {operation: {...}}")
         logic_type = next(iter(json.keys()))  # get the single key from the dict
         match logic_type:
@@ -103,7 +100,7 @@ class SubspaceLogic(ABC):
             JSONError: Raises a ``JSONError`` when the given ``json`` cannot be parsed to a ``SubspaceLogic``
         """
         if len(json.keys()) != 1:
-            raise JSONError("SubspaceLogic JSON contained other than a single key at the top level." +
+            raise JSONError("SubspaceLogic JSON contained other than a single key at the top level."
                             "Every JSON must have the shape of the following example: {operation: {...}}")
 
         logic_type = next(iter(json.keys()))  # get the single key from the dict
@@ -117,5 +114,5 @@ class SubspaceLogic(ABC):
             )
 
 
-from models.subspacelogic.literal import Literal
-from models.subspacelogic.operation import Operation
+from models.subspacelogic.literal import Literal  # noqa: E402 (disable linter warning)  # fixes  circular import
+from models.subspacelogic.operation import Operation  # noqa: E402 (disable linter warning)  # fixes circular import

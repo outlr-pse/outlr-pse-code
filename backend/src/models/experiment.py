@@ -225,8 +225,8 @@ class Experiment(Base):
     odm: Mapped['ODM'] = relationship()
 
     subspaces: Mapped[list['Subspace']] = relationship(
-         back_populates="experiment",
-         foreign_keys=[Subspace.experiment_id]
+        back_populates="experiment",
+        foreign_keys=[Subspace.experiment_id]
     )
 
     experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
@@ -285,4 +285,5 @@ class Experiment(Base):
             true_outliers=json['true_outliers']
         )
 
-import models.subspacelogic  # must be at the end because of circular import
+
+import models.subspacelogic  # noqa: E402 (disable linter warning)  # must be at the end because of circular import

@@ -25,6 +25,7 @@
   min-width: auto;
   width: 100vw;
   height: 100vh;
+  line-height: normal;
 }
 
 
@@ -36,6 +37,9 @@ body {
   min-height: 100vh;
 }
 
+p {
+  margin: 10px;
+}
 
 /* semantic color variables for this project */
 :root {

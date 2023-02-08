@@ -100,9 +100,9 @@ def login() -> (Response, int):
     password were correct a user json (with the jwt token connected to the user) and the status code "200 OK"
     is returned, status code "401 Unauthorized" otherwise.
     """
-    error = handle_user_input()
-    if error:
-        return error
+    user_input_error = handle_user_input()
+    if user_input_error:
+        return user_input_error
 
     username = request.json["username"]
     password = request.json["password"]
@@ -121,9 +121,9 @@ def register() -> (Response, int):
     into the database if username and password are valid and returns a user json
     (with the jwt token connected to the user), otherwise "409 Conflict"
     """
-    error = handle_user_input()
-    if error:
-        return error
+    user_input_error = handle_user_input()
+    if user_input_error:
+        return user_input_error
 
     username = request.json["username"]
     password = request.json["password"]

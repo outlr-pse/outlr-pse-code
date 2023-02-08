@@ -11,7 +11,7 @@ from sqlalchemy.orm import mapped_column, Mapped, relationship
 class Experiment(Base):
     __tablename__: str = 'experiment'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
     name: Mapped[str]
     true_outliers = mapped_column(ARRAY(Integer))
     param_values = mapped_column(JSON)
@@ -37,15 +37,18 @@ class Experiment(Base):
     def subspace_logic(self, subspace_logic: any):
         self._subspace_logic = subspace_logic
 
-    def to_json(self) -> dict:
-        return {
+    def to_json(self, with_outliers: bool) -> dict:
+        exp = {
             'id': self.id,
             'name': self.name,
             'dataset_name': self.dataset_name,
             'odm': self.odm.to_json(),
             'param_values': self.param_values,
-            'experiment_result': self.experiment_result.to_json(False),
+            'experiment_result': self.experiment_result.to_json(with_outliers),
         }
+        if with_outliers:
+            exp['subspace_logic'] = self.subspace_logic
+        return exp
 
     @classmethod
     def from_json(cls, json: dict):

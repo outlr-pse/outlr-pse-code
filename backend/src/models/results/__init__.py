@@ -148,7 +148,7 @@ class ExperimentResult(Base):
         # post_update=True  # might be necessary for writes and deletes to work
     )
 
-    def to_json(self, include_result_space: bool = True) -> dict:
+    def to_json(self, include_result_space: bool) -> dict:
         """Convert ExperimentResult to JSON.
         Note that the subspaces and outliers are contained in the subspace logic JSON,
         only the result space is contained in the experiment result JSON

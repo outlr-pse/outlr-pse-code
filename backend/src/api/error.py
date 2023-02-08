@@ -64,10 +64,16 @@ user_look_up_failed = {
     "status": 400,
 }
 
-dataset_not_valid = {
-    "error": "dataset_not_valid",
+invalid_dataset = {
+    "error": "invalid_dataset",
     "message": "Provided dataset is not valid",
     "status": 422,
+}
+
+not_implemented = {
+    "error": "not_implemented",
+    "message": "This feature is not implemented yet",
+    "status": 501,
 }
 
 ground_truth_not_valid = {
@@ -78,7 +84,7 @@ ground_truth_not_valid = {
 
 no_experiment_with_id = {
     "error": "no_experiment_with_id",
-    "message": "No experiment exists with provided id",
+    "message": "No experiment found with provided id",
     "status": 404,
 }
 

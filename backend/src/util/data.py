@@ -1,10 +1,11 @@
 import numpy as np
 import pandas as pd
+from typing import IO
 
 from models.dataset.dataset import Dataset
 
 
-def csv_to_dataset(name: str, dataset: str) -> Dataset:
+def csv_to_dataset(name: str, dataset: "IO[bytes]") -> Dataset:
     """Converts a CSV string to a Dataset object.
     Args:
         name (str): The name of the dataset.

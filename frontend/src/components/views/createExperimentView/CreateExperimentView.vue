@@ -5,18 +5,19 @@
         <div style="display: flex; align-items: center;">
           <p contenteditable="true" @input="onExperimentInput" class="exp-name"> {{ editableName }} </p>
           <i class="material-icons md-light" style="margin-left: auto; color: var(--color-stroke);
-           align-self: flex-end; margin-bottom: 15px; font-size: 20px">border_color</i>
+           align-self: flex-end; margin-bottom: 10px; font-size: 20px">border_color</i>
         </div>
-        <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines);  margin: 0 10px;"></div>
+        <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines); margin-bottom: 35px"></div>
 
-        <div style="height: 100px">{{ experimentName }}</div> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
+<!--        <div style="height: 50px">{{ experimentName }}</div> &lt;!&ndash; adfasdfassssssssssssssssssssssssssssssssssssssss   TODO &ndash;&gt;-->
       </div>
       <Card style="width: 30vw; display: flex; flex-direction: column; ">
-        <h2> Upload Files</h2>
+        <h3 style="font-size: 27px"> Upload Files</h3>
+<!--         <div style="width: 150px;  height: 2px;  background-color: var(&#45;&#45;color-lines);  margin: 0 7px; text-align: center"></div>-->
         <UploadFileField :input-name="$t('message.experimentCreate.dataset')" />
-        <UploadFileField :input-name="$t('message.experimentCreate.groundtruth')" />
+        <UploadFileField style = "margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')" />
       </Card>
-            <Button class="button" text="Create Experiment" :size="[250,60]"></Button>
+            <Button style ="margin-top: 45px;" class="button" text="Create Experiment" :size="[250,60]" :text-size="[22,600]" />
     </div>
     <div class="right-half">
       <InputSection @onODMSelection="onODMSelection"  :hyperparameters="hyperparameters" v-bind:odms="odms" class="inputSection"/>
@@ -44,8 +45,8 @@ export default defineComponent({
   components: {InputSection, Button, ODMSection, HyperParametersField, UploadFileField, Dropdown, Card},
   data() {
     return {
-      editableName: 'Experiment 3425',
-      experimentName: 'Experiment 3425',
+      editableName: 'new Experiment',
+      experimentName: 'new Experiment',
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
       selectedODM: null as ODM | null
@@ -112,10 +113,12 @@ export default defineComponent({
   overflow-y: hidden;
   text-align: center;
   white-space: nowrap;
+  margin-bottom: 3px;
 }
 
-h3 {
+h2, h3 {
   margin: 5px;
+
 }
 
 .button {

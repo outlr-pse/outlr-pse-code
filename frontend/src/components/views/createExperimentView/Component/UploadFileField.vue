@@ -1,7 +1,7 @@
 <template>
   <div class="Uploadfile">
     <h3>{{ inputName }}</h3>
-    <input style="" type="file" ref="file Input" @change="onFileChange">
+    <input class="input" type="file" ref="file Input" @change="onFileChange">
   </div>
 </template>
 
@@ -35,5 +35,9 @@ export default defineComponent({
   flex-direction: column;
   align-items: flex-start;
   margin: 25px;
+}
+
+.input {
+
 }
 </style>

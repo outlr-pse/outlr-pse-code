@@ -5,16 +5,16 @@
         <div style="display: flex; align-items: center;">
           <p contenteditable="true" @input="onExperimentInput" class="exp-name"> {{ editableName }} </p>
           <i class="material-icons md-light" style="margin-left: auto; color: var(--color-stroke);
-           align-self: flex-end; margin-bottom: 15px">border_color</i>
+           align-self: flex-end; margin-bottom: 15px; font-size: 20px">border_color</i>
         </div>
         <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines);  margin: 0 10px;"></div>
 
-        <p>{{ experimentName }}</p> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
+        <div style="height: 100px">{{ experimentName }}</div> <!-- adfasdfassssssssssssssssssssssssssssssssssssssss   TODO -->
       </div>
       <Card style="width: 30vw; display: flex; flex-direction: column; ">
         <h2> Upload Files</h2>
-        <UploadFileField input-name="Dashboard" />
-        <UploadFileField input-name="Groundtruth" />
+        <UploadFileField :input-name="$t('message.experimentCreate.dataset')" />
+        <UploadFileField :input-name="$t('message.experimentCreate.groundtruth')" />
       </Card>
             <Button class="button" text="Create Experiment" :size="[250,60]"></Button>
     </div>
@@ -46,7 +46,6 @@ export default defineComponent({
     return {
       editableName: 'Experiment 3425',
       experimentName: 'Experiment 3425',
-      preview: "null",
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
       selectedODM: null as ODM | null
@@ -56,15 +55,6 @@ export default defineComponent({
     onExperimentInput(event: any) {
       this.experimentName = event.target.textContent;
     },
-    onDataSetFileChange(e: any) {
-      const file= e.target.files[0];
-    },
-    onGroundTruthFileChange(e: any) {
-      const file= e.target.files[0];
-      this.preview = URL.createObjectURL(file);
-
-      // Do something with the file
-    },
     async onODMSelection(odm: ODM) {
       let response = await requestODM(odm.id)
       this.hyperparameters = []
@@ -73,7 +63,6 @@ export default defineComponent({
       }
       this.selectedODM = odm
       this.selectedODM.hyperParameters = this.hyperparameters
-
     },
   },
   async mounted() {

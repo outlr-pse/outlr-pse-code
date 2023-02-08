@@ -3,7 +3,10 @@
     "greeting": "Hello",
     "name": "England",
     "experimentCreate": {
-      "defaultFileField" : "Upload a file"
+      "defaultFileField" : "Upload a file",
+      "dataset" : "Dataset",
+      "groundtruth" : "Groundtruth"
+
     }
   }
 }

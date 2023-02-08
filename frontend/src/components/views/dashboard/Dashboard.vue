@@ -14,16 +14,13 @@
 <script lang="ts">
 import Tip from "../../basic/Tip.vue";
 import {defineComponent} from "vue";
-import {Experiment} from "../../../models/experiment/Experiment";
-import {requestAllExperiments} from "../../../api/APIRequests";
 import DashboardTable from "./components/DashboardTable.vue";
 import SearchBar from "./components/SearchBar.vue";
-import SortColumnSelector from "./components/SortColumnSelector.vue";
 import {DashboardSortColumn} from "./components/DashboardSortColumn";
 
 export default defineComponent({
   name: "Dashboard",
-  components: {SortColumnSelector, SearchBar, DashboardTable, Tip},
+  components: {SearchBar, DashboardTable, Tip},
   data() {
     return {
       searchTerm: "",
@@ -43,14 +40,15 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: end;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
 
 .dashboard-table {
   margin-top: 2vh;
-  margin-bottom: 7vh;
+  height: max-content;
+  margin-bottom: 12vh;
 }
 
 .searchBar {

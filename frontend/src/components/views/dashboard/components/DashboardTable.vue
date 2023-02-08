@@ -10,8 +10,11 @@
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" @click="rowClick(row[0])" class="tableData">
-            <td v-for="cell in row[1]">
+          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
+            <td  v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
+              {{ cell }}
+            </td>
+            <td v-for="cell in row[1]" v-else class="notRunning">
               {{ cell }}
             </td>
           </tr>
@@ -56,8 +59,8 @@ export default defineComponent({
   watch: {
     searchTerm: function (newSearchTerm: string) {
       this.filteredData = this.data.filter((row) => {
-        for (let cell of row[1]) {
-          if (cell.toLowerCase().includes(newSearchTerm.toLowerCase())) {
+        for (let i = 0; i < row[1].length - 2; i++) {
+          if (row[1][i].toLowerCase().includes(newSearchTerm.toLowerCase())) {
             return true
           }
         }
@@ -69,7 +72,10 @@ export default defineComponent({
     }
   },
   async mounted() {
-    this.experiments = await requestAllExperiments();
+    let response = await requestAllExperiments();
+    for (let experiment of response.data) {
+      this.experiments.push(Experiment.fromJSON(experiment))
+    }
     let headerShown = [
       this.$t('message.dashboard.name'),
       this.$t('message.dashboard.dataset'),
@@ -79,12 +85,12 @@ export default defineComponent({
       this.$t('message.dashboard.accuracy')
     ]
     this.headers = [
-        [headerShown[0], DashboardSortColumn.NAME],
-        [headerShown[1], DashboardSortColumn.DATASET],
-        [headerShown[2], DashboardSortColumn.ODM],
-        [headerShown[3], DashboardSortColumn.HYPERPARAMETER],
-        [headerShown[4], DashboardSortColumn.DATE],
-        [headerShown[5], DashboardSortColumn.ACCURACY]
+      [headerShown[0], DashboardSortColumn.NAME],
+      [headerShown[1], DashboardSortColumn.DATASET],
+      [headerShown[2], DashboardSortColumn.ODM],
+      [headerShown[3], DashboardSortColumn.HYPERPARAMETER],
+      [headerShown[4], DashboardSortColumn.DATE],
+      [headerShown[5], DashboardSortColumn.ACCURACY]
     ]
 
     for (let experiment of this.experiments) {
@@ -125,8 +131,11 @@ export default defineComponent({
     headerClick(header: DashboardSortColumn) {
       this.tableSort(header)
     },
-    rowClick(row: number) {
-      this.$router.push("/experiment/" + row)
+    rowClick(row: [number, string[]]) {
+      if(row[1][4] === "Running . . ."){
+        return
+      }
+      this.$router.push("/experiment/" + row[0])
     },
     tableSort(sortColumn: DashboardSortColumn) {
       if (sortColumn === DashboardSortColumn.NAME) {
@@ -164,7 +173,7 @@ export default defineComponent({
 
 .tableBox {
   height: max-content;
-  max-height: 50vh;
+  max-height: 65vh;
   width: 80vw;
   border-style: solid;
   border-radius: 7px;
@@ -225,26 +234,39 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
   background-color: var(--color-table-header);
   cursor: pointer;
 }
-.col-1{
+
+.col-1 {
   width: 15%;
 }
-.col-2{
+
+.col-2 {
   width: 15%;
 }
-.col-3{
+
+.col-3 {
   width: 10%;
 }
-.col-4{
+
+.col-4 {
   width: 42%;
 }
-.col-5{
+
+.col-5 {
   width: 15%;
 }
-.col-6{
+
+.col-6 {
   width: 3%;
 }
 
-.tableData td:hover {
+.running {
+  color: var(--color-running);
+}
+
+.running:hover {
+  cursor: default;
+}
+.notRunning:hover {
   cursor: pointer;
 }
 

@@ -58,6 +58,7 @@ body {
   --color-table-secondary: #2e2e2e;
   --color-table-border: #4f4f4f;
   --color-table-header: #514478;
+  --color-running: #31de84;
 }
 
 /* add colors for light mode here */

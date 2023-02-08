@@ -122,38 +122,16 @@ def get_all() -> Response:
     has encoded as json and status code "200 OK". In the case of an error, an is returned with status code
     "400 Bad Request".
     """
-    headers = request.headers
-    if headers is None:
-        return jsonify(error=error.no_header_provided), error.no_header_provided["status"]
-    bearer = headers.get('Authorization')
+    experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
+    experiment_two = json.load(open(script_location_parent / 'mock_files/experiment_two.json'))
+    experiments = [experiment_one, experiment_two]
+    experiment_array = [experiment_one, experiment_two]
 
-    if bearer is None or len(bearer) < 1:
-        return jsonify(error=error.token_not_provided), error.token_not_provided["status"]
-    token = bearer.split()[1]
-    user_to_token = mock_database.get_user_by_token(int(token))
+    for i in range(100):
+        experiment_array.append(experiments[random.randint(0, 1)])
 
-    if user_to_token is not None:
-        if no_experiments:
-            response = jsonify(experiment=[], message="No experiments to be retrieved", status=200)
-            return response
-
-        if single_experiment:
-            experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
-            response = jsonify(experiments=[experiment_one], message="Experiment successfully retrieved", status=200)
-            return response
-
-        experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
-        experiment_two = json.load(open(script_location_parent / 'mock_files/experiment_two.json'))
-        experiments = [experiment_one, experiment_two]
-        experiment_array = [experiment_one, experiment_two]
-
-        for i in range(4):
-            experiment_array.append(experiments[random.randint(0, 1)])
-
-        response = jsonify(experiments=experiment_array, message="Experiment(s) successfully retrieved", status=200)
-        return response
-    else:
-        return jsonify(error=error.token_not_linked), error.token_not_linked["status"]
+    response = jsonify(experiment_array)
+    return response
 
 
 @experiment_api.route('/create', methods=['POST'])

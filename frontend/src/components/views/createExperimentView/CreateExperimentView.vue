@@ -16,25 +16,12 @@
         <UploadFileField input-name="Dashboard" />
         <UploadFileField input-name="Groundtruth" />
       </Card>
-
-
+            <Button class="button" text="Create Experiment" :size="[250,60]"></Button>
     </div>
     <div class="right-half">
-      <Card style="width: 40vw; display: flex; flex-direction: column;">
-        <div class="ODM">
-          <h2>ODM</h2>
-          <Dropdown>
-
-          </Dropdown>
-        </div>
-        <div class="Hyperparameter">
-          <h3>Hyperparameter</h3>
-        </div>
-        <div class="SubspaceLogic">
-          <h3>SubspaceLogic</h3>
-        </div>
-      </Card>
+      <InputSection @onODMSelection="onODMSelection"  :hyperparameters="hyperparameters" v-bind:odms="odms" class="inputSection"/>
     </div>
+
   </div>
 </template>
 
@@ -43,15 +30,26 @@ import Card from "../../basic/Card.vue";
 import {defineComponent} from "vue";
 import Dropdown from "../../basic/Dropdown.vue";
 import UploadFileField from "./Component/UploadFileField.vue";
+import HyperParametersField from "./Component/HyperParametersSection.vue";
+import {Hyperparameter} from "../../../models/odm/Hyperparameter";
+import {HyperparameterType} from "../../../models/odm/HyperparameterType";
+import ODMSection from "./Component/InputSection.vue";
+import {ODM} from "../../../models/odm/ODM";
+import {requestODM, requestODMNames} from "../../../api/APIRequests";
+import Button from "../../basic/button/Button.vue";
+import InputSection from "./Component/InputSection.vue";
 
 export default defineComponent({
   name: "CreateExperimentView",
-  components: {UploadFileField, Dropdown, Card},
+  components: {InputSection, Button, ODMSection, HyperParametersField, UploadFileField, Dropdown, Card},
   data() {
     return {
       editableName: 'Experiment 3425',
       experimentName: 'Experiment 3425',
       preview: "null",
+      odms: [] as ODM[],
+      hyperparameters: [] as Hyperparameter[],
+      selectedODM: null as ODM | null
     }
   },
   methods: {
@@ -66,7 +64,25 @@ export default defineComponent({
       this.preview = URL.createObjectURL(file);
 
       // Do something with the file
+    },
+    async onODMSelection(odm: ODM) {
+      let response = await requestODM(odm.id)
+      this.hyperparameters = []
+      for (let param of response.data) {
+        this.hyperparameters.push(Hyperparameter.fromJSON(param))
+      }
+      this.selectedODM = odm
+      this.selectedODM.hyperParameters = this.hyperparameters
+
+    },
+  },
+  async mounted() {
+    let response = await requestODMNames()
+    let odms = []
+    for(let odm of response.data) {
+      odms.push(ODM.fromJSON(odm))
     }
+    this.odms = odms
   }
 })
 </script>
@@ -113,16 +129,12 @@ h3 {
   margin: 5px;
 }
 
-.ODM {
-  height: 27%;
+.button {
+  margin-top: 20px;
 }
 
-.Hyperparameter {
-    height: 27%;
-}
-
-.SubspaceLogic {
-    height: 27%;
+.inputSection {
+  margin-top: 8vh;
 }
 
 </style>

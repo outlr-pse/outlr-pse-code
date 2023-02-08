@@ -53,7 +53,7 @@ export class ODM implements JSONSerializable {
      */
     deserialize(json: any, valuesJson?: any): void {
         this.id = json.id;
-        this.name = json.name;
+        this.name = json.name.split('.')[1];
         if (valuesJson) {
             for (let param of json.hyper_parameters) {
                 this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));

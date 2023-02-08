@@ -2,7 +2,8 @@
   <div class="custom-dropdown">
     <button @click="openDropdown">
       <div class="buttonValue" :style="buttonStyle">
-        {{ selectedOption }} <span class="material-icons md-dark" style="color: var(--color-stroke); font-size: 4vh;">{{ arrowDirection }}</span>
+        {{ selectedOption }}
+        <span class="material-icons md-dark" style="color: var(--color-stroke); font-size: 3vh;">{{ arrowDirection }}</span>
       </div>
     </button>
     <ul v-if="isOpen" class="custom-dropdown-options">
@@ -109,12 +110,14 @@ export default defineComponent({
 
 .custom-dropdown button {
   width: 20vw;
-  height: 7vh;
-  padding: 10px;
+  height: 5.5vh;
+  padding-left: .6em;
+  padding-right: .6em;
   border: none;
   background-color: transparent;
   text-align: start;
-  font-size: 2.5vh;
+  font-size: 2.2vh;
+  font-weight: 500;
 }
 
 .buttonValue {

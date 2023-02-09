@@ -11,7 +11,7 @@
         </template>
         <template #body>
           <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
-            <td  v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
+            <td v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
               {{ cell }}
             </td>
             <td v-for="cell in row[1]" v-else class="notRunning">
@@ -72,10 +72,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    let response = await requestAllExperiments();
-    for (let experiment of response.data) {
-      this.experiments.push(Experiment.fromJSON(experiment))
-    }
+
     let headerShown = [
       this.$t('message.dashboard.name'),
       this.$t('message.dashboard.dataset'),
@@ -92,7 +89,13 @@ export default defineComponent({
       [headerShown[4], DashboardSortColumn.DATE],
       [headerShown[5], DashboardSortColumn.ACCURACY]
     ]
-
+    let response = await requestAllExperiments();
+    if(response.error !== null) {
+      return
+    }
+    for (let experiment of response.data) {
+      this.experiments.push(Experiment.fromJSON(experiment))
+    }
     for (let experiment of this.experiments) {
       let hyperParamString = ""
       for (let param of experiment.odm.hyperParameters) {
@@ -111,7 +114,6 @@ export default defineComponent({
           ]
         ])
       } else {
-
         this.data.push([
           experiment.id ? experiment.id : 0,
           [
@@ -125,14 +127,14 @@ export default defineComponent({
       }
     }
     this.filteredData = this.data
-
   },
+
   methods: {
     headerClick(header: DashboardSortColumn) {
       this.tableSort(header)
     },
     rowClick(row: [number, string[]]) {
-      if(row[1][4] === "Running . . ."){
+      if (row[1][4] === "Running . . .") {
         return
       }
       this.$router.push("/experiment/" + row[0])
@@ -266,6 +268,7 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .running:hover {
   cursor: default;
 }
+
 .notRunning:hover {
   cursor: pointer;
 }

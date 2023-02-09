@@ -6,12 +6,12 @@ Because of the relations between the classes in the database it is easier if all
 from datetime import datetime, timedelta
 from typing import Optional
 
-from models.base import Base
-from models.odm import ODM
-import models
-
 from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
+
+import models
+from models.base import Base
+from models.odm import ODM
 
 
 EXPERIMENT_TABLE_NAME = "experiment"
@@ -312,8 +312,9 @@ class Experiment(Base):
     @classmethod
     def from_json(cls, json: dict):
         return cls(
+            user_id=json['user_id'],
             name=json['name'],
-            subspace_logic=json['subspace_logic'],
+            subspace_logic=models.subspacelogic.SubspaceLogic.from_client_json(json['subspace_logic']),
             odm_id=json['odm']['id'],
             param_values=json['odm']['hyper_parameters'],
             dataset_name=json.get('dataset_name'),

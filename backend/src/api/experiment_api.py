@@ -10,16 +10,21 @@ Endpoints defined:
 """
 import os
 from os.path import exists as path_exists
+from concurrent.futures import ProcessPoolExecutor
 
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.experiment import Experiment
+from execution.experiment_scheduler.coroutine_experiment_scheduler import CoroutineExperimentScheduler
+from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
 import database.database_access as db
 import util.data as data_utils
 import api.error as error
 
 experiment_api = Blueprint('experiment', __name__)
+
+_experiment_scheduler = CoroutineExperimentScheduler(ExecutorODMScheduler(ProcessPoolExecutor()))
 
 _user_files = {
     "dataset": "dataset.csv",
@@ -115,14 +120,14 @@ def upload_files() -> (Response, int):
 
 
 @experiment_api.route('/create', methods=['POST'])
-@jwt_required()
-def create() -> (Response, int):
+# @jwt_required()
+async def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
     """
     exp_json = request.json
-    user_id = get_jwt_identity()
+    user_id = 1
     exp_json['user_id'] = user_id
 
     if not path_exists(data_path(user_id, "dataset")):
@@ -130,11 +135,12 @@ def create() -> (Response, int):
 
     exp = Experiment.from_json(request.json)
     # TODO: remove Dataset class
-    exp.dataset = data_utils.csv_to_dataset(exp_json["dataset_name"], data_path(user_id, "dataset"))
+    exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
     if path_exists(data_path(user_id, "ground_truth")):
         exp.true_outliers = data_utils.csv_to_list(data_path(user_id, "ground_truth"))
     db.add_experiment(exp)
-    # TODO: run experiment
+    await _experiment_scheduler.schedule(exp)
+    db.session.commit()
     return 'OK', 200
 
 

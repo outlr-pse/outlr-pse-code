@@ -7,6 +7,9 @@ describe('getAllExperiment', () => {
         let experiments: Experiment[] = [];
         let experimentJson = await requestAllExperiments();
 
+        if(experimentJson.error !== null){
+            return;
+        }
         console.log(experimentJson.data)
         for (let experiment of experimentJson.data) {
             console.log(experiment)

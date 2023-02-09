@@ -2,10 +2,9 @@
   <div class="container">
     <Card class="container-card">
       <div class="content">
-
         <div class="header">
           <div class="title">{{ $t('message.register-view.title') }}
-            <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> info </span>
+            <span v-bind:class="{'errorInput':error}" class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> info </span>
             <transition name="fade">
               <Card class="card" v-if="showTip" @mouseenter="showTip = true" @mouseleave="showTip = false">
                 {{ $t('message.register-view.requirements') }}
@@ -20,8 +19,10 @@
         <div class="login-form">
           <div class="error" v-show="error">{{ errorMessage }}</div>
           <div class="text-fields">
-            <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username"
+            <div>
+              <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username"
                    @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
+            </div>
             <div style="position:relative">
                <input v-bind:class="{'valid': passwordInput(passwordInput), 'errorInput':error}" class="password"
                    @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password"
@@ -270,11 +271,14 @@ export default defineComponent({
   background: var(--color-background);
   border: 2px solid var(--color-stroke);
   color: var(--color-main-white);
-
 }
 
 .text-fields input:focus {
   border: 2px solid var(--color-main)
+}
+
+.submit-field{
+  margin: 0 4px;
 }
 
 .submit-field input {

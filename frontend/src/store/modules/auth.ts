@@ -2,8 +2,9 @@ import {getIdentity} from "../../api/DataRetrievalService"
 import {AuthModuleState} from "./auth.state";
 import {ActionContext} from "vuex";
 
+const defaultUsername = "Not logged in"
 let hasValidAuthToken:boolean = false
-let username:string = ""
+let username:string = defaultUsername
 
 
 
@@ -37,7 +38,7 @@ export default {
             state.username = username
         },
         unsetUsername(state:AuthModuleState) {
-            state.username = ""
+            state.username = defaultUsername
         }
     },
     getters:{

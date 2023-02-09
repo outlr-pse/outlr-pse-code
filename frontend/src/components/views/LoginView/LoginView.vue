@@ -25,7 +25,7 @@
 
           </div>
           <div class="submit-field">
-            <input v-bind:class="{'validSubmit': validInput, 'errorSubmit':error}" ref="submit" @click="tryLoginSubmit"
+            <input v-bind:class="{'errorSubmit':error}" ref="submit" @click="tryLoginSubmit"
                    type="button" value="Continue">
           </div>
         </div>

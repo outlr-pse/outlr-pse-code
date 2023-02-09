@@ -25,6 +25,17 @@
       "signUp": "Sign up",
       "logIn": "Log in"
     },
+    "dashboard": {
+      "search": "Search...",
+      "clear": "Clear",
+      "name": "Name",
+      "dataset": "Dataset",
+      "odm": "ODM",
+      "hyperparameters": "Hyperparameters",
+      "date": "Date",
+      "accuracy": "Accuracy",
+      "running": "Running . . ."
+    },
     "experimentCreate": {
       "defaultFileField": "Upload a file",
       "dataset": "Dataset",

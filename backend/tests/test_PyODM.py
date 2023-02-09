@@ -3,10 +3,9 @@ import unittest
 import pandas as pd
 import numpy as np
 from pyod.utils import generate_data
-from pyod.utils.example import visualize
 
-from models.dataset.dataset import Dataset
-from models.odm.pyodm import PyODM
+from models.dataset import Dataset
+from models.odm import PyODM
 
 
 # TODO: Add more tests for Experiment, ODM and User

@@ -1,8 +1,8 @@
 import unittest
 
-from models.odm.odm import ODM
-from models.odm.hyper_parameter import HyperParameter
-from models.user.user import User
+from models.odm import ODM
+from models.odm import HyperParameter
+from models.user import User
 
 
 # TODO: Add more tests for Experiment, ODM and User

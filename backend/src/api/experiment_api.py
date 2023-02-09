@@ -144,7 +144,7 @@ async def create() -> (Response, int):
     exp.odm.__class__ = PyODM
     exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
     if path_exists(data_path(user_id, "ground_truth")):
-        # TODO: set ground truth in exp
+        exp.ground_truth = data_utils.csv_to_list(data_path(user_id, "ground_truth"))
         pass
 
     remove_user_data(user_id)

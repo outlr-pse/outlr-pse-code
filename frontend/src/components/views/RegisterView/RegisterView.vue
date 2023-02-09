@@ -1,4 +1,5 @@
 <template>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
   <div class="container">
     <Card>
       <div class="content">
@@ -9,24 +10,19 @@
         </div>
 
         <div class="login-form">
-          <div class="form">
             <div class="error" v-show="error">{{errorMessage}}</div>
             <div class="text-fields">
-              <input @click="() => error = false" v-model="username" placeholder="Username"/>
-              <input @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
-              <input @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
+              <input v-bind:class="{'valid': this.usernameInput(this.username), 'errorInput':this.error}" class="username" @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
+              <input v-bind:class="{'valid': this.passwordInput(this.passwordInput), 'errorInput':this.error}" class="password" @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
+              <input v-bind:class="{'valid': this.passwordRepeatedInput(this.passwordRepeated), 'errorInput':this.error}" class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
             </div>
             <div class="submit-field">
-              <input class="buttonStyling" @click="tryRegisterSubmit" type="button" value="Create account">
+              <input v-bind:class="{'validSubmit': validInput}" ref="submit" @click="tryRegisterSubmit" type="button" value="Create account">
             </div>
-          </div>
         </div>
-
       </div>
     </Card>
   </div>
-
-
 </template>
 
 
@@ -34,16 +30,17 @@
 import Card from "../../basic/Card.vue";
 import Button from "../../basic/button/Button.vue";
 import Tip from "../../basic/Tip.vue";
-import {login, register, validatePassword, validateUsername} from "../../../api/AuthServices";
+import {register, validatePassword, validateUsername} from "../../../api/AuthServices";
 import {defineComponent} from "vue";
 import router from "../../../router";
 import store from "../../../store";
 
 export default defineComponent({
-  name: "Login",
+  name: "Register",
   components: {Tip, Button, Card},
   data: () => {
     return {
+      withValidInput: [false, false, false],
       username: "",
       password: "",
       passwordRepeated: "",
@@ -52,114 +49,165 @@ export default defineComponent({
     };
   },
   methods: {
+    usernameInput(event:any){
+      let isValid = validateUsername(this.username)
+      this.withValidInput[0] = isValid;
+      return isValid
+    },
+    passwordInput(event:any){
+      let isValid = validatePassword(this.password);
+      this.withValidInput[1] = isValid;
+      return isValid;
+    },
+    passwordRepeatedInput(event:any){
+      let isValid = this.passwordRepeated === this.password && this.withValidInput[1];
+      this.withValidInput[2] = isValid;
+      return isValid;
+    },
+    resetInputFields() {
+      this.username = ""
+      this.password = ""
+      this.passwordRepeated = ""
+      for (let i=0; i < this.withValidInput.length; i++) {
+        this.withValidInput[i] = false
+      }
+    },
     async tryRegisterSubmit() {
+
       if (!validateUsername(this.username) || !validatePassword(this.password, this.password)
         ||  this.password != this.passwordRepeated) {
           this.error = true;
+          this.errorMessage = this.$t('message.register-view.errors.provided-credentials-wrong')
+          this.resetInputFields()
           return;
         }
 
       const response = await register(this.username, this.password)
       if (response.error != null) {
-        this.error = true;
+        this.error = true
+        this.errorMessage = this.$t(`message.register-view.errors.${response.error}`)
+        this.resetInputFields()
         return;
       }
-      console.log(store.getters["auth/isAuthenticated"])
-      console.log(store.getters["auth/username"])
       await router.push('/')
+    }
+  },
+  computed: {
+    validInput() {
+      for (let i=0; i < this.withValidInput.length; i++) {
+        if (!this.withValidInput[i]) {
+          return false
+        }
+      }
+      return true;
     }
   }
 })
 </script>
 
 <style scoped>
-
-.title {
-  color: var(--color-text);
-  font-weight: bold;
-  font-size: 22px;
+.errorInput{
+  border-color: var(--color-main) !important;
+  background: none;
+  color: var(--color-main)!important;
 }
 
-.subtitle {
-  color: var(--color-default-text-textbox);
-  font-weight: bold;
-  font-size: 20px;
+.container{
+  height:100%;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.tip{
+  background:var(--color-auth-form-background);
+  border: none;
+  padding: 0;
+  margin:0;
 }
 
 .content {
-  padding: 0 1vw;
-  max-width: max(35vh, 300px);
+  width: min(70vw, 325px);
+  padding: 30px;
+  display:grid;
+  grid-template-rows: auto auto;
+  gap:30px;
 }
 
-.error {
-  margin-top: 1vw;
-  border-radius: 7px;
-  padding: 7px;
-  border: 1px solid red;
-  color: red;
-}
-
-.header {
+.header{
   text-align: left;
-  padding: 1vw 0;
-  height: 20%
+  display:grid;
+  gap: 7px;
 }
 
-.login-form {
-  border-top: 1px solid var(--color-stroke);
-  height: 65%;
-  padding: 0 1vw;
+.title{
+  font-size: 22px;
+  font-weight: 800;
 }
 
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%
-}
-
-.text-fields {
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-row-gap: 1vw;
-  margin: 2vw 0;
-}
-
-.text-fields input {
-  font-size: 18px;
-  color: var(--color-text);
-  font-weight: 1000;
-  background: none;
-  border: 1px solid var(--color-stroke);
-  border-radius: 7px;
-  padding:10px;
-}
-
-.form {
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
-  padding: 0;
-  height: 100%;
-}
-
-.login-form {
-  padding: 0 1vw;
-}
-
-.submit-field {
-  color: var(--color-text);
-  margin-bottom: 1vw;
-}
-
-.buttonStyling{
-  color: var(--color-text);
+.subtitle{
   font-size:20px;
-  width:100%;
-  padding:10px;
-  background: var(--color-main);
-  border-radius: 7px
+  font-weight: 700;
+  color: var(--color-stroke)
 }
+
+.login-form{
+  display: grid;
+  grid-template-rows: auto;
+  gap: 30px;
+}
+
+.error{
+  font-size:18px;
+  font-weight: 500;
+  border: 2px solid var(--color-main);
+  color:var(--color-main);
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.text-fields{
+  display:grid;
+  gap:15px;
+}
+
+.valid{
+  border: 2px solid green !important;
+}
+
+.validSubmit{
+  background: green !important;
+}
+
+.login-form input{
+  outline:none;
+  font-size:20px;
+  font-weight: 800;
+  padding: 10px;
+  border-radius: 7px;
+  border:none;
+}
+
+.text-fields input{
+  background: var(--color-background);
+  border: 2px solid var(--color-stroke)
+}
+
+.text-fields input:focus{
+  border: 2px solid var(--color-main)
+}
+
+.submit-field input{
+  width:100%;
+  background: var(--color-main);
+}
+
+.submit-field input:hover{
+  filter: brightness(120%);
+  cursor: pointer;
+}
+
+
+
 
 </style>

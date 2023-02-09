@@ -4,7 +4,11 @@
     "name": "England",
     "register-view": {
         "title": "Hello!",
-        "subtitle": "Please enter your details to create an account!"
+        "subtitle": "Please enter your details to create an account!",
+        "errors": {
+          "provided-credentials-wrong": "Please provide valid credentials!",
+          "username_already_taken": "Username is already taken!"
+        }
     },
     "experimentResultView": {
       "experimentSummaryCard": {

@@ -55,6 +55,7 @@ body {
   --color-purple-button: var(--palette-purple-85);
   --color-disabled-button: var(--palette-grey-4);
   --color-close-button: #D64751;
+  --color-auth-form-background: #2E2E2E;
 }
 
 /* add colors for light mode here */

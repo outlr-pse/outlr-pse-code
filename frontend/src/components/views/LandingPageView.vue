@@ -1,6 +1,6 @@
 <template>
   Landing page
-  <Button @click="logout()"></Button>
+  <Button @click="logout()" text="Logout"></Button>
 </template>
 
 <script lang="ts">

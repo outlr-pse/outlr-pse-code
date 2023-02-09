@@ -2,6 +2,14 @@
   "message": {
     "greeting": "Hallo",
     "name": "Deutschland",
+    "register-view": {
+        "title": "Hallo!",
+        "subtitle": "Bitte geben Sie Daten zur Accounterstellung an.",
+        "errors": {
+          "provided-credentials-wrong": "Bitte gültige Daten angeben!",
+          "username_already_taken": "Benutzername schon vergeben!"
+        }
+    },
     "experimentResultView": {
       "experimentSummaryCard": {
         "summary": "Zusammenfassung",

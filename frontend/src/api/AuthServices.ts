@@ -31,7 +31,7 @@ export function validateUsername(username : string) : boolean {
     return usernameRegex.test(username)
 }
 
-export function validatePassword(password:string, passwordRepeated:string) {
+export function validatePassword(password:string) {
     /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
@@ -45,7 +45,7 @@ export function validatePassword(password:string, passwordRepeated:string) {
      *
      * @param password the password, the user provided
      */
-    if (password == null || passwordRepeated == null || password != passwordRepeated) {
+    if (password == null) {
         return false
     }
 
@@ -131,16 +131,16 @@ export async function logout() {
     try {
             const response = await sendLogout()
             if (response.error != null) {
-                storage.clear()
+                storage.removeItem('access_token')
                 await store.dispatch("auth/unsetAuthenticated")
                 return response
             }
 
-            storage.clear()
+            storage.removeItem('access_token')
             await store.dispatch("auth/unsetAuthenticated")
             return response.data
         } catch (error) {
-            storage.clear()
+            storage.removeItem('access_token')
             return errorOther
         }
 }

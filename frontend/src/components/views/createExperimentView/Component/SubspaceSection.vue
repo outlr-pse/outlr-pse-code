@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-      Subspace Logic
+      {{ $t('message.experimentCreate.subspaceLogic') }}
       <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
     </span>
       <transition name="fade">

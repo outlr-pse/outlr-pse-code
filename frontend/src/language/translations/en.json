@@ -3,14 +3,15 @@
     "greeting": "Hello",
     "name": "England",
     "experimentCreate": {
-      "defaultFileField" : "Upload a file",
-      "dataset" : "Dataset",
-      "groundtruth" : "Groundtruth",
+      "defaultFileField": "Upload a file",
+      "dataset": "Dataset",
+      "groundtruth": "Groundtruth",
       "logicHint": "Text for subspace logic hint",
-      "paramHint": "empty field --> default value is used,\nred border --> invalid input type,\nblue border --> parameter is not optional and needs a value,\ngray border --> type is allowed but can still be incorrect"
-
-
-
+      "paramHint": "empty field --> default value is used,\nred border --> invalid input type,\nblue border --> parameter is not optional and needs a value,\ngray border --> type is allowed but can still be incorrect",
+      "odm": "Outlier Detection Method",
+      "odmParameters": "ODM Parameters",
+      "subspaceLogic": "Subspace Logic",
+      "enterSL": "Enter Subspace Logic"
     }
   }
 }

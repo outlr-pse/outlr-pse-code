@@ -1,7 +1,7 @@
 <template>
   <div class="parameterSection">
     <div class="header">
-      ODM Parameters
+      {{  $t('message.experimentCreate.odmParameters') }}
       <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         information
       </span>
@@ -15,7 +15,7 @@
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
                            :parameter-id="param.id" :key="param.id" :ref="'inputRef' + param.id"
-                           :optional="param.optional" @checkData="$emit('checkData')"/>
+                           :optional="param.optional" />
     </div>
   </div>
 </template>
@@ -61,7 +61,9 @@ export default defineComponent({
       } else {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].correctInput();
       }
+      this.$emit("checkData");
     }
+
   }
 })
 

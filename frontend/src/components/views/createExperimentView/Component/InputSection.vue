@@ -2,7 +2,7 @@
   <Card class="card">
     <div class="odmContainer">
       <div class="odm">
-        Outlier Detection Method
+        {{ $t('message.experimentCreate.odm') }}
         <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
       </div>
       <Dropdown :options="odmNames" hint="Select ODM" class="dropdown" @onValueSelected="onODMSelection"/>

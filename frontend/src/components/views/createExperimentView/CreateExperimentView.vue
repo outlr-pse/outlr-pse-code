@@ -51,7 +51,10 @@ export default defineComponent({
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
       selectedODM: null as ODM | null,
-      buttonType: ButtonType.DISABLED
+      buttonType: ButtonType.DISABLED,
+      dataset: null as File | null,
+      groundtruth: null as File | null,
+
     }
   },
   methods: {
@@ -83,6 +86,7 @@ export default defineComponent({
           return
         }
       }
+      //validate dataset
       //validate subspacelogic
       this.buttonType = ButtonType.ACTIVE
     }

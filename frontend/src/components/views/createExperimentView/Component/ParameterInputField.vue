@@ -1,5 +1,5 @@
 <template>
-      <input type="text" :placeholder="placeholder" v-model="value" class="field" @input="checkData" >
+      <input type="text" :placeholder="placeholder" v-model="value" class="field">
 </template>
 
 <script lang="ts">

@@ -10,7 +10,7 @@
           {{ $t('message.experimentCreate.paramHint') }}
         </Card>
       </transition>
-      <div style="border: 1px solid var(--color-lines); margin-top: .5vh; width: 12vw;"/>
+      <div style="border: 1px solid var(--color-lines); margin-top: .5vh; width: 12vw; height: 0"/>
     </div>
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
@@ -108,7 +108,7 @@ export default defineComponent({
   top: 70%;
   left: 25%;
   right: 0;
-  width: 15vw;
+  width: 17vw;
   height: max-content;
   background-color: rgb(47, 41, 58);
   z-index: 100;

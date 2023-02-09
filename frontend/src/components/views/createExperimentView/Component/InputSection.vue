@@ -94,7 +94,7 @@ export default defineComponent({
 }
 
 .subspace {
-  height: 32%;
+  height: 30%;
 }
 
 

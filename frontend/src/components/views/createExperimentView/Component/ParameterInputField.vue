@@ -1,5 +1,5 @@
 <template>
-      <input type="text" :placeholder="placeholder" v-model="value" class="field" @focusout="checkData" @focusin="checkData" @mouseleave="checkData">
+      <input type="text" :placeholder="placeholder" v-model="value" class="field" @input="checkData" >
 </template>
 
 <script lang="ts">
@@ -56,7 +56,7 @@ export default defineComponent({
 <style scoped>
 .field {
     border: 1px solid var(--color-stroke);
-    width: 8.5vw;
+    width: 8.2vw;
     outline: none;
     background-color: transparent;
     font-size: 1em;

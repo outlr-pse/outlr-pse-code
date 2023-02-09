@@ -1,18 +1,19 @@
 <template>
-  <div class="header">
-    Subspace Logic
-    <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
+    <div class="header">
+      Subspace Logic
+      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
     </span>
-    <transition name="fade">
-      <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
-        {{ $t('message.experimentCreate.logicHint') }}
-      </Card>
-    </transition>
-    <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
-  </div>
-  <div class="subspaceLogic">
-    <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
-  </div>
+      <transition name="fade">
+        <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
+          {{ $t('message.experimentCreate.logicHint') }}
+        </Card>
+      </transition>
+      <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
+    </div>
+    <div class="subspaceLogic">
+      <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
+    </div>
+
 </template>
 
 <script lang="ts">
@@ -45,25 +46,26 @@ export default defineComponent({
   text-align: left;
   padding: 5px;
   width: 12vw;
+  height: 25%;
 }
 
 .subspaceLogic {
+  height: 68%;
   display: flex;
   text-align: left;
-  height: 77%;
   width: 100%;
 }
 
 .inputField {
   width: 100%;
-  margin-top: 1vh;
   border-radius: 8px;
   outline: none;
-  font-size: 20px;
-  padding: 14px;
+  font-size: 2vh;
+  padding: 10px;
   z-index: 1;
   background: transparent;
   font-family: Poppins, serif;
+  resize: none;
 
 }
 

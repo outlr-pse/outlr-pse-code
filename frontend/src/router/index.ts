@@ -17,7 +17,7 @@ const routes = [
   {
     path: '/register',
     name: 'register-page',
-    component: () => import("../components/views/RegisterView.vue"),
+    component: () => import("../components/views/RegisterView/RegisterView.vue"),
     meta: { requiresAuth: false }
   },
   {
@@ -57,12 +57,12 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/is_authenticated']) {
+  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
     next('/')
     return;
   }
 
-  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/is_authenticated']) {
+  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/isAuthenticated']) {
     next('/login')
     return;
   }

@@ -75,6 +75,7 @@ p {
   --color-stroke: var(--palette-grey-1);
   --color-default-text-textbox: var(--palette-grey-1);
   --color-textboxfill: var(--palette-grey-9);
+  /*--color-topbar: #2f293a; /* vlt zu palette ändern */
   --color-lines: var(--palette-grey-3);
   --color-subheader: var(--palette-grey-1);
   --color-input-textbox: var(--palette-grey--1);
@@ -88,6 +89,7 @@ p {
   --color-table-border: #4f4f4f;
   --color-table-header: #514478;
   --color-running: #31de84;
+  --color-auth-form-background: #2E2E2E;
   --color-input-optional: rgb(19, 104, 211);
 }
 

@@ -68,23 +68,23 @@ p {
 
 /* semantic color variables for this project */
 :root {
-    --color-main: var(--palette-purple-5);
-    --color-main-white: #eeeeee;
-    --color-text: var(--color-main-white);
-    --color-background: #202020;
-    --color-stroke: var(--palette-grey-1);
-    --color-default-text-textbox: var(--palette-grey-1);
-    --color-textboxfill: var(--palette-grey-9);
-    --color-lines: var(--palette-grey-3);
-    --color-subheader: var(--palette-grey-1);
-    --color-input-textbox: var(--palette-grey--1);
-    --color-selected: var(--palette-purple-3);
-    --color-cell-background: #3c3054;
-    --color-purple-button: var(--palette-purple-85);
-    --color-disabled-button: var(--palette-grey-4);
-    --color-close-button: #D64751;
-    --color-topbar: rgb(47, 41, 58, 0.95);
-    --color-input-optional: rgb(19, 104, 211);
+  --color-main: var(--palette-purple-5);
+  --color-main-white: #eeeeee;
+  --color-text: var(--color-main-white);
+  --color-background: #202020;
+  --color-stroke: var(--palette-grey-1);
+  --color-default-text-textbox: var(--palette-grey-1);
+  --color-textboxfill: var(--palette-grey-9);
+  --color-lines: var(--palette-grey-3);
+  --color-subheader: var(--palette-grey-1);
+  --color-input-textbox: var(--palette-grey--1);
+  --color-selected: var(--palette-purple-3);
+  --color-cell-background: #3c3054;
+  --color-purple-button: var(--palette-purple-85);
+  --color-disabled-button: var(--palette-grey-4);
+  --color-close-button: #D64751;
+  --color-topbar: rgb(47, 41, 58, 0.95);
+  --color-input-optional: rgb(19, 104, 211);
 }
 
 /* add colors for light mode here */

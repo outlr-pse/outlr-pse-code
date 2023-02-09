@@ -314,7 +314,7 @@ class Experiment(Base):
         return cls(
             name=json['name'],
             subspace_logic=json['subspace_logic'],
-            odm=json['odm'],
-            param_values=json['odm_params'],
+            odm_id=json['odm']['id'],
+            param_values=json['odm']['hyper_parameters'],
             dataset_name=json.get('dataset_name'),
         )

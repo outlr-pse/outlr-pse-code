@@ -8,10 +8,11 @@ Endpoints defined:
 """
 from flask import Blueprint, Response, jsonify, request
 import re
+
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+import api.error as error
 from werkzeug.security import check_password_hash, generate_password_hash
 
-import api.error as error
 from database import database_access
 from models.user import User
 
@@ -100,9 +101,9 @@ def login() -> (Response, int):
     password were correct a user json (with the jwt token connected to the user) and the status code "200 OK"
     is returned, status code "401 Unauthorized" otherwise.
     """
-    user_input_error = handle_user_input()
-    if user_input_error:
-        return user_input_error
+    input_error = handle_user_input()
+    if input_error:
+        return input_error
 
     username = request.json["username"]
     password = request.json["password"]
@@ -123,9 +124,9 @@ def register() -> (Response, int):
     into the database if username and password are valid and returns a user json
     (with the jwt token connected to the user), otherwise "409 Conflict"
     """
-    user_input_error = handle_user_input()
-    if user_input_error:
-        return user_input_error
+    input_error = handle_user_input()
+    if input_error:
+        return input_error
 
     username = request.json["username"]
     password = request.json["password"]

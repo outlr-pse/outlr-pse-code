@@ -8,6 +8,16 @@
       "logOut": "Log Out",
       "signUp": "Sign Up",
       "signInAs": "Signed in as"
+    },
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Summary",
+        "odm": "ODM",
+        "accuracy": "Accuracy",
+        "executionDate": "Execution Date",
+        "executionTime": "Execution Time",
+        "detectedOutliers": "Number of detected outliers"
+      }
     }
   }
 }

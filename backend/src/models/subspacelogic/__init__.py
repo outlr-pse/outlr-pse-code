@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from numpy.typing import ArrayLike
 
 from models.json_error import JSONError
-from models.experiment import Subspace
+from models.experiment.experiment import Subspace
 
 
 class SubspaceLogic(ABC):

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
-from models.experiment import Experiment
+from models.experiment.experiment import Experiment
 from models.odm.hyper_parameter import HyperParameter
 from models.odm.odm import ODM
 from models.user.user import User
@@ -31,8 +31,8 @@ def add_experiment(experiment: Experiment) -> Experiment:
     return experiment
 
 
-def get_experiment(exp_id: int) -> Experiment | None:
-    return session.get(Experiment, exp_id)
+def get_experiment(user_id: int, exp_id: int) -> Experiment | None:
+    return session.get(Experiment, {'user_id': user_id, 'id': exp_id})
 
 
 def add_user(user: User) -> User:

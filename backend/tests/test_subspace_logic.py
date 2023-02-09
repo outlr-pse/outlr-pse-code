@@ -5,7 +5,7 @@ from models.subspacelogic import SubspaceLogic
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
-from models.experiment import ExperimentResult, Subspace, Outlier
+from models.experiment.experiment import Subspace, Outlier
 
 
 # don't modify these variables

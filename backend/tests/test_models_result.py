@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime, timedelta
 
-from models.experiment import ExperimentResult, Experiment, Subspace, Outlier
+from models.experiment.experiment import ExperimentResult, Experiment, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 
 exp = Experiment(id=123)

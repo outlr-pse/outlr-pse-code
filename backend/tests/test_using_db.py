@@ -3,10 +3,10 @@ from datetime import timedelta, datetime
 
 import database.database_access as db
 from models.user.user import User
-from models.experiment import Experiment, ExperimentResult, Subspace, Outlier
+from models.experiment.experiment import Experiment, ExperimentResult, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation, Operator
-from models.odm.odm import ODM, HyperParameter
+from models.odm.odm import HyperParameter
 from models.base import Base
 
 
@@ -55,7 +55,7 @@ class TestDBAccess(unittest.TestCase):
         self.assertEqual(4, exp.id)
 
     def test_get_experiment(self) -> None:
-        exp = db.get_experiment(1)
+        exp = db.get_experiment(1, 1)
         self.assertEqual("exp1", exp.name)
         self.assertEqual(1, exp.id)
 

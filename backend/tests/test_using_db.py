@@ -117,11 +117,11 @@ class TestExperimentWithResult(unittest.TestCase):
             user_id=u.id,
             name="Experiment #1203",
             odm_id=1,
-            dataset_size=20,
         )
         self.res = ExperimentResult(
-            accuracy=0.89,
+            user_id=u.id,
             experiment=self.exp,
+            accuracy=0.89,
             execution_date=datetime.now(), execution_time=timedelta(minutes=2)
         )
         self.res_space = Subspace(

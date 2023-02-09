@@ -151,11 +151,16 @@ class ExperimentResult(Base):
     accuracy: Mapped[float]
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
-    user_id: Mapped[int]
-    experiment_id: Mapped[int]
+    user_id: Mapped[int] = mapped_column()
+    experiment_id: Mapped[int] = mapped_column()
     ForeignKeyConstraint(
         ["user_id", "experiment_id"],
         ["experiment.user_id", "experiment.id"]
+    )
+    experiment: Mapped['Experiment'] = relationship(
+        back_populates="experiment_result",
+        foreign_keys=[experiment_id, user_id],
+        primaryjoin="and_(ExperimentResult.user_id==Experiment.user_id, ExperimentResult.experiment_id==Experiment.id)"
     )
 
     outliers: Mapped[list['Outlier']] = relationship(
@@ -241,6 +246,7 @@ class Experiment(Base):
     )
 
     experiment_result: Mapped["ExperimentResult"] = relationship(
+        back_populates="experiment",
         foreign_keys=[ExperimentResult.experiment_id, ExperimentResult.user_id],
         primaryjoin="and_(Experiment.id==ExperimentResult.experiment_id, Experiment.user_id==ExperimentResult.user_id)")
 

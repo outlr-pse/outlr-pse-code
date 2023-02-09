@@ -10,7 +10,6 @@ res = ExperimentResult(
     accuracy=0.89,
     execution_date=datetime.now(),
     execution_time=timedelta(minutes=2),
-    experiment=exp
 )
 res_space = Subspace(id=2343, columns=None, name="result")
 sub1 = Subspace(id=23, experiment=exp, columns=[0, 1, 3])
@@ -114,7 +113,7 @@ class TestResultModels(unittest.TestCase):
                 "execution_time": 2 * 1000000 * 60,
                 "result_space": res_space.to_json()  # This is already tested by test_subspace_json()
             },
-            res.to_json()
+            res.to_json(True)
         )
 
     def test_subspace_from_json(self):

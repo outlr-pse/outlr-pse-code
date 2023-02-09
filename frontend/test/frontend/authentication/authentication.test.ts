@@ -1,4 +1,8 @@
-import {initialValidityCheck, login, logout, register} from "../../../src/api/AuthServices";
+/**
+ * @jest-environment jsdom
+ */
+
+import {login, logout, register} from "../../../src/api/AuthServices";
 import store from "../../../src/store";
 import {axiosClient, requestTokenIdentity, storage} from "../../../src/api/APIRequests";
 

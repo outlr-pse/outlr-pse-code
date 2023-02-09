@@ -1,13 +1,10 @@
 <template>
   <div id="app">
-    <Topbar/>
     <RouterView class="routerView"/>
   </div>
 </template>
 
 <script lang="ts">
-
-import Topbar from "./components/topbar/Topbar.vue";
 import {RouterView} from "vue-router";
 
 export default {
@@ -18,7 +15,6 @@ export default {
   },
 
   components: {
-    Topbar,
     RouterView
   },
 

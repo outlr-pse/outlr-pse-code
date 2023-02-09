@@ -11,11 +11,11 @@
         <div class="login-form">
             <div class="error" v-show="error">{{errorMessage}}</div>
             <div class="text-fields">
-              <input v-bind:class="{'errorInput':this.error}" class="username" @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
-              <input v-bind:class="{'errorInput':this.error}" class="password" @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
+              <input v-bind:class="{'errorInput':error}" class="username" @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
+              <input v-bind:class="{'errorInput':error}" class="password" @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
             </div>
             <div class="submit-field">
-              <input v-bind:class="{'validSubmit': validInput}" ref="submit" @click="tryLoginSubmit" type="button" value="Continue">
+              <input v-bind:class="{'validSubmit': validInput, 'errorSubmit':error}" ref="submit" @click="tryLoginSubmit" type="button" value="Continue">
             </div>
         </div>
       </div>
@@ -75,9 +75,22 @@ export default defineComponent({
 
 <style scoped>
 .errorInput{
-  border-color: var(--color-main) !important;
+  border-color: var(--color-close-button) !important;
   background: none;
-  color: var(--color-main)!important;
+  color: var(--color-close-button)!important;
+}
+
+.error{
+  font-size:18px;
+  font-weight: 500;
+  border: 2px solid var(--color-close-button);
+  color:var(--color-close-button);
+  padding: 10px;
+  border-radius: 7px;
+}
+
+.errorSubmit{
+  background: var(--color-close-button) !important;
 }
 
 .container{
@@ -125,15 +138,6 @@ export default defineComponent({
   gap: 30px;
 }
 
-.error{
-  font-size:18px;
-  font-weight: 500;
-  border: 2px solid var(--color-main);
-  color:var(--color-main);
-  padding: 10px;
-  border-radius: 7px;
-}
-
 .text-fields{
   display:grid;
   gap:15px;
@@ -154,6 +158,7 @@ export default defineComponent({
   padding: 10px;
   border-radius: 7px;
   border:none;
+  color: var(--color-main-white);
 }
 
 .text-fields input{
@@ -168,6 +173,7 @@ export default defineComponent({
 .submit-field input{
   width:100%;
   background: var(--color-main);
+  color: var(--color-main-white)
 }
 
 .submit-field input:hover{

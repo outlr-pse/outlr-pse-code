@@ -2,7 +2,7 @@
   <div class="TopBar">
     <img alt="Outlr logo" @click="$router.push('/')" class="logo" src="../../assets/OutlrLogo.svg"
          width="125"/>
-
+    <h1> {{ topbarMessage }} </h1>
     <div style="justify-self: end">
       <div v-if="isAuthenticated" style="display: flex; align-items: center">
         <div v-if="$route.path !== '/create'" style="display: inline-block">
@@ -79,7 +79,7 @@ export default defineComponent({
   color: #fff;
   font-size: 14px;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* two columns: logo, buttons */
+  grid-template-columns: 1fr 1fr 1fr; /* two columns: logo, text and buttons */
   grid-gap: 10px; /* gap between cells, kann man weglassen */
   align-items: center;
   padding-right: 1rem;

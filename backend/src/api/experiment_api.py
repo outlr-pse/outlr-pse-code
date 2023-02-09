@@ -143,7 +143,10 @@ async def create() -> (Response, int):
 
     exp.odm.__class__ = PyODM
     exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
-    exp.ground_truth # TODO: get ground truth from db
+    if path_exists(data_path(user_id, "ground_truth")):
+        # TODO: set ground truth in exp
+        pass
+
     await _experiment_scheduler.schedule(exp)
     db.session.commit()
     return 'OK', 200

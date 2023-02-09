@@ -7,7 +7,8 @@
         "subtitle": "Bitte geben Sie Daten zur Accounterstellung an.",
         "errors": {
           "provided-credentials-wrong": "Bitte gültige Daten angeben!",
-          "username_already_taken": "Benutzername schon vergeben!"
+          "username_already_taken": "Benutzername schon vergeben!",
+          "other": "Ein unerwarteter Fehler ist aufgetreten. Server läuft möglicherweise nicht."
         }
     },
     "experimentResultView": {

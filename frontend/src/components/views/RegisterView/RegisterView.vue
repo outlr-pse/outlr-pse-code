@@ -1,5 +1,4 @@
 <template>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
   <div class="container">
     <Card>
       <div class="content">
@@ -17,7 +16,7 @@
               <input v-bind:class="{'valid': passwordRepeatedInput(passwordRepeated), 'errorInput':error}" class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
             </div>
             <div class="submit-field">
-              <input v-bind:class="{'validSubmit': validInput}" ref="submit" @click="tryRegisterSubmit" type="button" value="Create account">
+              <input v-bind:class="{'validSubmit': validInput, 'errorSubmit':error}" ref="submit" @click="tryRegisterSubmit" type="button" value="Create account">
             </div>
         </div>
       </div>
@@ -107,9 +106,22 @@ export default defineComponent({
 
 <style scoped>
 .errorInput{
-  border-color: var(--color-main) !important;
+  border-color: var(--color-close-button) !important;
   background: none;
-  color: var(--color-main)!important;
+  color: var(--color-close-button)!important;
+}
+
+.errorSubmit{
+  background: var(--color-close-button) !important;
+}
+
+.error{
+  font-size:18px;
+  font-weight: 500;
+  border: 2px solid var(--color-close-button);
+  color:var(--color-close-button);
+  padding: 10px;
+  border-radius: 7px;
 }
 
 .container{
@@ -157,26 +169,17 @@ export default defineComponent({
   gap: 30px;
 }
 
-.error{
-  font-size:18px;
-  font-weight: 500;
-  border: 2px solid var(--color-main);
-  color:var(--color-main);
-  padding: 10px;
-  border-radius: 7px;
-}
-
 .text-fields{
   display:grid;
   gap:15px;
 }
 
 .valid{
-  border: 2px solid green !important;
+  border: 2px solid var(--color-running) !important;
 }
 
 .validSubmit{
-  background: green !important;
+  background: var(--color-running) !important;
 }
 
 .login-form input{
@@ -201,7 +204,7 @@ export default defineComponent({
 .submit-field input{
   width:100%;
   background: var(--color-main);
-  color:var(--color-main-white)
+  color:var(--color-main-white);
 }
 
 .submit-field input:hover{

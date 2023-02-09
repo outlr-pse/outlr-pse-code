@@ -7,7 +7,8 @@
         "subtitle": "Please enter your details to create an account!",
         "errors": {
           "provided-credentials-wrong": "Please provide valid credentials!",
-          "username_already_taken": "Username is already taken!"
+          "username_already_taken": "Username is already taken!",
+          "other": "An unexpected error occured. Potentially server is down."
         }
     },
     "experimentResultView": {

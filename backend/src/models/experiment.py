@@ -43,6 +43,8 @@ class Subspace(Base):
         experiment (Optional[Experiment]): The Experiment that this subspace belongs to.
             Is None for the result space
         outliers (list[Outlier]): The Outliers in this Subspace
+        outlier_array (Optional[NDArray]): A numpy ndarray containing 1 and 1 for each datapoint,
+            describing which datapoints are outliers in this subspace
     """
     __tablename__ = SUBSPACE_TABLE_NAME
 
@@ -60,6 +62,8 @@ class Subspace(Base):
         secondary=subspace_outlier,
         back_populates="subspaces"
     )
+
+    outlier_array = None
 
     def to_json(self) -> dict:
         """

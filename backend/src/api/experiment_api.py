@@ -125,7 +125,7 @@ def upload_files() -> (Response, int):
 
 
 @experiment_api.route('/create', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 async def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
@@ -133,7 +133,7 @@ async def create() -> (Response, int):
     """
     exp_json = request.json
     user_id = 1
-    exp_json['user_id'] = user_id
+    exp_json['user_id'] = get_jwt_identity()
 
     if not path_exists(data_path(user_id, "dataset")):
         return error.no_dataset, error.no_dataset["status"]
@@ -146,6 +146,8 @@ async def create() -> (Response, int):
     if path_exists(data_path(user_id, "ground_truth")):
         # TODO: set ground truth in exp
         pass
+
+    remove_user_data(user_id)
 
     await _experiment_scheduler.schedule(exp)
     db.session.commit()

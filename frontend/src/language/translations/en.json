@@ -12,6 +12,16 @@
       "date": "Date",
       "accuracy": "Accuracy",
       "running": "Running . . ."
+    },
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Summary",
+        "odm": "ODM",
+        "accuracy": "Accuracy",
+        "executionDate": "Execution Date",
+        "executionTime": "Execution Time",
+        "detectedOutliers": "Number of detected outliers"
+      }
     }
   }
 }

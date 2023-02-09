@@ -17,7 +17,13 @@
         "executionDate": "Execution Date",
         "executionTime": "Execution Time",
         "detectedOutliers": "Number of detected outliers"
-      }
+      },
+      "landingPage": {
+      "slogan": "Effective subspace outlier analysis",
+      "navigateDashboard": "Navigate to dashboard",
+      "signUp": "Sign up",
+      "logIn": "Log in"
+    }
     }
   }
 }

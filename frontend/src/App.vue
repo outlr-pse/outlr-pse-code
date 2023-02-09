@@ -8,6 +8,7 @@
 <script lang="ts">
 
 import Topbar from "./components/topbar/Topbar.vue";
+import {RouterView} from "vue-router";
 
 export default {
   data() {
@@ -17,7 +18,8 @@ export default {
   },
 
   components: {
-    Topbar
+    Topbar,
+    RouterView
   },
 
 }

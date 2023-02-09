@@ -33,7 +33,8 @@
       "title": "Welcome back!",
       "subtitle": "Please sign into your account",
       "errors": {
-        "provided_credentials_wrong": "Please provide valid credentials!"
+        "provided_credentials_wrong": "Please provide valid credentials!",
+        "other": "An unexpected error occured. Potentially server is down."
       }
     },
     "landingPage": {

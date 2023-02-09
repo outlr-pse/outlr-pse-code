@@ -105,7 +105,7 @@ export default defineComponent({
       if (!validateUsername(this.username) || !validatePassword(this.password)
           || this.password != this.passwordRepeated) {
         this.error = true;
-        this.errorMessage = this.$t('message.register-view.errors.provided-credentials-wrong')
+        this.errorMessage = this.$t('message.register-view.errors.provided_credentials_wrong')
         this.resetInputFields()
         return;
       }

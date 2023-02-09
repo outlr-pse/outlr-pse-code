@@ -123,6 +123,7 @@ export default defineComponent({
     toggleVisibilityPasswordRepeated(){
       this.inputTypePasswordRepeated = this.inputTypePasswordRepeated === "password"  ? "text" : "password"
       this.visiblePasswordRepeated= this.visiblePasswordRepeated === "visibility_off" ? "visibility": "visibility_off"
+      this.error = false
     }
   },
   computed: {

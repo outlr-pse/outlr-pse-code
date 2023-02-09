@@ -74,7 +74,7 @@ export default defineComponent({
     },
     async tryRegisterSubmit() {
 
-      if (!validateUsername(this.username) || !validatePassword(this.password, this.password)
+      if (!validateUsername(this.username) || !validatePassword(this.password)
         ||  this.password != this.passwordRepeated) {
           this.error = true;
           this.errorMessage = this.$t('message.register-view.errors.provided-credentials-wrong')

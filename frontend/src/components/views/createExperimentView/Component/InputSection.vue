@@ -69,6 +69,7 @@ export default defineComponent({
 
       //Parse Subspace Logic
       let subspaceLogic = logic
+      //Emit null when subspacelogic is invalid
       //Emit only when parsed successfully then its ensured the button can be clicked
       this.$emit("onSubspaceInput", subspaceLogic)
     }

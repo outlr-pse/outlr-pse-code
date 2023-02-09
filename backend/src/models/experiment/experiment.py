@@ -51,10 +51,16 @@ class Subspace(Base):
     columns = mapped_column(ARRAY(Integer), default=[])
     name: Mapped[Optional[str]]
 
-    experiment_id: Mapped[Optional[int]] = mapped_column(ForeignKey(f"{EXPERIMENT_TABLE_NAME}.id"))
+    experiment_id: Mapped[Optional[int]] = mapped_column()
+    user_id: Mapped[Optional[int]] = mapped_column()
+    ForeignKeyConstraint(
+        ["user_id", "experiment_id"],
+        ["experiment.user_id", "experiment.id"],
+    )
     experiment: Mapped[Optional['Experiment']] = relationship(
         back_populates="subspaces",
-        foreign_keys=[experiment_id]
+        foreign_keys=[experiment_id, user_id],
+        primaryjoin="and_(Experiment.id == Subspace.experiment_id, Experiment.user_id == Subspace.user_id)"
     )
 
     outliers: Mapped[list['Outlier']] = relationship(  # many-to-many
@@ -230,7 +236,8 @@ class Experiment(Base):
 
     subspaces: Mapped[list['Subspace']] = relationship(
         back_populates="experiment",
-        foreign_keys=[Subspace.experiment_id]
+        foreign_keys=[Subspace.experiment_id, Subspace.user_id],
+        primaryjoin="and_(Experiment.id == Subspace.experiment_id, Experiment.user_id == Subspace.user_id)"
     )
 
     experiment_result: Mapped["ExperimentResult"] = relationship(

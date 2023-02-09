@@ -43,10 +43,7 @@ class CoroutineExperimentScheduler(ExperimentScheduler):
 
             experiment.experiment_result = experiment_result
             experiment.subspaces = subspaces
+        except ExecutionError as e:
+            ExperimentScheduler.fail_execution(experiment, e)
         except Exception as e:
-            raise e
-        # except ExecutionError as e:
-        #     ExperimentScheduler.fail_execution(experiment, e)
-        # except Exception as e:
-        #     ExperimentScheduler.fail_execution(experiment, ExecutionError(str(e)))
-
+            ExperimentScheduler.fail_execution(experiment, ExecutionError(str(e)))

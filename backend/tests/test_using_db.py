@@ -118,7 +118,6 @@ class TestExperimentWithResult(unittest.TestCase):
             user_id=u.id,
             name="Experiment #1203",
             odm_id=1,
-            dataset_size=20,
         )
         self.res = ExperimentResult(
             accuracy=0.89,

@@ -54,7 +54,6 @@ class TestCoroutineScheduler(unittest.IsolatedAsyncioTestCase):
         self.experiment = Experiment(
             name="Expeeriment",
             user_id=self.user.id,
-            dataset_size=self.dataset.dataset.shape[0],
             dataset=self.dataset,
             subspaces=[self.sub1, self.sub2, self.sub3],
             odm=self.odm,

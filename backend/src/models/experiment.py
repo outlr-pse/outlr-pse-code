@@ -204,7 +204,6 @@ class Experiment(Base):
         param_values: Contains all hyperparameter values that the user selected
         _subspace_logic: Subspace logic as JSON. Use the property ``subspace_logic`` instead
         dataset_name (Optional[str])): Name the user assigned to the dataset
-        dataset_size (int): Total number of datapoints (rows) in the dataset. Needed for SubspaceLogic evaluation
         error_json (Optional[dict]): Error that occurred during execution of the experiment
         odm_id (int): ID of the odm. See attribute ``odm``
         odm (ODM): ODM that for used in this experiment
@@ -223,7 +222,6 @@ class Experiment(Base):
     param_values = mapped_column(JSON)
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
-    dataset_size: Mapped[int]
     error_json: Mapped[Optional[dict]] = mapped_column(JSON)
 
     odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))

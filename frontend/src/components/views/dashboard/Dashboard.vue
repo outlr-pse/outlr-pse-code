@@ -45,7 +45,6 @@ export default defineComponent({
 .dashboard-table {
   margin-top: 2vh;
   height: max-content;
-  margin-bottom: 12vh;
 }
 
 .searchBar {

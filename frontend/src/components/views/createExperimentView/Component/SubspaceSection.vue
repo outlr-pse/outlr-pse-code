@@ -1,15 +1,17 @@
 <template>
   <div class="header">
-    {{ $t('message.experimentCreate.subspaceLogic') }}
-    <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
+    <h3>
+      {{ $t('message.experimentCreate.subspaceLogic') }}
+      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         info
     </span>
+    </h3>
     <transition name="fade">
       <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
         {{ $t('message.experimentCreate.logicHint') }}
       </Card>
     </transition>
-    <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
+    <div style="border: 1px solid var(--color-lines); width: 17vw;"/>
   </div>
   <div class="subspaceLogic">
     <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
@@ -46,11 +48,12 @@ export default defineComponent({
   font-size: 1.2vw;
   text-align: left;
   padding: 5px;
-  width: 12vw;
+  width: 100%;
   height: 25%;
 }
 
 .subspaceLogic {
+  margin-top: 1.5vh;
   height: 68%;
   display: flex;
   text-align: left;

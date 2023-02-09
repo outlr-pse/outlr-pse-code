@@ -1,16 +1,18 @@
 <template>
   <div class="parameterSection">
     <div class="header">
-      {{  $t('message.experimentCreate.odmParameters') }}
-      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
+      <h3>
+        {{  $t('message.experimentCreate.odmParameters') }}
+        <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         info
       </span>
+      </h3>
       <transition name="fade">
         <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
           {{ $t('message.experimentCreate.paramHint') }}
         </Card>
       </transition>
-      <div style="border: 1px solid var(--color-lines); margin-top: .5vh; width: 12vw; height: 0"/>
+      <div style="border: 1px solid var(--color-lines);width: 16vw; height: 0"/>
     </div>
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"

@@ -50,7 +50,7 @@
   grid-area: dashboard;
   align-self: end;
   justify-self: center;
-  margin-bottom: 20px;
+  margin-bottom: 5vh;
 }
 </style>
 

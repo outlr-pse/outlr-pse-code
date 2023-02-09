@@ -9,7 +9,7 @@ import {Experiment} from "../models/experiment/Experiment";
 export const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:1337/api'
 });
-export const storage = localStorage
+export const storage = new MockStorage()
 
 export async  function sendLogout() : Promise<any>{
     /**

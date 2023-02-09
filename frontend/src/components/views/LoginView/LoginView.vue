@@ -71,7 +71,7 @@ export default defineComponent({
     },
     async tryLoginSubmit() {
 
-      if (!validateUsername(this.username) || !validatePassword(this.password, this.password)) {
+      if (!validateUsername(this.username) || !validatePassword(this.password)) {
         this.error = true;
         this.errorMessage = this.$t('message.login-view.errors.provided_credentials_wrong')
         this.resetInputFields()

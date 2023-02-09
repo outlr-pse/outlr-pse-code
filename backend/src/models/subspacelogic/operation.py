@@ -36,8 +36,8 @@ class Operation(SubspaceLogic):
     def get_subspaces(self) -> set[Subspace]:
         return set(chain(*map(lambda operand: operand.get_subspaces(), self.operands)))
 
-    def evaluate(self, dataset_size: int) -> ArrayLike:
-        return self.operator.function([operand.evaluate(dataset_size) for operand in self.operands])
+    def evaluate(self) -> ArrayLike:
+        return self.operator.function([operand.evaluate() for operand in self.operands])
 
     def to_client_json(self) -> dict:
         return {

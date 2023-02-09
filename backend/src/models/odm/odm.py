@@ -9,6 +9,9 @@ See https://docs.sqlalchemy.org/en/20/orm/inheritance.html#single-table-inherita
 """
 from typing import Any
 
+import pandas as pd
+from numpy.typing import NDArray
+
 from models.base import Base
 from models.dataset import Dataset
 from models.odm.hyper_parameter import HyperParameter
@@ -44,6 +47,6 @@ class ODM(Base):
             if repr(type(args[param.name])) != param.param_type:
                 return False
 
-    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
+    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
         """Runs the ODM on the given subspace"""
         raise NotImplementedError

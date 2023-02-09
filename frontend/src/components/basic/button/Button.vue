@@ -76,21 +76,21 @@ export default defineComponent({
 
 .icon {
     position: absolute;
-    transform: translate(0, -10px);
+    transform: translate(-16px, -10px);
 }
 
 button:hover .icon{
   position: absolute;
-  transform: translate(0, -10px);
+  transform: translate(-16px, -10px);
   animation: wiggle 0.5s ease-in-out infinite alternate;
 }
 
 @keyframes wiggle {
   from {
-    transform: translate(0, -8px);
+    transform: translate(-16px, -8px);
   }
   to {
-    transform: translate(0, -12px);
+    transform: translate(-16px, -12px);
   }
 }
 </style>

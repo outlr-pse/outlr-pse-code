@@ -4,7 +4,8 @@
       <div class="content">
         <div class="header">
           <div class="title">{{ $t('message.register-view.title') }}
-            <span v-bind:class="{'errorInput':error}" class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> info </span>
+            <span v-bind:class="{'errorInput':error}" class="material-icons md-dark icon" @mouseenter="showTip = true"
+                  @mouseleave="showTip = false"> info </span>
             <transition name="fade">
               <Card class="card" v-if="showTip" @mouseenter="showTip = true" @mouseleave="showTip = false">
                 {{ $t('message.register-view.requirements') }}
@@ -19,22 +20,23 @@
         <div class="login-form">
           <div class="error" v-show="error">{{ errorMessage }}</div>
           <div class="text-fields">
-<!--            <div>-->
-              <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username"
+            <!--            <div>-->
+            <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username"
                    @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
-<!--            </div>-->
-<!--            <div style="position:relative">-->
-               <input v-bind:class="{'valid': passwordInput(passwordInput), 'errorInput':error}" class="password"
-                   @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password"
-                   :type="inputTypePassword"/>
-<!--            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPassword">{{visiblePassword}}</span>-->
-<!--            </div>-->
-<!--             <div style="position:relative">-->
-               <input v-bind:class="{'valid': passwordRepeatedInput(passwordRepeated), 'errorInput':error}"
+            <!--            </div>-->
+            <div style="position:relative">
+              <input v-bind:class="{'valid': passwordInput(passwordInput), 'errorInput':error}" class="password"
+                     @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password"
+                     :type="inputTypePassword"/>
+              <span class="material-icons md-dark passwordIcon"
+                    @click="toggleVisibilityPassword">{{ visiblePassword }}</span>
+            </div>
+                         <div style="position:relative">
+            <input v-bind:class="{'valid': passwordRepeatedInput(passwordRepeated), 'errorInput':error}"
                    class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false"
                    v-model="passwordRepeated" placeholder="Re-enter Password" :type="inputTypePasswordRepeated"/>
-<!--            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPasswordRepeated">{{visiblePasswordRepeated}}</span>-->
-<!--             </div>-->
+                        <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPasswordRepeated">{{visiblePasswordRepeated}}</span>
+                         </div>
           </div>
           <div class="submit-field">
             <input v-bind:class="{'validSubmit': validInput, 'errorSubmit':error}" ref="submit"
@@ -117,13 +119,13 @@ export default defineComponent({
       }
       await router.push('/')
     },
-    toggleVisibilityPassword(){
-      this.inputTypePassword = this.inputTypePassword === "password"  ? "text" : "password"
-      this.visiblePassword = this.visiblePassword === "visibility_off" ? "visibility": "visibility_off"
+    toggleVisibilityPassword() {
+      this.inputTypePassword = this.inputTypePassword === "password" ? "text" : "password"
+      this.visiblePassword = this.visiblePassword === "visibility_off" ? "visibility" : "visibility_off"
     },
-    toggleVisibilityPasswordRepeated(){
-      this.inputTypePasswordRepeated = this.inputTypePasswordRepeated === "password"  ? "text" : "password"
-      this.visiblePasswordRepeated= this.visiblePasswordRepeated === "visibility_off" ? "visibility": "visibility_off"
+    toggleVisibilityPasswordRepeated() {
+      this.inputTypePasswordRepeated = this.inputTypePasswordRepeated === "password" ? "text" : "password"
+      this.visiblePasswordRepeated = this.visiblePasswordRepeated === "visibility_off" ? "visibility" : "visibility_off"
       this.error = false
     }
   },
@@ -142,15 +144,20 @@ export default defineComponent({
 
 <style scoped>
 
-.card{
+input {
+  width: 325px;
+  margin: 0 50px;
+}
+
+.card {
   position: absolute;
-  margin:0;
-  top:82%;
-  left:95%;
-  width:95%;
-  z-index: 90;
+  margin: 0;
+  top: 82%;
+  left: 95%;
+  width: 95%;
+  z-index: 91;
   background: var(--color-topbar);
-  font-weight:400;
+  font-weight: 400;
   font-size: 16px;
   white-space: break-spaces;
 }
@@ -158,27 +165,27 @@ export default defineComponent({
 .passwordIcon {
   float: right;
   position: absolute;
-    top: 0.8rem;
-  right: 0.8rem;
-  padding: 0.5rem;
-  /*right: 18px;*/
-  /*top: 13px;*/
+  /*top: 0.8rem;*/
+  /*right: 0.8rem;*/
+  /*padding: 0.5rem;*/
+  right: 60px;
+  top: 19px;
   z-index: 90;
-  color: var(--color-main-white);
+  color: var(--color-default-text-textbox);
   width: 24px;
   height: 24px;
   user-select: none;
 }
 
-.passwordIcon:hover{
-  cursor:pointer;
+.passwordIcon:hover {
+  cursor: pointer;
 }
 
-.icon{
-  color:var(--color-main);
+.icon {
+  color: var(--color-main);
   width: auto;
   text-align: right;
-  margin:0;
+  margin: 0;
 }
 
 .errorInput {
@@ -198,6 +205,7 @@ export default defineComponent({
   color: var(--color-close-button);
   padding: 10px;
   border-radius: 7px;
+  margin: 0 50px;
 }
 
 .container {
@@ -208,6 +216,7 @@ export default defineComponent({
 }
 
 .container-card {
+  width: 450px;
   background: var(--color-auth-form-background);
   border: none;
   padding: 0;
@@ -215,14 +224,15 @@ export default defineComponent({
 }
 
 .content {
-  width: min(70vw, 325px);
-  padding: 30px;
   display: grid;
   grid-template-rows: auto auto;
   gap: 30px;
+  max-width: 100%;
+
 }
 
 .header {
+  margin: 50px 50px 0 50px;
   text-align: left;
   display: grid;
   gap: 7px;
@@ -231,7 +241,7 @@ export default defineComponent({
 .title {
   font-size: 22px;
   font-weight: 800;
-  display:flex;
+  display: flex;
   justify-content: space-between;
   position: relative;
 }
@@ -246,6 +256,7 @@ export default defineComponent({
   display: grid;
   grid-template-rows: auto;
   gap: 30px;
+  /*margin: 0 50px;*/
 }
 
 .text-fields {
@@ -280,12 +291,11 @@ export default defineComponent({
   border: 2px solid var(--color-main)
 }
 
-.submit-field{
-  margin: 0 4px;
+.submit-field {
+  margin: 0 4px 50px 4px;
 }
 
 .submit-field input {
-  width: 100%;
   background: var(--color-main);
   color: var(--color-main-white);
 }

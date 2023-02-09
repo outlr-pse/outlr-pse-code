@@ -1,9 +1,6 @@
 <template>
 
   <div class="dashboard">
-    <h1>
-      Dashboard
-    </h1>
     <div class="searchBar">
       <search-bar @search-term-changed="applySearch" class="left"/>
     </div>

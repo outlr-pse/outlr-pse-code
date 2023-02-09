@@ -4,10 +4,13 @@
     "name": "England",
     "topbar": {
       "createExperiment": "Create Experiment",
-      "logIn": "Log In",
-      "logOut": "Log Out",
-      "signUp": "Sign Up",
-      "signInAs": "Signed in as"
+      "logIn": "Log in",
+      "logOut": "Log out",
+      "signUp": "Sign up",
+      "signInAs": "Signed in as",
+      "dashboard": "Dashboard",
+      "createAnExperiment": "Create an Experiment",
+      "experimentResult": "Experiment Result"
     },
     "register-view": {
       "title": "Hello!",

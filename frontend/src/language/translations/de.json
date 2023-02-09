@@ -2,6 +2,16 @@
   "message": {
     "greeting": "Hallo",
     "name": "Deutschland",
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Zusammenfassung",
+        "odm": "ODM",
+        "accuracy": "Genauigkeit",
+        "executionDate": "Ausführungsdatum",
+        "executionTime": "Ausführungsdauer",
+        "detectedOutliers": "Anzahl gefundener Outliers"
+      }
+    }
     "login-view": {
       "welcome": "Wilkommen zurück!",
       "login": "Bitte melden Sie sich an"

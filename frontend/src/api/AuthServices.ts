@@ -1,13 +1,15 @@
-import {sendLoginData, sendLogout, sendRegisterData, storage} from "./APIRequests";
+import {requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData, storage} from "./APIRequests";
 import store from "../store"
 import {errorOther} from "./ErrorOther";
-import {getIdentity} from "./DataRetrievalService";
+export async function initialValidityCheck() : Promise<void> {
+    let responseJson = await requestTokenIdentity()
 
-export async function initialValidityCheck() {
-    let identityJson = await getIdentity()
+    if (responseJson != null && "username" in responseJson && "access_token" in responseJson) {
+        await store.dispatch("auth/setAuthenticated", responseJson.username)
+    }
 
-    if ("username" in identityJson) {
-        await store.dispatch("auth/setAuthenticated", identityJson.username)
+    else {
+        storage.clear()
     }
 }
 
@@ -29,7 +31,7 @@ export function validateUsername(username : string) : boolean {
     return usernameRegex.test(username)
 }
 
-export function validatePassword(password:string, passwordRepeated:string) {
+export function validatePassword(password:string) {
     /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
@@ -43,7 +45,7 @@ export function validatePassword(password:string, passwordRepeated:string) {
      *
      * @param password the password, the user provided
      */
-    if (password == null || passwordRepeated == null || password != passwordRepeated) {
+    if (password == null) {
         return false
     }
 
@@ -129,13 +131,16 @@ export async function logout() {
     try {
             const response = await sendLogout()
             if (response.error != null) {
+                storage.removeItem('access_token')
+                await store.dispatch("auth/unsetAuthenticated")
                 return response
             }
 
-            storage.removeItem("access_token")
+            storage.removeItem('access_token')
             await store.dispatch("auth/unsetAuthenticated")
             return response.data
         } catch (error) {
+            storage.removeItem('access_token')
             return errorOther
         }
 }

@@ -15,7 +15,7 @@
       <Button style="display: inline-block; margin-top: 30px" @buttonClick="redirect('register')"
               :button-type="ButtonType.DARKPURPLESIGNUP" :text="$t('message.landingPage.signUp')" :size="[140,70] " />
       <div style="width: 40px; height:auto; display:inline-block;" />
-     <Button style="display: inline-block; cursor: not-allowed"  :button-type="ButtonType.OUTLINE" :text="$t('message.landingPage.logIn')" :size="[140,70]" />
+     <Button style="display: inline-block; cursor: not-allowed"  :button-type="ButtonType.OUTLINE" :text="$t('message.landingPage.tryItOut')" :size="[140,70]" />
     </div>
 
   </div>
@@ -79,8 +79,7 @@ export default defineComponent( {
       return ButtonType
     },
     isAuthenticated() : boolean {
-      return true;
-      return store.getters['auth/is_authenticated'];
+      return store.getters['auth/isAuthenticated'];
     }
   }
 })

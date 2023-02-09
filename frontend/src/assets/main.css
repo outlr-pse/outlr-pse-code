@@ -28,6 +28,11 @@
     line-height: normal;
 }
 
+/* GLOBAL global styles */
+* {
+  font-family: "Poppins", Calibri, sans-serif;
+  letter-spacing: 0.02em;
+}
 
 body {
     margin: 0;
@@ -88,6 +93,7 @@ p {
   --color-table-border: #4f4f4f;
   --color-table-header: #514478;
   --color-running: #31de84;
+  --color-auth-form-background: #2E2E2E;
   --color-input-optional: rgb(19, 104, 211);
 }
 

@@ -11,20 +11,20 @@ const routes = [
   {
     path: '/login',
     name: 'login-page',
-    component: () => import("../components/views/LoginView.vue"),
+    component: () => import("../components/views/LoginView/LoginView.vue"),
     meta: { requiresAuth: false }
   },
   {
     path: '/register',
     name: 'register-page',
-    component: () => import("../components/views/RegisterView.vue"),
+    component: () => import("../components/views/RegisterView/RegisterView.vue"),
     meta: { requiresAuth: false }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
     component: () => import("../components/views/dashboard/Dashboard.vue"),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: true }
   },
   {
     path: '/experiment/:expId',
@@ -57,12 +57,12 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/is_authenticated']) {
+  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
     next('/')
     return;
   }
 
-  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/is_authenticated']) {
+  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/isAuthenticated']) {
     next('/login')
     return;
   }

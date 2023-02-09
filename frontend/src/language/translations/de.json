@@ -2,6 +2,17 @@
   "message": {
     "greeting": "Hallo",
     "name": "Deutschland",
+    "dashboard": {
+      "search": "Suche...",
+      "clear": "Lösche",
+      "name": "Name",
+      "dataset": "Datenset",
+      "odm": "ODM",
+      "hyperparameters": "Hyperparameter",
+      "date": "Datum",
+      "accuracy": "Genauigkeit",
+      "running": "In Ausführung . . ."
+    },
     "experimentResultView": {
       "experimentSummaryCard": {
         "summary": "Zusammenfassung",

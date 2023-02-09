@@ -23,8 +23,8 @@ const routes = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import("../components/views/Dashboard.vue"),
-    meta: { requiresAuth: true }
+    component: () => import("../components/views/dashboard/Dashboard.vue"),
+    meta: { requiresAuth: false }
   },
   {
     path: '/experiment/:expId',

@@ -10,6 +10,7 @@ res = ExperimentResult(
     accuracy=0.89,
     execution_date=datetime.now(),
     execution_time=timedelta(minutes=2),
+    experiment=exp
 )
 res_space = Subspace(id=2343, columns=None, name="result")
 sub1 = Subspace(id=23, experiment=exp, columns=[0, 1, 3])

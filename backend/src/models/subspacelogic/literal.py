@@ -30,12 +30,8 @@ class Literal(SubspaceLogic):
     def get_subspaces(self) -> set[Subspace]:
         return {self.subspace}
 
-    def evaluate(self, dataset_size: int) -> ArrayLike:
-        # create numpy array containing 0 and 1
-        array = np.zeros(dataset_size, np.uint8)
-        for outlier in self.subspace.outliers:
-            array[outlier.index] = 1
-        return array
+    def evaluate(self) -> ArrayLike:
+        return self.subspace.outlier_array
 
     def to_client_json(self) -> dict:
         return {

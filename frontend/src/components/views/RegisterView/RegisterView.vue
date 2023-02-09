@@ -19,26 +19,26 @@
         <div class="login-form">
           <div class="error" v-show="error">{{ errorMessage }}</div>
           <div class="text-fields">
-            <div>
+<!--            <div>-->
               <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username"
                    @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
-            </div>
-            <div style="position:relative">
+<!--            </div>-->
+<!--            <div style="position:relative">-->
                <input v-bind:class="{'valid': passwordInput(passwordInput), 'errorInput':error}" class="password"
                    @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password"
                    :type="inputTypePassword"/>
-            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPassword">{{visiblePassword}}</span>
-            </div>
-             <div style="position:relative">
+<!--            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPassword">{{visiblePassword}}</span>-->
+<!--            </div>-->
+<!--             <div style="position:relative">-->
                <input v-bind:class="{'valid': passwordRepeatedInput(passwordRepeated), 'errorInput':error}"
                    class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false"
                    v-model="passwordRepeated" placeholder="Re-enter Password" :type="inputTypePasswordRepeated"/>
-            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPasswordRepeated">{{visiblePasswordRepeated}}</span>
-             </div>
+<!--            <span class="material-icons md-dark passwordIcon" @click="toggleVisibilityPasswordRepeated">{{visiblePasswordRepeated}}</span>-->
+<!--             </div>-->
           </div>
           <div class="submit-field">
             <input v-bind:class="{'validSubmit': validInput, 'errorSubmit':error}" ref="submit"
-                   @click="tryRegisterSubmit" type="button" value="Create account">
+                   @click="tryRegisterSubmit" type="button" value="Create Account">
           </div>
         </div>
       </div>
@@ -158,8 +158,11 @@ export default defineComponent({
 .passwordIcon {
   float: right;
   position: absolute;
-  right: 18px;
-  top: 13px;
+    top: 0.8rem;
+  right: 0.8rem;
+  padding: 0.5rem;
+  /*right: 18px;*/
+  /*top: 13px;*/
   z-index: 90;
   color: var(--color-main-white);
   width: 24px;
@@ -262,7 +265,7 @@ export default defineComponent({
   outline: none;
   font-size: 20px;
   font-weight: 800;
-  padding: 10px;
+  padding: 14px;
   border-radius: 7px;
   border: none;
 }

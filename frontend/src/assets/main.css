@@ -27,6 +27,11 @@
   height: 100vh;
 }
 
+/* GLOBAL global styles */
+* {
+  font-family: "Poppins", Calibri, sans-serif;
+  letter-spacing: 0.02em;
+}
 
 body {
   margin: 0;

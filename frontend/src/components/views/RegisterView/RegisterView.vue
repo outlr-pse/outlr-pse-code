@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Card class="container-card">
+    <Card class="container-card" @keyup.enter="tryRegisterSubmit">
       <div class="content">
         <div class="header">
           <div class="title">{{ $t('message.register-view.title') }}

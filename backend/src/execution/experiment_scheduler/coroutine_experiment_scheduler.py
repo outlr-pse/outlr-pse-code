@@ -42,7 +42,6 @@ class CoroutineExperimentScheduler(ExperimentScheduler):
             experiment_result.execution_time = datetime.now() - experiment_result.execution_date
 
             experiment.experiment_result = experiment_result
-            db.session.commit()
         except ExecutionError as e:
             ExperimentScheduler.fail_execution(experiment, e)
         except Exception as e:

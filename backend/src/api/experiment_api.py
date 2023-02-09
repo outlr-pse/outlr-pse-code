@@ -8,6 +8,8 @@ Endpoints defined:
     /create
     /download-result/<exp_id>
 """
+import asyncio
+import multiprocessing
 import os
 from os.path import exists as path_exists
 from concurrent.futures import ProcessPoolExecutor
@@ -31,6 +33,8 @@ _user_files = {
     "dataset": "dataset.csv",
     "ground_truth": "ground_truth.csv"
 }
+
+_background_tasks = set()
 
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
@@ -94,7 +98,7 @@ def count() -> (Response, int):
 
 
 @experiment_api.route('/upload-files', methods=['POST'])
-@jwt_required()
+# @jwt_required()
 def upload_files() -> (Response, int):
     """
     Requires a jwt access token. Expects a dataset and optionally a ground truth file
@@ -104,7 +108,7 @@ def upload_files() -> (Response, int):
     if "dataset" not in request.files:
         return jsonify(error.no_dataset), error.no_dataset["status"]
 
-    user_id = get_jwt_identity()
+    user_id = 1
     if not os.path.exists(data_path(user_id)):
         os.makedirs(data_path(user_id))
 
@@ -122,7 +126,7 @@ def upload_files() -> (Response, int):
 
 @experiment_api.route('/create', methods=['POST'])
 # @jwt_required()
-def create() -> (Response, int):
+async def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
@@ -135,15 +139,12 @@ def create() -> (Response, int):
         return error.no_dataset, error.no_dataset["status"]
 
     exp = Experiment.from_json(request.json)
-    # TODO: remove Dataset class
-    exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
-    if path_exists(data_path(user_id, "ground_truth")):
-        exp.true_outliers = data_utils.csv_to_list(data_path(user_id, "ground_truth"))
     db.add_experiment(exp)
+
     exp.odm.__class__ = PyODM
     exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
     exp.ground_truth # TODO: get ground truth from db
-    _experiment_scheduler.schedule(exp)
+    await _experiment_scheduler.schedule(exp)
     db.session.commit()
     return 'OK', 200
 
@@ -177,7 +178,18 @@ def data_path(user_id: int, file: str = "") -> str:
     Returns:
         The path to the user data directory or a specific file.
     """
-    base = f"user_data/{user_id}"
+    base = f"user_files/{user_id}"
     if file in _user_files:
         return f"{base}/{_user_files[file]}"
     return base
+
+
+def remove_user_data(user_id: int) -> None:
+    """ Removes all data of the user with the given id.
+    Args:
+        user_id: The id of the user to remove the data of.
+    """
+    for file, _ in _user_files.items():
+        path = data_path(user_id, file)
+        if os.path.exists(path):
+            os.remove(path)

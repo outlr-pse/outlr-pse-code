@@ -18,6 +18,7 @@ from execution.odm_scheduler.sequential_odm_scheduler import SequentialODMSchedu
 from execution.experiment_scheduler.coroutine_experiment_scheduler import CoroutineExperimentScheduler
 from models.base import Base
 
+
 def setUpModule() -> None:
     Base.metadata.drop_all(bind=db.engine, checkfirst=True)
     Base.metadata.create_all(bind=db.engine)
@@ -71,4 +72,3 @@ class TestCoroutineSequentialScheduler(unittest.IsolatedAsyncioTestCase):
             await self.experiment_scheduler.schedule(self.experiment)
         self.assertIs(self.experiment.error_json, None, msg="Execution failed")
         db.add_experiment(self.experiment)
-

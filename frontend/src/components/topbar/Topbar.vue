@@ -4,7 +4,7 @@
          width="125"/>
 
     <div style="justify-self: end">
-      <div v-if="is_authenticated" style="display: flex; align-items: center">
+      <div v-if="isAuthenticated" style="display: flex; align-items: center">
         <div v-if="$route.path !== '/create'" style="display: inline-block">
           <Button :text="$t('message.topbar.createExperiment')" :button-type="ButtonType.ACTIVE" :size="[200,40]"
                   @buttonClick="() => $router.push('/create')" :text-size="[15,700]"/>
@@ -58,8 +58,8 @@ export default defineComponent({
     store() {
       return store
     },
-    is_authenticated(): boolean {
-      return store.getters['auth/is_authenticated'];
+    isAuthenticated(): boolean {
+      return store.getters['auth/isAuthenticated'];
     },
 
   }

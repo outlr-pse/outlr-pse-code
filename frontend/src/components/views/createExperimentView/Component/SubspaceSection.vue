@@ -1,18 +1,19 @@
 <template>
-    <div class="header">
-      {{ $t('message.experimentCreate.subspaceLogic') }}
-      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
+  <div class="header">
+    {{ $t('message.experimentCreate.subspaceLogic') }}
+    <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
+        info
     </span>
-      <transition name="fade">
-        <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
-          {{ $t('message.experimentCreate.logicHint') }}
-        </Card>
-      </transition>
-      <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
-    </div>
-    <div class="subspaceLogic">
-      <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
-    </div>
+    <transition name="fade">
+      <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
+        {{ $t('message.experimentCreate.logicHint') }}
+      </Card>
+    </transition>
+    <div style="border: 1px solid var(--color-lines); margin-top: .5vh"/>
+  </div>
+  <div class="subspaceLogic">
+    <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
+  </div>
 
 </template>
 
@@ -71,7 +72,7 @@ export default defineComponent({
 
 .icon {
   color: var(--color-text);
-  width: 24px;
+  width: auto;
   font-size: 18px;
 }
 

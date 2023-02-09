@@ -3,7 +3,7 @@
     <div class="header">
       {{  $t('message.experimentCreate.odmParameters') }}
       <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
-        information
+        info
       </span>
       <transition name="fade">
         <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
@@ -97,7 +97,7 @@ export default defineComponent({
 
 .icon {
   color: var(--color-text);
-  width: 24px;
+  width: auto;
   font-size: 18px;
 }
 

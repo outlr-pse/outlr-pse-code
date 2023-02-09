@@ -11,7 +11,7 @@
       <HyperParametersSection :parameters="hyperparameters" @checkData="$emit('checkData')"/>
     </div>
     <div class="subspace">
-      <SubspaceSection @onInputChange="parseSubspaceLogic" ></SubspaceSection>
+      <SubspaceSection @onInputChange="parseSubspaceLogic"></SubspaceSection>
     </div>
   </Card>
 </template>
@@ -25,22 +25,27 @@ import Dropdown from "../../../basic/Dropdown.vue";
 import {ODM} from "../../../../models/odm/ODM";
 import SubspaceSection from "./SubspaceSection.vue";
 import HyperParametersSection from "./HyperParametersSection.vue";
+import {SubspaceLogic} from "../../../../models/subspacelogic/SubspaceLogic";
+import {Subspace} from "../../../../models/results/Subspace";
+import {Literal} from "../../../../models/subspacelogic/Literal";
+import {Operation} from "../../../../models/subspacelogic/Operation";
+import {Operator} from "../../../../models/subspacelogic/Operator";
 
 export default defineComponent({
   name: "InputSection",
   components: {HyperParametersSection, SubspaceSection, Dropdown, HyperParametersField, Card},
-  data(){
+  data() {
     return {
       odmNames: [] as string[],
       odmMap: new Map<string, ODM>()
     }
   },
-  props:{
-    odms:{
+  props: {
+    odms: {
       type: Array as () => ODM[],
       required: true
     },
-    hyperparameters:{
+    hyperparameters: {
       type: Array as () => Hyperparameter[],
       required: true
     }
@@ -49,7 +54,7 @@ export default defineComponent({
     odms: function (odms: ODM[]) {
       this.odmNames = []
       this.odmMap = new Map<string, ODM>()
-      for(let odm of odms){
+      for (let odm of odms) {
         this.odmMap.set(odm.name, odm)
         this.odmNames.push(odm.name)
       }
@@ -61,8 +66,11 @@ export default defineComponent({
       this.$emit("onODMSelection", this.odmMap.get(odmName))
     },
     parseSubspaceLogic(logic: string) {
+
+      //Parse Subspace Logic
       let subspaceLogic = logic
-      this.$emit("subspaceLogic", subspaceLogic)
+      //Emit only when parsed successfully then its ensured the button can be clicked
+      this.$emit("onSubspaceInput", subspaceLogic)
     }
   }
 })
@@ -80,10 +88,12 @@ export default defineComponent({
   text-align: left;
   width: 17vw;
 }
+
 .dropdown {
   margin: 15px;
   z-index: 100;
 }
+
 .odmContainer {
   height: 20%;
 }

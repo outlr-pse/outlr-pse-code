@@ -21,11 +21,8 @@ session: Session = Session()
 def add_experiment(experiment: Experiment) -> Experiment:
     if experiment not in session:
         session.add(experiment)
-    if any(subspace.id is None for subspace in experiment.subspaces):
-        # Ensure that all subspace ids are available for the following subspace logic json update
-        # Note: It might be better to store the subspace logic as a class hierarchy instead of as a json.
-        #       That way SQLAlchemy would load the correct ids on its own
-        session.flush()
+
+    session.flush()
 
     experiment.update_subspace_logic_json()
     session.commit()

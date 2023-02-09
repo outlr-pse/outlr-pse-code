@@ -86,7 +86,8 @@ class ExperimentScheduler(ABC):
         """
         Calculates the accuracy of the experiment and writes it to the experiment
         """
-
+        if ground_truth is None:
+            return
         correct_predictions = np.sum(ground_truth == experiment_result.result_space.outlier_array)
         experiment_result.accuracy = correct_predictions / ground_truth.size
 

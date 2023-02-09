@@ -82,16 +82,36 @@ def count() -> (Response, int):
     Requires a jwt access token. Returns the amount of experiments the user
     has and status code "200 OK".
     """
-    experiment_one = json.load(open(script_location_parent / 'mock_files/experiment_one.json'))
-    experiment_two = json.load(open(script_location_parent / 'mock_files/experiment_two.json'))
-    experiments = [experiment_one, experiment_two]
-    experiment_array = [experiment_one, experiment_two]
+    user = db.get_user(get_jwt_identity())
+    amount = len(user.experiments)
+    return {"amount": amount}, 200
 
-    for i in range(100):
-        experiment_array.append(experiments[random.randint(0, 1)])
 
-    response = jsonify(experiment_array)
-    return response
+@experiment_api.route('/upload-files', methods=['POST'])
+@jwt_required()
+def upload_files() -> (Response, int):
+    """
+    Requires a jwt access token. Expects a dataset and optionally a ground truth file
+    as CSV files in the request. Returns status code "200 OK" if the files
+    were successfully stored.
+    """
+    if "dataset" not in request.files:
+        return jsonify(error.no_dataset), error.no_dataset["status"]
+
+    user_id = get_jwt_identity()
+    if not os.path.exists(data_path(user_id)):
+        os.makedirs(data_path(user_id))
+
+    dataset_file = request.files["dataset"]
+    dataset_file.save(data_path(user_id, "dataset"))
+    dataset_file.close()
+
+    if "ground_truth" in request.files:
+        ground_truth_file = request.files["ground_truth"]
+        ground_truth_file.save(data_path(user_id, "ground_truth"))
+        ground_truth_file.close()
+
+    return "OK", 200
 
 
 @experiment_api.route('/create', methods=['POST'])

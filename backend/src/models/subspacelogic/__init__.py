@@ -45,7 +45,7 @@ class SubspaceLogic(ABC):
         pass
 
     @staticmethod
-    def from_client_json(json: dict, existing_subspaces: dict[frozenset, 'Subspace'] = {}) -> 'SubspaceLogic':
+    def from_client_json(json: dict, existing_subspaces: dict[frozenset, 'Subspace']) -> 'SubspaceLogic':
         """
         Create a SubspaceLogic from JSON that was received from a client (in the form of a dict).
 

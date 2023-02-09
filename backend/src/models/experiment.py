@@ -152,7 +152,7 @@ class ExperimentResult(Base):
     __tablename__ = EXPERIMENT_RESULT_TABLE_NAME
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    accuracy: Mapped[float]
+    accuracy: Mapped[Optional[float]]
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
     user_id: Mapped[int] = mapped_column()
@@ -311,11 +311,14 @@ class Experiment(Base):
 
     @classmethod
     def from_json(cls, json: dict):
-        return cls(
+        subspaces = {}
+        exp = cls(
             user_id=json['user_id'],
             name=json['name'],
-            subspace_logic=models.subspacelogic.SubspaceLogic.from_client_json(json['subspace_logic']),
+            subspace_logic=models.subspacelogic.SubspaceLogic.from_client_json(json['subspace_logic'], subspaces),
             odm_id=json['odm']['id'],
             param_values=json['odm']['hyper_parameters'],
             dataset_name=json.get('dataset_name'),
         )
+        exp.subspaces = list(subspaces.values())
+        return exp

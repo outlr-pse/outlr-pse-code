@@ -21,6 +21,7 @@ from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
 import database.database_access as db
 import util.data as data_utils
 import api.error as error
+from models.odm import PyODM
 
 experiment_api = Blueprint('experiment', __name__)
 
@@ -121,7 +122,7 @@ def upload_files() -> (Response, int):
 
 @experiment_api.route('/create', methods=['POST'])
 # @jwt_required()
-async def create() -> (Response, int):
+def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
@@ -139,7 +140,10 @@ async def create() -> (Response, int):
     if path_exists(data_path(user_id, "ground_truth")):
         exp.true_outliers = data_utils.csv_to_list(data_path(user_id, "ground_truth"))
     db.add_experiment(exp)
-    await _experiment_scheduler.schedule(exp)
+    exp.odm.__class__ = PyODM
+    exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
+    exp.ground_truth # TODO: get ground truth from db
+    _experiment_scheduler.schedule(exp)
     db.session.commit()
     return 'OK', 200
 

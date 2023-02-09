@@ -11,7 +11,7 @@ const routes = [
   {
     path: '/login',
     name: 'login-page',
-    component: () => import("../components/views/LoginView.vue"),
+    component: () => import("../components/views/LoginView/LoginView.vue"),
     meta: { requiresAuth: false }
   },
   {
@@ -24,7 +24,7 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: () => import("../components/views/dashboard/Dashboard.vue"),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: true }
   },
   {
     path: '/experiment/:expId',

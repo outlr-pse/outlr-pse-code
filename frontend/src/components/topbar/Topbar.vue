@@ -14,9 +14,9 @@
       </div>
 
       <div v-else>
-        <Button text="Log in" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
+        <Button :text="this.$t('message.topbar.logIn')" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
         <div style="width:5px; height:auto; display:inline-block;"/>
-        <Button text="Sign up" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
+        <Button :text="this.$t('message.topbar.signUp')" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
         <div style="width:15px; height:auto; display:inline-block;"/>
       </div>
     </div>
@@ -63,13 +63,13 @@ export default defineComponent({
       if (path === "/") {
         msg = "";
       } else if (path === "/create") {
-        msg = "Create an experiment";
+        msg = this.$t('message.topbar.createAnExperiment');
       } else if (path === "/login") {
-        msg = "Log in";
+        msg = this.$t('message.topbar.logIn');
       } else if (path === "/register") {
-        msg = "Sign up";
+        msg = this.$t('message.topbar.signUp');
       } else if (path === "/dashboard") {
-        msg = "Dashboard";
+        msg = this.$t('message.topbar.dashboard');
       }
       else if (path.startsWith("/experiment/")) {
         msg = "Experiment Result";

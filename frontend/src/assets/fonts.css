@@ -128,6 +128,14 @@
   font-style: italic;
 }
 
+/* Black */
+@font-face {
+    font-family: "Poppins";
+    src: local("Poppins Black"), url(../assets/fonts/Poppins/Poppins-Black.ttf) format("truetype");
+    font-weight: 900;
+    font-style: normal;
+}
+
 /* Black Italic */
 @font-face {
   font-family: "Poppins";

@@ -32,6 +32,13 @@
         "executionTime": "Ausführungsdauer",
         "detectedOutliers": "Anzahl gefundener Outliers"
       }
+    },
+    "login-view": {
+      "title": "Wilkommen zurück!",
+      "subtitle": "Bitte melden Sie sich an",
+      "errors": {
+        "provided-credentials-wrong": "Bitte geben Sie gültige Daten an!"
+      }
     }
   }
 }

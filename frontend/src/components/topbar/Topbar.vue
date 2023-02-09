@@ -86,6 +86,7 @@ export default defineComponent({
   justify-content: space-between;
   height: var(--top-bar-height);
   width: 100%;
+  z-index: 1000;
 }
 
 

@@ -11,10 +11,13 @@
         "executionTime": "Ausführungsdauer",
         "detectedOutliers": "Anzahl gefundener Outliers"
       }
-    }
+    },
     "login-view": {
-      "welcome": "Wilkommen zurück!",
-      "login": "Bitte melden Sie sich an"
+      "title": "Wilkommen zurück!",
+      "subtitle": "Bitte melden Sie sich an",
+      "errors": {
+          "provided-credentials-wrong": "Bitte geben Sie gültige Daten an!"
+        }
     }
   }
 }

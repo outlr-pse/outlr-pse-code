@@ -4,10 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
-from models.experiment.experiment import Experiment
-from models.odm.hyper_parameter import HyperParameter
-from models.odm.odm import ODM
-from models.user.user import User
+from models.experiment import Experiment
+from models.odm import HyperParameter
+from models.odm import ODM
+from models.user import User
 
 from odmprovider.pyod_scraper import PyODScraper
 import config

@@ -18,8 +18,8 @@ from typing import Iterator
 
 import pyod.models
 
-from models.odm.hyper_parameter import HyperParameter
-from models.odm.odm import ODM
+from models.odm import HyperParameter
+from models.odm import ODM
 from odmprovider.odm_provider import ODMProvider
 
 

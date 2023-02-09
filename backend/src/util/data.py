@@ -3,7 +3,7 @@ from typing import Optional
 
 import pandas as pd
 
-from models.dataset.dataset import Dataset
+from models.dataset import Dataset
 
 
 def csv_to_dataset(name: str, dataset: str) -> Dataset:

@@ -14,7 +14,7 @@ import api.error as error
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from database import database_access
-from models.user.user import User
+from models.user import User
 
 user_management_api = Blueprint('user_management', __name__)
 username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"

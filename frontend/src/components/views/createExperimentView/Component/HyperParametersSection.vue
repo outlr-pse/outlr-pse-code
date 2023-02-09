@@ -15,7 +15,7 @@
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
                            :parameter-id="param.id" :key="param.id" :ref="'inputRef' + param.id"
-                           :optional="param.optional" @checkData="this.$emit('checkData')"/>
+                           :optional="param.optional" @checkData="$emit('checkData')"/>
     </div>
   </div>
 </template>

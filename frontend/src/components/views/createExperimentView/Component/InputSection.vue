@@ -8,7 +8,7 @@
       <Dropdown :options="odmNames" hint="Select ODM" class="dropdown" @onValueSelected="onODMSelection"/>
     </div>
     <div class="hyperparameter">
-      <HyperParametersSection :parameters="hyperparameters" @checkData="this.$emit('checkData')"/>
+      <HyperParametersSection :parameters="hyperparameters" @checkData="$emit('checkData')"/>
     </div>
     <div class="subspace">
       <SubspaceSection @onInputChange="parseSubspaceLogic" ></SubspaceSection>

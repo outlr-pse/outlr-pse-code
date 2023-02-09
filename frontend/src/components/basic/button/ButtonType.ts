@@ -4,5 +4,9 @@ export enum ButtonType{
     ACTIVE = "active",
     DISABLED = "disabled",
     OUTLINE = "outline",
-    TRANSPARENT = "transparent"
+    TRANSPARENT = "transparent",
+    DARKPURPLESIGNUP = "darkPurpleSignUp",
+
+    DARKPURPLENAVIGATETODASHBOARD = "darkPurpleNavigateToDashboard"
+
 }

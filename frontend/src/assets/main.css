@@ -27,6 +27,11 @@
   height: 100vh;
 }
 
+/* GLOBAL global styles */
+* {
+  font-family: "Poppins", Calibri, sans-serif;
+  letter-spacing: 0.02em;
+}
 
 body {
   margin: 0;
@@ -56,6 +61,7 @@ body {
   --color-disabled-button: var(--palette-grey-4);
   --color-close-button: #D64751;
   --color-auth-form-background: #2E2E2E;
+  --color-running: #31de84;
 }
 
 /* add colors for light mode here */

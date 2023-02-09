@@ -2,11 +2,11 @@ import unittest
 from datetime import timedelta, datetime
 
 import database.database_access as db
-from models.user.user import User
-from models.experiment.experiment import Experiment, ExperimentResult, Subspace, Outlier
+from models.user import User
+from models.experiment import Experiment, ExperimentResult, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation, Operator
-from models.odm.odm import HyperParameter
+from models.odm import HyperParameter
 from models.base import Base
 
 

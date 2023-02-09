@@ -39,29 +39,46 @@ export default defineComponent({
     Button,
     RouterLink
   },
-  data() {
+  data() : {
+
+  }
+  {
     return {
-      buttonStyle: {
-        type: String,
-        default: "createExperimentTopBar"
-      },
-      rotation: {
-        type: Number,
-        default: 90
-      }
+
     }
   },
   computed: {
     ButtonType() {
       return ButtonType
     },
-    store() {
+    store(): any {
       return store
     },
     isAuthenticated(): boolean {
       return store.getters['auth/isAuthenticated'];
     },
-
+    topbarMessage(): string {
+      let msg:string = "";
+      const path = this.$route.path;
+      if (path === "/") {
+        msg = "";
+      } else if (path === "/create") {
+        msg = "Create an experiment";
+      } else if (path === "/login") {
+        msg = "Log in";
+      } else if (path === "/register") {
+        msg = "Sign up";
+      } else if (path === "/dashboard") {
+        msg = "Dashboard";
+      }
+      else if (path.startsWith("/experiment/")) {
+        msg = "Experiment Result";
+      }
+      else {
+        msg = ". __ .";
+      }
+      return msg;
+    }
   }
 })
 </script>

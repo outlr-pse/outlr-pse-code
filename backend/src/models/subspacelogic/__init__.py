@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from numpy.typing import ArrayLike
 
 from models.json_error import JSONError
-from models.experiment.experiment import Subspace
+from models.experiment import Subspace
 
 
 class SubspaceLogic(ABC):
@@ -20,14 +20,11 @@ class SubspaceLogic(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self, dataset_size: int) -> ArrayLike:
+    def evaluate(self) -> ArrayLike:
         """
         Evaluates the subspace logic.
         It is required that all subspaces contained in this subspace logic have their result in the
-        Subspace.outliers attribute. See SubspaceLogic.get_subspaces
-
-        Args:
-            dataset_size (int): The size of the dataset. Needed to know size of arrays for calculation
+        ``Subspace.outlier_array`` attribute. See SubspaceLogic.get_subspaces
 
         Returns:
             A numpy array where the element at index i is 1 if and only if the datapoint at index i in the dataset

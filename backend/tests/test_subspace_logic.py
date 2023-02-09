@@ -5,7 +5,7 @@ from models.subspacelogic import SubspaceLogic
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
-from models.experiment.experiment import Subspace, Outlier
+from models.experiment import ExperimentResult, Subspace, Outlier
 
 
 # don't modify these variables
@@ -54,6 +54,12 @@ expected_layer3 = {
     }
 }
 
+for sub in [sub1, sub2, sub3]:
+    array = np.zeros(10)
+    for outlier in sub.subspace.outliers:
+        array[outlier.index] = 1
+    sub.subspace.outlier_array = array
+
 
 class TestSubspaceLogic(unittest.TestCase):
 
@@ -71,9 +77,9 @@ class TestSubspaceLogic(unittest.TestCase):
         self.assertEqual(len(subspaces), 3)
 
     def test_literals_evaluate(self):
-        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0]) == sub1.evaluate(10)).all())
-        self.assertTrue((np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0]) == sub2.evaluate(10)).all())
-        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 1]) == sub3.evaluate(10)).all())
+        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0]) == sub1.evaluate()).all())
+        self.assertTrue((np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0]) == sub2.evaluate()).all())
+        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 1]) == sub3.evaluate()).all())
 
     def test_client_json(self):
         # Check literals

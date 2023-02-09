@@ -4,10 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
-from models.experiment.experiment import Experiment
-from models.odm.hyper_parameter import HyperParameter
-from models.odm.odm import ODM
-from models.user.user import User
+from models.experiment import Experiment
+from models.odm import HyperParameter
+from models.odm import ODM
+from models.user import User
 
 from odmprovider.pyod_scraper import PyODScraper
 import config
@@ -19,11 +19,12 @@ session: Session = Session()
 
 
 def add_experiment(experiment: Experiment) -> Experiment:
+    if experiment not in session:
+        session.add(experiment)
     if any(subspace.id is None for subspace in experiment.subspaces):
         # Ensure that all subspace ids are available for the following subspace logic json update
         # Note: It might be better to store the subspace logic as a class hierarchy instead of as a json.
         #       That way SQLAlchemy would load the correct ids on its own
-        session.add(experiment)
         session.flush()
 
     experiment.update_subspace_logic_json()

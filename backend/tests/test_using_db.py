@@ -1,12 +1,14 @@
 import unittest
 from datetime import timedelta, datetime
 
+import numpy as np
+
 import database.database_access as db
-from models.user.user import User
-from models.experiment.experiment import Experiment, ExperimentResult, Subspace, Outlier
+from models.user import User
+from models.experiment import Experiment, ExperimentResult, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation, Operator
-from models.odm.odm import HyperParameter
+from models.odm import HyperParameter
 from models.base import Base
 
 
@@ -25,9 +27,8 @@ class TestDBAccess(unittest.TestCase):
         exp.name = name
         exp.odm_id = 1
         exp.odm_params = {"b": 2}
-        exp.true_outliers = [1, 2, 3]
+        exp.ground_truth = np.array([0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1])
         exp.dataset_name = "datasatasat"
-        exp.dataset_size = 20
         outlier = Outlier(index=2)
         exp.subspaces = [Subspace(name="one subspace", columns=[1], outliers=[outlier])]
         exp.subspace_logic = Literal(exp.subspaces[0])

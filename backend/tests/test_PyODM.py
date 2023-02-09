@@ -3,13 +3,10 @@ import unittest
 import pandas as pd
 import numpy as np
 from pyod.utils import generate_data
-from pyod.utils.example import visualize
 
-from models.dataset.dataset import Dataset
 from models.odm.pyodm import PyODM
 
 
-# TODO: Add more tests for Experiment, ODM and User
 class TestPyODM(unittest.TestCase):
     def setUp(self):
         self.abod = PyODM(id=1, name='abod.ABOD', deprecated=False)
@@ -22,7 +19,7 @@ class TestPyODM(unittest.TestCase):
 
         # self.X_train_df = Dataset("test", pd.DataFrame(self.X_train, index=range(self.n_train),
         #                                                columns=range(2)))
-        self.X_train_df = Dataset("test", pd.DataFrame(self.X_train))
+        self.X_train_df = pd.DataFrame(self.X_train)
 
     def test_working_abod(self):
         self.abod_y_train = self.abod.run_odm(self.X_train_df,

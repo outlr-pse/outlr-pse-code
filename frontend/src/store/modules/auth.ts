@@ -1,6 +1,6 @@
-import {getIdentity} from "../../api/DataRetrievalService"
 import {AuthModuleState} from "./auth.state";
 import {ActionContext} from "vuex";
+import {requestTokenIdentity} from "../../api/APIRequests";
 
 const defaultUsername = "Not logged in"
 let hasValidAuthToken:boolean = false
@@ -16,7 +16,7 @@ export default {
     },
     actions:{
         async setAuthenticated(context : ActionContext<AuthModuleState, any>) {
-            let userJson = await getIdentity()
+            let userJson = await requestTokenIdentity()
             if ("username" in userJson) {
                 context.commit('setAuthenticated')
                 context.commit('setUsername', userJson.username)

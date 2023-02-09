@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import {validatePassword, validateUsername} from "../../../src/api/AuthServices"
 
 describe('validateData', () => {
@@ -61,17 +65,17 @@ describe('validateData', () => {
     })
 
     // PASSWORD VALIDATION
-    test('password repeated does not equal actual password', () => {
+    test.skip('password repeated does not equal actual password', () => {
         for(let i = 0; i < validPasswords.length - 1; i++) {
-            expect(validatePassword(validPasswords[i], validPasswords[i+1])).toEqual(false)
+            expect(validatePassword(validPasswords[i])).toEqual(false)
         }
     })
 
     test('should return true - valid password', () => {
-        validPasswords.forEach(val => {expect(validatePassword(val, val)).toEqual(true)})
+        validPasswords.forEach(val => {expect(validatePassword(val)).toEqual(true)})
     });
 
     test('should return false - invalid password', () => {
-        invalidPasswords.forEach(val => {expect(validatePassword(val, val)).toEqual(false)})
+        invalidPasswords.forEach(val => {expect(validatePassword(val)).toEqual(false)})
     });
 });

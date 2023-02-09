@@ -108,6 +108,8 @@ def login() -> (Response, int):
     username = request.json["username"]
     password = request.json["password"]
     user = database_access.get_user(username)
+    if user is None:
+        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
 
     if not check_password_hash(user.password, password):
         return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]

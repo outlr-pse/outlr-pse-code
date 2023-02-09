@@ -14,12 +14,7 @@ class SequentialODMScheduler(ODMScheduler):
     This is implemented using coroutines, but since the coroutine never awaits, the execution is sequential.
     """
 
-    async def schedule(
-        self,
-        odm: ODM,
-        hyperparams: dict[str, Any],
-        dataset: pd.DataFrame
-    ) -> NDArray:
+    async def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> NDArray:
         """
         Schedule the execution of an individual outlier detection method
         Args:

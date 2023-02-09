@@ -201,7 +201,6 @@ class Experiment(Base):
         id (int): Primary key
         user_id (int): ID of the user that created this experiment
         name (str): Name, assigned by user
-        true_outliers: The indices of the datapoints that are outliers according to a ground-truth file
         param_values: Contains all hyperparameter values that the user selected
         _subspace_logic: Subspace logic as JSON. Use the property ``subspace_logic`` instead
         dataset_name (Optional[str])): Name the user assigned to the dataset
@@ -213,6 +212,7 @@ class Experiment(Base):
         experiment_result (Optional[ExperimentResult]): Result of the experiment.
             Is None if the experiment has not yet been run
         dataset (Dataset): Dataset. This attribute is not stored in the database
+        ground_truth (np.NDArray): A numpy array containing 0 and 1 to indicate which datapoint is an outlier
     """
 
     __tablename__ = EXPERIMENT_TABLE_NAME
@@ -220,7 +220,6 @@ class Experiment(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     name: Mapped[str]
-    true_outliers = mapped_column(ARRAY(Integer))
     param_values = mapped_column(JSON)
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
@@ -237,9 +236,10 @@ class Experiment(Base):
 
     experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
 
-    # The dataset cannot have a type annotation. Otherwise, SQLAlchemy will try to create a column for it.
+    # These cannot have a type annotation. Otherwise, SQLAlchemy will try to create columns for them
     dataset = None
     _subspace_logic = None
+    ground_truth = None
 
     @property
     def subspace_logic(self) -> 'models.subspacelogic.SubspaceLogic':
@@ -278,7 +278,6 @@ class Experiment(Base):
             'subspace_logic': self.subspace_logic.to_client_json(),
             'odm': self.odm.to_json(),
             'odm_params': self.param_values,
-            # 'true_outliers': self.true_outliers,
             'dataset_name': self.dataset_name,
             'error_json': self.error_json,
         }
@@ -290,7 +289,6 @@ class Experiment(Base):
             subspace_logic=json['subspace_logic'],
             odm=json['odm'],
             param_values=json['odm_params'],
-            # true_outliers=json['true_outliers'],
             dataset_name=json['dataset_name'],
         )
 

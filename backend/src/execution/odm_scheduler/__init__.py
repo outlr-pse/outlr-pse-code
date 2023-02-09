@@ -11,16 +11,11 @@ from execution.execution_error import ExecutionError
 
 class ODMScheduler(ABC):
     """
-    Represents a scheduler that can scheduler the execution of individual outlier detection methods
+    A scheduler that can scheduler the execution of individual outlier detection methods
     """
 
     @abstractmethod
-    def schedule(
-        self,
-        odm: ODM,
-        hyperparams: dict[str, Any],
-        dataset: pd.DataFrame
-    ) -> Awaitable[NDArray]:
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> Awaitable[NDArray]:
         """
         Schedule the execution of an individual outlier detection method
         Args:

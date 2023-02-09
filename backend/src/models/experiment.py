@@ -232,7 +232,7 @@ class Experiment(Base):
     __tablename__ = EXPERIMENT_TABLE_NAME
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), primary_key=True)
     name: Mapped[str]
     param_values = mapped_column(JSON)
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step

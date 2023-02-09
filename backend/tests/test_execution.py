@@ -3,17 +3,14 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 import pandas as pd
-import numpy as np
 from pyod.utils import generate_data
-from sqlalchemy.orm import make_transient
 
 from models.experiment import Experiment, Subspace
-from models.subspacelogic import SubspaceLogic
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
-from models.dataset.dataset import Dataset
-from models.user.user import User
+from models.dataset import Dataset
+from models.user import User
 from models.odm.pyodm import PyODM
 import database.database_access as db
 from execution.odm_scheduler import ODMScheduler

@@ -4,20 +4,23 @@
     "name": "England",
     "topbar": {
       "createExperiment": "Create Experiment",
-      "logIn": "Log In",
-      "logOut": "Log Out",
-      "signUp": "Sign Up",
-      "signInAs": "Signed in as"
+      "logIn": "Log in",
+      "logOut": "Log out",
+      "signUp": "Sign up",
+      "signInAs": "Signed in as",
+      "dashboard": "Dashboard",
+      "createAnExperiment": "Create an Experiment",
+      "experimentResult": "Experiment Result"
     },
     "register-view": {
-        "title": "Hello!",
-        "subtitle": "Please enter details to create an account!",
-        "requirements": "A username is valid, if:\n- It starts with a letter\n- it only contains characters, numbers or an underscore\n- it is not shorter than 3 letters, not longer than 30 characters\n\nA password is valid, if:\n- it has 6 characters\n- it contains at least one digit\n- it contains at least one uppercase letter, one lowercase letter and one special character",
-        "errors": {
-          "provided-credentials-wrong": "Please provide valid credentials!",
-          "username_already_taken": "Username is already taken!",
-          "other": "An unexpected error occured. Potentially server is down."
-        }
+      "title": "Hello!",
+      "subtitle": "Please enter details to create an account!",
+      "requirements": "A username is valid, if:\n- It starts with a letter\n- it only contains characters, numbers or an underscore\n- it is not shorter than 3 letters, not longer than 30 characters\n\nA password is valid, if:\n- it has 6 characters\n- it contains at least one digit\n- it contains at least one uppercase letter, one lowercase letter and one special character",
+      "errors": {
+        "provided_credentials_wrong": "Please provide valid credentials!",
+        "username_already_taken": "Username is already taken!",
+        "other": "An unexpected error occured. Potentially server is down."
+      }
     },
     "experimentResultView": {
       "experimentSummaryCard": {
@@ -27,6 +30,14 @@
         "executionDate": "Execution Date",
         "executionTime": "Execution Time",
         "detectedOutliers": "Number of detected outliers"
+      }
+    },
+    "login-view": {
+      "title": "Welcome back!",
+      "subtitle": "Please sign into your account",
+      "errors": {
+        "provided_credentials_wrong": "Please provide valid credentials!",
+        "other": "An unexpected error occured. Potentially server is down."
       }
     },
     "landingPage": {

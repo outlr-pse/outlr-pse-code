@@ -13,6 +13,7 @@ import pandas as pd
 from numpy.typing import NDArray
 
 from models.base import Base
+from models.dataset import Dataset
 from models.odm.hyper_parameter import HyperParameter
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 

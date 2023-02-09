@@ -23,6 +23,7 @@
 <script lang="ts">
 import store from "../../store";
 import {defineComponent} from "vue";
+import { logout } from "../../api/AuthServices";
 
 export default defineComponent({
   name: "AppearingCard",
@@ -34,7 +35,7 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      store.dispatch('auth/logout');
+      logout();
       this.$router.push('/')
     }
   },

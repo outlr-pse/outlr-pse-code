@@ -14,9 +14,9 @@
       </div>
 
       <div v-else>
-        <Button :text="this.$t('message.topbar.logIn')" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
+        <Button :text="$t('message.topbar.logIn')" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
         <div style="width:5px; height:auto; display:inline-block;"/>
-        <Button :text="this.$t('message.topbar.signUp')" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
+        <Button :text="$t('message.topbar.signUp')" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
         <div style="width:15px; height:auto; display:inline-block;"/>
       </div>
     </div>

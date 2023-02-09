@@ -190,7 +190,8 @@ export default defineComponent({
 
 .text-fields input{
   background: var(--color-background);
-  border: 2px solid var(--color-stroke)
+  border: 2px solid var(--color-stroke);
+  color:var(--color-main-white);
 }
 
 .text-fields input:focus{
@@ -200,6 +201,7 @@ export default defineComponent({
 .submit-field input{
   width:100%;
   background: var(--color-main);
+  color:var(--color-main-white)
 }
 
 .submit-field input:hover{

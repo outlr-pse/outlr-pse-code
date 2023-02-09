@@ -11,8 +11,10 @@
         <div class="login-form">
           <div class="error" v-show="error">{{ errorMessage }}</div>
           <div class="text-fields">
-            <input v-bind:class="{'errorInput':error}" class="username"
+            <div>
+              <input v-bind:class="{'errorInput':error}" class="username"
                    @click="() => error = false" v-model="username" placeholder="Username"/>
+            </div>
             <div style="position:relative">
               <input v-bind:class="{'errorInput':error}" class="password"
                      @click="() => error = false" v-model="password" placeholder="Password"

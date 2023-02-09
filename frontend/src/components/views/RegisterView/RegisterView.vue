@@ -12,9 +12,9 @@
         <div class="login-form">
             <div class="error" v-show="error">{{errorMessage}}</div>
             <div class="text-fields">
-              <input v-bind:class="{'valid': this.usernameInput(this.username), 'errorInput':this.error}" class="username" @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
-              <input v-bind:class="{'valid': this.passwordInput(this.passwordInput), 'errorInput':this.error}" class="password" @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
-              <input v-bind:class="{'valid': this.passwordRepeatedInput(this.passwordRepeated), 'errorInput':this.error}" class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
+              <input v-bind:class="{'valid': usernameInput(username), 'errorInput':error}" class="username" @input="usernameInput" @click="() => error = false" v-model="username" placeholder="Username"/>
+              <input v-bind:class="{'valid': passwordInput(passwordInput), 'errorInput':error}" class="password" @input="passwordInput" @click="() => error = false" v-model="password" placeholder="Password" type="password"/>
+              <input v-bind:class="{'valid': passwordRepeatedInput(passwordRepeated), 'errorInput':error}" class="passwordRepeated" @input="passwordRepeatedInput" @click="() => error = false" v-model="passwordRepeated" placeholder="Re-enter Password" type="password"/>
             </div>
             <div class="submit-field">
               <input v-bind:class="{'validSubmit': validInput}" ref="submit" @click="tryRegisterSubmit" type="button" value="Create account">

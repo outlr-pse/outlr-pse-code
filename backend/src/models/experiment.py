@@ -7,7 +7,8 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from models.base import Base
-from models.odm.odm import ODM
+from models.odm import ODM
+import models
 
 from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint
 from sqlalchemy.orm import mapped_column, Mapped, relationship
@@ -52,10 +53,16 @@ class Subspace(Base):
     columns = mapped_column(ARRAY(Integer), default=[])
     name: Mapped[Optional[str]]
 
-    experiment_id: Mapped[Optional[int]] = mapped_column(ForeignKey(f"{EXPERIMENT_TABLE_NAME}.id"))
+    experiment_id: Mapped[Optional[int]] = mapped_column()
+    user_id: Mapped[Optional[int]] = mapped_column()
+    ForeignKeyConstraint(
+        ["user_id", "experiment_id"],
+        ["experiment.user_id", "experiment.id"],
+    )
     experiment: Mapped[Optional['Experiment']] = relationship(
         back_populates="subspaces",
-        foreign_keys=[experiment_id]
+        foreign_keys=[experiment_id, user_id],
+        primaryjoin="and_(Experiment.id == Subspace.experiment_id, Experiment.user_id == Subspace.user_id)"
     )
 
     outliers: Mapped[list['Outlier']] = relationship(  # many-to-many
@@ -148,8 +155,17 @@ class ExperimentResult(Base):
     accuracy: Mapped[float]
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
-    experiment_id: Mapped[int] = mapped_column(ForeignKey("experiment.id"))
-    experiment: Mapped['Experiment'] = relationship(back_populates="experiment_result")
+    user_id: Mapped[int] = mapped_column()
+    experiment_id: Mapped[int] = mapped_column()
+    ForeignKeyConstraint(
+        ["user_id", "experiment_id"],
+        ["experiment.user_id", "experiment.id"]
+    )
+    experiment: Mapped['Experiment'] = relationship(
+        back_populates="experiment_result",
+        foreign_keys=[experiment_id, user_id],
+        primaryjoin="and_(ExperimentResult.user_id==Experiment.user_id, ExperimentResult.experiment_id==Experiment.id)"
+    )
 
     outliers: Mapped[list['Outlier']] = relationship(
         back_populates="experiment_result"
@@ -158,13 +174,10 @@ class ExperimentResult(Base):
     result_space_id: Mapped[int] = mapped_column(
         ForeignKey(f"{SUBSPACE_TABLE_NAME}.id", name="foreign_key_result_space"),
     )
-    result_space: Mapped['Subspace'] = relationship(
-        foreign_keys=[result_space_id],
-        # post_update=True  # might be necessary for writes and deletes to work
-    )
+    result_space: Mapped['Subspace'] = relationship(foreign_keys=[result_space_id])
 
-    def to_json(self) -> dict:
-        """Convert ExperimentResult to JSON
+    def to_json(self, include_result_space: bool) -> dict:
+        """Convert ExperimentResult to JSON.
         Note that the subspaces and outliers are contained in the subspace logic JSON,
         only the result space is contained in the experiment result JSON
         Example:
@@ -181,13 +194,15 @@ class ExperimentResult(Base):
                 }
             }
         """
-        return {
+        result = {
             "id": self.id,
             "accuracy": self.accuracy,
             "execution_date": self.execution_date.isoformat(),  # ISO 8601 format
             "execution_time": ExperimentResult.microseconds(self.execution_time),  # in μs (microseconds)
-            "result_space": self.result_space.to_json()
         }
+        if include_result_space:
+            result["result_space"] = self.result_space.to_json()
+        return result
 
     @staticmethod
     def microseconds(duration: timedelta) -> int:
@@ -229,10 +244,14 @@ class Experiment(Base):
 
     subspaces: Mapped[list['Subspace']] = relationship(
         back_populates="experiment",
-        foreign_keys=[Subspace.experiment_id]
+        foreign_keys=[Subspace.experiment_id, Subspace.user_id],
+        primaryjoin="and_(Experiment.id == Subspace.experiment_id, Experiment.user_id == Subspace.user_id)"
     )
 
-    experiment_result: Mapped["ExperimentResult"] = relationship(ExperimentResult)
+    experiment_result: Mapped["ExperimentResult"] = relationship(
+        back_populates="experiment",
+        foreign_keys=[ExperimentResult.experiment_id, ExperimentResult.user_id],
+        primaryjoin="and_(Experiment.id==ExperimentResult.experiment_id, Experiment.user_id==ExperimentResult.user_id)")
 
     # These cannot have a type annotation. Otherwise, SQLAlchemy will try to create columns for them
     dataset = None
@@ -269,16 +288,26 @@ class Experiment(Base):
         else:
             assert self._subspace_logic_json is not None
 
-    def to_json(self) -> dict:
-        return {
+    def to_json(self, with_outliers: bool) -> dict:
+        """Converts the experiment to a JSON object.
+        Args:
+            with_outliers: If True, the subspace logic including all outliers and the result space
+                            is included in the JSON object.
+        Returns:
+            The experiment in json format.
+        """
+        exp = {
             'id': self.id,
             'name': self.name,
-            'subspace_logic': self.subspace_logic.to_client_json(),
+            'dataset_name': self.dataset_name,
             'odm': self.odm.to_json(),
             'odm_params': self.param_values,
-            'dataset_name': self.dataset_name,
             'error_json': self.error_json,
+            'experiment_result': self.experiment_result.to_json(with_outliers),
         }
+        if with_outliers:
+            exp['subspace_logic'] = self.subspace_logic.to_client_json()
+        return exp
 
     @classmethod
     def from_json(cls, json: dict):
@@ -287,8 +316,5 @@ class Experiment(Base):
             subspace_logic=json['subspace_logic'],
             odm=json['odm'],
             param_values=json['odm_params'],
-            dataset_name=json['dataset_name'],
+            dataset_name=json.get('dataset_name'),
         )
-
-
-import models.subspacelogic  # noqa: E402 (disable linter warning)  # must be at the end because of circular import

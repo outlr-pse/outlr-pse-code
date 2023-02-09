@@ -114,7 +114,7 @@ class TestResultModels(unittest.TestCase):
                 "execution_time": 2 * 1000000 * 60,
                 "result_space": res_space.to_json()  # This is already tested by test_subspace_json()
             },
-            res.to_json()
+            res.to_json(True)
         )
 
     def test_subspace_from_json(self):

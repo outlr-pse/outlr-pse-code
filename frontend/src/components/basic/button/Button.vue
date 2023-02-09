@@ -1,7 +1,7 @@
 <template>
   <button :class="buttonType" :style="style" @click="onClick">
     <div v-if="IconProvided">
-      <div style="display: inline-grid; grid-template-rows: auto auto; padding-top: 4vh">
+      <div style="display: inline-grid; grid-template-rows: auto auto;">
         <div> {{ text }}</div>
         <div>
           <Icon class="material-icons md-dark icon" style="font-size: 4vh; font-weight: 100; color: var(--color-stroke)" > {{startIcon}} </Icon>
@@ -45,7 +45,7 @@ export default defineComponent({
       textSize:{
         type: Object as () => [number, CSSProperties['fontWeight']],
         required: false,
-        default: [20, 500],
+        default: [16, 500],
       }
     },
   methods: {
@@ -74,16 +74,23 @@ export default defineComponent({
 <style scoped>
 @import "./button.css";
 
+.icon {
+    position: absolute;
+    transform: translate(0, -10px);
+}
+
 button:hover .icon{
+  position: absolute;
+  transform: translate(0, -10px);
   animation: wiggle 0.5s ease-in-out infinite alternate;
 }
 
 @keyframes wiggle {
   from {
-    transform: translate(0, -2px);
+    transform: translate(0, -8px);
   }
   to {
-    transform: translate(0, 2px);
+    transform: translate(0, -12px);
   }
 }
 </style>

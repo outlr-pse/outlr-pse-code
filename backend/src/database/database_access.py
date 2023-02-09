@@ -5,9 +5,9 @@ from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
 from models.experiment import Experiment
-from models.odm.hyper_parameter import HyperParameter
-from models.odm.odm import ODM
-from models.user.user import User
+from models.odm import HyperParameter
+from models.odm import ODM
+from models.user import User
 
 from odmprovider.pyod_scraper import PyODScraper
 import config
@@ -32,8 +32,8 @@ def add_experiment(experiment: Experiment) -> Experiment:
     return experiment
 
 
-def get_experiment(exp_id: int) -> Experiment | None:
-    return session.get(Experiment, exp_id)
+def get_experiment(user_id: int, exp_id: int) -> Experiment | None:
+    return session.get(Experiment, {'user_id': user_id, 'id': exp_id})
 
 
 def add_user(user: User) -> User:

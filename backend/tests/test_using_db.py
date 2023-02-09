@@ -4,11 +4,11 @@ from datetime import timedelta, datetime
 import numpy as np
 
 import database.database_access as db
-from models.user.user import User
+from models.user import User
 from models.experiment import Experiment, ExperimentResult, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation, Operator
-from models.odm.odm import ODM, HyperParameter
+from models.odm import HyperParameter
 from models.base import Base
 
 
@@ -56,7 +56,7 @@ class TestDBAccess(unittest.TestCase):
         self.assertEqual(4, exp.id)
 
     def test_get_experiment(self) -> None:
-        exp = db.get_experiment(1)
+        exp = db.get_experiment(1, 1)
         self.assertEqual("exp1", exp.name)
         self.assertEqual(1, exp.id)
 
@@ -120,8 +120,9 @@ class TestExperimentWithResult(unittest.TestCase):
             odm_id=1,
         )
         self.res = ExperimentResult(
-            accuracy=0.89,
+            user_id=u.id,
             experiment=self.exp,
+            accuracy=0.89,
             execution_date=datetime.now(), execution_time=timedelta(minutes=2)
         )
         self.res_space = Subspace(

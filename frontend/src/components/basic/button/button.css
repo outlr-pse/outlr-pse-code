@@ -6,11 +6,12 @@ button {
   background-color: var(--color-main);
   cursor: pointer;
   transition: border-color 0.25s;
+  color: var(--color-text);
 }
 
-button:hover {
-  border: 1px solid var(--color-selected);
-}
+/*button:hover {*/
+/*  border: 3px solid var(--color-selected);*/
+/*}*/
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -20,6 +21,7 @@ button:focus-visible {
 .disabled {
   background-color: var(--color-disabled-button);
 }
+
 .disabled:hover {
   cursor: default;
   outline: none;
@@ -40,11 +42,28 @@ button:focus-visible {
 
 }
 .outline {
-  background-color: var(--color-background);
   border-color: var(--color-stroke);
-
+  background-color: transparent;
 }
 .transparent {
     background-color: transparent;
     border-color: transparent;
+}
+
+.darkPurpleSignUp {
+    background-color: #361F61;
+    box-shadow: 0px 3px 7px 0px rgb(0, 0, 0, 0.5);
+    height: 70px;
+    width: 140px;
+    font-size: 20px;
+    border-radius: 15px;
+}
+
+.darkPurpleNavigateToDashboard {
+    background-color: #361F61;
+    box-shadow: 0px 3px 7px 0px rgb(0, 0, 0, 0.5);
+    height: 90px;
+    width: 543px;
+    font-size: 25px;
+    border-radius: 18px;
 }

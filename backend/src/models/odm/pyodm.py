@@ -8,8 +8,8 @@ from typing import Any
 import pandas as pd
 from numpy.typing import NDArray
 
-from models.odm.odm import ODM
-import pyod
+from models.odm import ODM
+import pyod  # maybe this is necessary for importlib
 import importlib
 
 

@@ -1,6 +1,29 @@
 {
   "message": {
     "greeting": "Hello",
-    "name": "England"
+    "name": "England",
+    "topbar": {
+      "createExperiment": "Create Experiment",
+      "logIn": "Log In",
+      "logOut": "Log Out",
+      "signUp": "Sign Up",
+      "signInAs": "Signed in as"
+    },
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Summary",
+        "odm": "ODM",
+        "accuracy": "Accuracy",
+        "executionDate": "Execution Date",
+        "executionTime": "Execution Time",
+        "detectedOutliers": "Number of detected outliers"
+      }
+    },
+    "landingPage": {
+      "slogan": "Effective subspace outlier analysis",
+      "navigateDashboard": "Navigate to dashboard",
+      "signUp": "Sign up",
+      "logIn": "Log in"
+    }
   }
 }

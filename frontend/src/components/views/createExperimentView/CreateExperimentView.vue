@@ -17,10 +17,10 @@
         <UploadFileField :input-name="$t('message.experimentCreate.dataset')" />
         <UploadFileField style = "margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')" />
       </Card>
-            <Button style ="margin-top: 45px;" class="button" text="Create Experiment" :size="[250,60]" :text-size="[22,600]" />
+            <Button :button-type="buttonType" style ="margin-top: 45px;" class="button" text="Create Experiment" :size="[250,60]" :text-size="[22,600]" />
     </div>
     <div class="right-half">
-      <InputSection @onODMSelection="onODMSelection"  :hyperparameters="hyperparameters" v-bind:odms="odms" class="inputSection"/>
+      <InputSection @onODMSelection="onODMSelection"  :hyperparameters="hyperparameters" v-bind:odms="odms" class="inputSection" @checkData="checkRequiredData"/>
     </div>
 
   </div>
@@ -33,12 +33,13 @@ import Dropdown from "../../basic/Dropdown.vue";
 import UploadFileField from "./Component/UploadFileField.vue";
 import HyperParametersField from "./Component/HyperParametersSection.vue";
 import {Hyperparameter} from "../../../models/odm/Hyperparameter";
-import {HyperparameterType} from "../../../models/odm/HyperparameterType";
+import {validateHyperparameterType} from "../../../models/odm/HyperparameterType";
 import ODMSection from "./Component/InputSection.vue";
 import {ODM} from "../../../models/odm/ODM";
 import {requestODM, requestODMNames} from "../../../api/APIRequests";
 import Button from "../../basic/button/Button.vue";
 import InputSection from "./Component/InputSection.vue";
+import {ButtonType} from "../../basic/button/ButtonType";
 
 export default defineComponent({
   name: "CreateExperimentView",
@@ -49,7 +50,8 @@ export default defineComponent({
       experimentName: 'new Experiment',
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
-      selectedODM: null as ODM | null
+      selectedODM: null as ODM | null,
+      buttonType: ButtonType.DISABLED
     }
   },
   methods: {
@@ -64,7 +66,26 @@ export default defineComponent({
       }
       this.selectedODM = odm
       this.selectedODM.hyperParameters = this.hyperparameters
+      this.checkRequiredData()
     },
+    checkRequiredData(){
+      if (this.selectedODM === null) {
+        this.buttonType = ButtonType.DISABLED
+        return
+      }
+      for (let param of this.selectedODM.hyperParameters) {
+        if (!param.optional && param.value === "") {
+          this.buttonType = ButtonType.DISABLED
+          return
+        }
+        if(!validateHyperparameterType(param) && param.value !== ""){
+          this.buttonType = ButtonType.DISABLED
+          return
+        }
+      }
+      //validate subspacelogic
+      this.buttonType = ButtonType.ACTIVE
+    }
   },
   async mounted() {
     let response = await requestODMNames()

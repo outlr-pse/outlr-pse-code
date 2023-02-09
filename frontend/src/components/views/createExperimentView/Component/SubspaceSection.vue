@@ -1,8 +1,8 @@
 <template>
   <div class="header">
     Subspace Logic
-    <Icon class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
-    </Icon>
+    <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false"> information
+    </span>
     <transition name="fade">
       <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
         {{ $t('message.experimentCreate.logicHint') }}
@@ -30,9 +30,10 @@ export default defineComponent({
   },
   watch: {
     value: function () {
-      this.$emit("input-change", this.value)
+      this.$emit("onInputChange", this.value)
     }
-  }
+  },
+  emits: ["onInputChange"]
 })
 </script>
 
@@ -43,7 +44,7 @@ export default defineComponent({
   font-size: 1.2vw;
   text-align: left;
   padding: 5px;
-  width: 13vw;
+  width: 12vw;
 }
 
 .subspaceLogic {

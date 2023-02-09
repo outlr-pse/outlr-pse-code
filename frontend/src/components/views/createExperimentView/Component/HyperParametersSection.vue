@@ -2,9 +2,9 @@
   <div class="parameterSection">
     <div class="header">
       ODM Parameters
-      <Icon class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
+      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         information
-      </Icon>
+      </span>
       <transition name="fade">
         <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
           {{ $t('message.experimentCreate.paramHint') }}
@@ -15,7 +15,7 @@
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
                            :parameter-id="param.id" :key="param.id" :ref="'inputRef' + param.id"
-                           :optional="param.optional"/>
+                           :optional="param.optional" @checkData="this.$emit('checkData')"/>
     </div>
   </div>
 </template>
@@ -53,10 +53,10 @@ export default defineComponent({
   methods: {
     inputChange(value: string, parameterId: number) {
       (this.parametersMap.get(parameterId) as Hyperparameter).value = value;
-      console.log(this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)
-      if (!validateHyperparameterType(this.parametersMap.get(parameterId) as Hyperparameter)) {
+      let param = this.parametersMap.get(parameterId) as Hyperparameter;
+      if (!validateHyperparameterType(param)&& param.value !== "") {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].wrongInput();
-      } else if (!(this.parametersMap.get(parameterId) as Hyperparameter).optional) {
+      } else if (!param.optional) {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].optionalInput();
       } else {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].correctInput();

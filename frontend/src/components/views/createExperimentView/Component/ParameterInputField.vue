@@ -1,5 +1,5 @@
 <template>
-      <input type="text" :placeholder="placeholder" v-model="value" class="field">
+      <input type="text" :placeholder="placeholder" v-model="value" class="field" @focusout="checkData" @focusin="checkData" @mouseleave="checkData">
 </template>
 
 <script lang="ts">
@@ -35,6 +35,9 @@ export default defineComponent({
     },
     optionalInput() {
       this.$el.style.border = "1px solid var(--color-input-optional)";
+    },
+    checkData(){
+      this.$emit("check-data")
     }
   },
   watch: {

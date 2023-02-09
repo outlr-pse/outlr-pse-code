@@ -8,10 +8,10 @@
       <Dropdown :options="odmNames" hint="Select ODM" class="dropdown" @onValueSelected="onODMSelection"/>
     </div>
     <div class="hyperparameter">
-      <HyperParametersSection :parameters="hyperparameters"/>
+      <HyperParametersSection :parameters="hyperparameters" @checkData="this.$emit('checkData')"/>
     </div>
     <div class="subspace">
-      <SubspaceSection @input-change="" ></SubspaceSection>
+      <SubspaceSection @onInputChange="parseSubspaceLogic" ></SubspaceSection>
     </div>
   </Card>
 </template>
@@ -60,6 +60,10 @@ export default defineComponent({
     onODMSelection(odmName: string) {
       this.$emit("onODMSelection", this.odmMap.get(odmName))
     },
+    parseSubspaceLogic(logic: string) {
+      let subspaceLogic = logic
+      this.$emit("subspaceLogic", subspaceLogic)
+    }
   }
 })
 </script>

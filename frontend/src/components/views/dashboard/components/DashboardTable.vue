@@ -217,4 +217,61 @@ td {
   top: 0;
 }
 
+
+tr:nth-child(odd).tableData {
+  background-color: var(--color-background);
+}
+
+tr:nth-child(even).tableData {
+  background-color: var(--color-table-secondary);
+}
+
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6 {
+  background-color: var(--color-cell-background);
+  border: 1px solid var(--color-table-border);
+
+}
+
+td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.col-6 {
+  background-color: var(--color-table-header);
+  cursor: pointer;
+}
+
+.col-1 {
+  width: 15%;
+}
+
+.col-2 {
+  width: 15%;
+}
+
+.col-3 {
+  width: 10%;
+}
+
+.col-4 {
+  width: 42%;
+}
+
+.col-5 {
+  width: 15%;
+}
+
+.col-6 {
+  width: 3%;
+}
+
+.running {
+  color: var(--color-running);
+}
+
+.running:hover {
+  cursor: default;
+}
+
+.notRunning:hover {
+  cursor: pointer;
+}
+
+
 </style>

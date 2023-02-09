@@ -33,6 +33,9 @@ export default defineComponent({
     correctInput() {
       this.$el.style.border = "1px solid var(--color-stroke)";
     },
+    optionalInput() {
+      this.$el.style.border = "1px solid var(--color-input-optional)";
+    }
   },
   watch: {
     value: function () {
@@ -41,7 +44,7 @@ export default defineComponent({
   },
   mounted() {
     if(!this.optional){
-      this.$el.style.border = "1px solid var(--color-input-optional)";
+      this.optionalInput()
     }
   }
 })

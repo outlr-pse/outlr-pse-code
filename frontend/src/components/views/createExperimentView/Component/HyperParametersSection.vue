@@ -14,7 +14,8 @@
     </div>
     <div v-if="visible" class="inputFields">
       <ParameterInputField v-for="param in parameters" :placeholder="param.name" @input-change="inputChange"
-                           :parameter-id="param.id" :key="param.id" :ref="'inputRef' + param.id" :optional="param.optional"/>
+                           :parameter-id="param.id" :key="param.id" :ref="'inputRef' + param.id"
+                           :optional="param.optional"/>
     </div>
   </div>
 </template>
@@ -55,6 +56,8 @@ export default defineComponent({
       console.log(this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)
       if (!validateHyperparameterType(this.parametersMap.get(parameterId) as Hyperparameter)) {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].wrongInput();
+      } else if (!(this.parametersMap.get(parameterId) as Hyperparameter).optional) {
+        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].optionalInput();
       } else {
         (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].correctInput();
       }

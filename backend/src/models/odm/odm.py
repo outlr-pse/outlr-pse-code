@@ -10,7 +10,7 @@ See https://docs.sqlalchemy.org/en/20/orm/inheritance.html#single-table-inherita
 from typing import Any
 
 from models.base import Base
-from models.dataset.dataset import Dataset
+from models.dataset import Dataset
 from models.odm.hyper_parameter import HyperParameter
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 

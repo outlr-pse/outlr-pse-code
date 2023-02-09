@@ -14,7 +14,7 @@ from os.path import exists as path_exists
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from models.experiment.experiment import Experiment
+from models.experiment import Experiment
 import database.database_access as db
 import util.data as data_utils
 import api.error as error

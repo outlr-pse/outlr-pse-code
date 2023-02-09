@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 from models.base import Base
-from models.odm.odm import ODM
+from models.odm import ODM
 import models
 
 from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint

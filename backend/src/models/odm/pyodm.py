@@ -7,9 +7,8 @@ from typing import Any
 
 import numpy
 
-from models.odm.odm import ODM
-from models.dataset.dataset import Dataset
-import pyod
+from models.odm import ODM
+from models.dataset import Dataset
 import importlib
 
 

@@ -1,6 +1,6 @@
 from models.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.experiment.experiment import Experiment
+from models.experiment import Experiment
 
 
 class User(Base):

@@ -1,8 +1,7 @@
 import unittest
 import pandas as pd
-import numpy as np
 
-from models.dataset.dataset import Dataset
+from models.dataset import Dataset
 from util.data import csv_to_dataset, csv_to_list, write_list_to_csv
 
 

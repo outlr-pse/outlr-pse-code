@@ -46,7 +46,6 @@ body {
   --color-stroke: var(--palette-grey-1);
   --color-default-text-textbox: var(--palette-grey-1);
   --color-textboxfill: var(--palette-grey-9);
-  --color-topbar: #2f293a; /* vlt zu palette ändern */
   --color-lines: var(--palette-grey-3);
   --color-subheader: var(--palette-grey-1);
   --color-input-textbox: var(--palette-grey--1);
@@ -55,6 +54,7 @@ body {
   --color-purple-button: var(--palette-purple-85);
   --color-disabled-button: var(--palette-grey-4);
   --color-close-button: #D64751;
+  --color-topbar: rgb(47, 41, 58, 0.95);
   --color-table-secondary: #2e2e2e;
   --color-table-border: #4f4f4f;
   --color-table-header: #514478;

@@ -2,16 +2,12 @@
   "message": {
     "greeting": "Hello",
     "name": "England",
-    "dashboard": {
-      "search": "Search...",
-      "clear": "Clear",
-      "name": "Name",
-      "dataset": "Dataset",
-      "odm": "ODM",
-      "hyperparameters": "Hyperparameters",
-      "date": "Date",
-      "accuracy": "Accuracy",
-      "running": "Running . . ."
+    "topbar": {
+      "createExperiment": "Create Experiment",
+      "logIn": "Log In",
+      "logOut": "Log Out",
+      "signUp": "Sign Up",
+      "signInAs": "Signed in as"
     },
     "experimentResultView": {
       "experimentSummaryCard": {
@@ -22,6 +18,23 @@
         "executionTime": "Execution Time",
         "detectedOutliers": "Number of detected outliers"
       }
+    },
+    "landingPage": {
+      "slogan": "Effective subspace outlier analysis",
+      "navigateDashboard": "Navigate to dashboard",
+      "signUp": "Sign up",
+      "logIn": "Log in"
+    },
+    "dashboard": {
+      "search": "Search...",
+      "clear": "Clear",
+      "name": "Name",
+      "dataset": "Dataset",
+      "odm": "ODM",
+      "hyperparameters": "Hyperparameters",
+      "date": "Date",
+      "accuracy": "Accuracy",
+      "running": "Running . . ."
     }
   }
 }

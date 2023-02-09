@@ -1,15 +1,21 @@
 import unittest
 from datetime import datetime, timedelta
 
-from models.results import ExperimentResult, Subspace, Outlier
+from models.experiment.experiment import ExperimentResult, Experiment, Subspace, Outlier
+from models.subspacelogic.literal import Literal
 
-
-res = ExperimentResult(id=12, accuracy=0.89, execution_date=datetime.now(), execution_time=timedelta(minutes=2))
+exp = Experiment(id=123)
+res = ExperimentResult(
+    id=12,
+    accuracy=0.89,
+    execution_date=datetime.now(),
+    execution_time=timedelta(minutes=2),
+)
 res_space = Subspace(id=2343, columns=None, name="result")
-sub1 = Subspace(id=23, experiment_result=res, columns=[0, 1, 3])
+sub1 = Subspace(id=23, experiment=exp, columns=[0, 1, 3])
 sub2 = Subspace(id=123, columns=[32])
 res.result_space = res_space
-res.subspaces.append(sub2)
+exp.subspaces.append(sub2)
 out1 = Outlier(index=3, subspaces=[sub1, sub2], experiment_result=res)
 out2 = Outlier(index=4, experiment_result=res)
 res.outliers.append(out1)
@@ -21,33 +27,36 @@ class TestResultModels(unittest.TestCase):
 
     def test_model_relations(self):
         self.assertIn(
-            sub1, res.subspaces,
-            msg="Check if result contains subspace added with Subspace(experiment_result=...)"
+            sub1, exp.subspaces,
+            msg="Check if experiment contains subspace added with Subspace(experiment=...)"
         )
 
         self.assertIn(
-            sub2, res.subspaces,
-            msg="Check if result contains subspace added manually to experiment_result.subspaces"
+            sub2, exp.subspaces,
+            msg="Check if experiment contains subspace added manually to experiment.subspaces"
         )
 
         self.assertNotIn(
-            res_space, res.subspaces,
-            msg="Check that result space is not in experiment_result.subspaces"
+            res_space, exp.subspaces,
+            msg="Check that result space is not in experiment.subspaces"
         )
 
-        self.assertEqual(len(res.subspaces), 2, msg="Check that result.subspaces does not contain more than expected")
-
-        self.assertIs(
-            sub1.experiment_result, res,
-            msg="Check that subspace.experiment_result is correct when set manually in Subspace constructor"
+        self.assertEqual(
+            len(exp.subspaces), 2,
+            msg="Check that experiment.subspaces does not contain more than expected"
         )
 
         self.assertIs(
-            sub2.experiment_result, res,
-            msg="Check that subspace.experiment_result is correct when added by result.subspaces.append(subspace)"
+            sub1.experiment, exp,
+            msg="Check that subspace.experiment is correct when set manually in Subspace constructor"
         )
 
-        self.assertIs(res_space.experiment_result, None, msg="Check that result_space.experiment_result is None")
+        self.assertIs(
+            sub2.experiment, exp,
+            msg="Check that subspace.experiment is correct when added by experiment.subspaces.append(subspace)"
+        )
+
+        self.assertIs(res_space.experiment, None, msg="Check that result_space.experiment is None")
 
         self.assertIn(
             out1, sub1.outliers,
@@ -104,5 +113,18 @@ class TestResultModels(unittest.TestCase):
                 "execution_time": 2 * 1000000 * 60,
                 "result_space": res_space.to_json()  # This is already tested by test_subspace_json()
             },
-            res.to_json()
+            res.to_json(True)
         )
+
+    def test_subspace_from_json(self):
+        _sub1 = Subspace.from_client_json(sub1.to_json())
+        # See help(Subspace.from_client_json) to find out what attributes are read from the json
+        self.assertEqual(_sub1.id, sub1.id)
+        self.assertEqual(_sub1.columns, sub1.columns)
+        self.assertEqual(_sub1.name, sub1.name)
+
+    def test_subspace_logic(self):
+        self.assertIn(sub1, exp.subspaces, msg="This is necessary for the following test case to work")
+        exp.subspace_logic = Literal(sub1)
+        self.assertIs(type(exp.subspace_logic), Literal)
+        self.assertEqual(exp.subspace_logic.subspace.columns, sub1.columns)

@@ -1,17 +1,21 @@
 <template>
-  <div class="profile">
-    <div class="circle"/>
+  <div class="profile" @mouseenter="showCard = true" @mouseleave="showCard = false">
+    <div class="circle"> {{firstCharName}} </div>
     <div class="card-container">
-      <img alt="arrow" @click="() => $router.push('/')" class="arrow" src="../../assets/pp_arrow.svg"
-           width="13" :style="rotatedImage"/>
-      <div class="card">
-
-        <p style=" margin-top: 16px; margin-bottom: 16px">Signed in as <b>{{ store.getters["auth/username"] }}</b></p>
-        <div class="separator"></div>
-        <a href="./logout">Logout <i class="material-icons md-light"
-                                     style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i></a>
-      </div>
-
+      <img v-if="showCard" alt="arrow" class="arrow" src="../../assets/pp_arrow.svg"
+           width="17" />
+      <img v-else alt="arrow" class="arrow" src="../../assets/pp_arrow_side.svg"
+           height="17"/>
+      <transition name="fade">
+        <div class="card" v-if="showCard" @mouseleave="showCard = false" @mouseenter="showCard = true">
+          <p style=" margin-top: 16px; margin-bottom: 16px">{{ $t('message.topbar.signInAs') }}
+            <b>{{ store.getters["auth/username"] }}</b></p>
+          <div class="separator"></div>
+          <div class="hoverMouse" @click="logout">{{ $t('message.topbar.logOut') }} <i class="material-icons md-light"
+                                                                                       style="font-size: 16px; vertical-align: middle; margin-left: 5px">logout</i>
+          </div>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -24,25 +28,35 @@ export default defineComponent({
   name: "AppearingCard",
   data() {
     return {
-      rotation: {
-        type: Number,
-        default: 90
-      }
+      rotation: 0,
+      showCard: false
     }
   },
-
-computed: {
-  store()
-  {
-    return store
+  methods: {
+    logout() {
+      store.dispatch('auth/logout');
+      this.$router.push('/')
+    }
   },
-  rotatedImage() : {transform: string}
-  {
-    return {
-      transform: 'rotate(' + this.rotation + 'deg)'
+  computed: {
+    store() {
+      return store
+    },
+    rotatedImage(): { transform: string } {
+      if (this.showCard) {
+        this.rotation = 0
+      } else {
+        this.rotation = 90
+      }
+      return {
+        transform: 'rotate(' + this.rotation + 'deg)' + 'translate(-50%, 50%)'
+      }
+    },
+
+    firstCharName(): string {
+      return this.store.getters["auth/username"].charAt(0).toUpperCase();
     }
   }
-}
 })
 </script>
 
@@ -65,28 +79,15 @@ a {
   margin-left: 15px;
 }
 
-
-.profile:hover .card, .card:hover {
-  display: block;
-  position: absolute;
-  opacity: 100;
-  top: calc(var(--top-bar-height) / 2 - 10px);
-  left: -100px;
-  right: 0;
-  bottom: 0;
-  width: 110px;
-  height: 110px;
-  background-color: rgb(47, 41, 58, 0.70);
-  z-index: 100;
-  border-radius: 12px;
-  border: 1px solid var(--color-stroke);
-  font-size: 14px;
-  transition: all 0.25s ease-in-out;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .8s;
 }
 
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
 
 .card {
-  opacity: 0;
   display: block;
   position: absolute;
   top: calc(var(--top-bar-height) / 2 - 10px);
@@ -109,6 +110,7 @@ a {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 50%);
+  transform-origin: center center;
 }
 
 .circle {
@@ -121,17 +123,22 @@ a {
   display: inline-block;
   background-color: var(--color-main);
   margin-left: 40px;
-  margin-right: 7px;
+  margin-right: 5px;
 }
 
-.circle::before {
-  content: "U";
-}
+/*.circle::before {*/
+/*  content: "U";*/
+/*}*/
 
 .separator {
   width: 90px;
   height: 1px;
   background-color: var(--color-lines);
   margin: 0 10px;
+}
+
+.hoverMouse {
+  cursor: pointer;
+
 }
 </style>

@@ -1,4 +1,6 @@
-import numpy as np
+from io import BytesIO
+from typing import Optional
+
 import pandas as pd
 
 from models.dataset.dataset import Dataset
@@ -7,8 +9,8 @@ from models.dataset.dataset import Dataset
 def csv_to_dataset(name: str, dataset: str) -> Dataset:
     """Converts a CSV string to a Dataset object.
     Args:
-        name (str): The name of the dataset.
-        dataset (str): The path to the CSV file.
+        name: The name of the dataset.
+        dataset: The path to the CSV file.
     Returns:
         Dataset: The Dataset object.
 
@@ -19,24 +21,29 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
     return dataset
 
 
-def csv_to_ndarray(csv: str) -> np.ndarray:
-    """Converts a CSV file to a numpy ndarray.
+def csv_to_list(csv: str) -> list:
+    """Converts a CSV file to a list.
     Args:
-        csv (str): The path to the CSV file.
+        csv: The path to the CSV file.
     Returns:
-        np.ndarray: The numpy ndarray array.
+        list: The list of datapoints.
     """
-    df = pd.read_csv(csv)
+    df = pd.read_csv(csv, header=None)
 
-    return df.to_numpy(dtype=int)
+    return df.values.tolist()[0]
 
 
-def ndarray_to_csv(path: str, arr: np.ndarray) -> None:
-    """Converts numpy ndarray to a CSV file.
+def write_list_to_csv(data: list[int], path: Optional[str] = None) -> BytesIO | None:
+    """Converts a list of integers to a CSV file.
     Args:
-        path (str): The path to the CSV file.
-        arr (np.ndarray): The numpy ndarray array.
+        path: The path to the CSV file.
+        data: The list of datapoints.
     Returns:
-        None
+        BytesIO: In-memory file-like object if `path` is not provided.
+        None: If `path` is provided.
     """
-    pd.DataFrame(arr).to_csv(path, index=False, header=False)
+    path_or_buf = path or BytesIO()
+    pd.DataFrame([data]).to_csv(path_or_buf, index=False, header=False)
+    if not path:
+        path_or_buf.seek(0)
+        return path_or_buf

@@ -133,12 +133,13 @@ async def create() -> (Response, int):
     """
     exp_json = request.json
     user_id = 1
-    exp_json['user_id'] = get_jwt_identity()
+    exp_json['experiment']['user_id'] = get_jwt_identity()
 
     if not path_exists(data_path(user_id, "dataset")):
         return error.no_dataset, error.no_dataset["status"]
 
-    exp = Experiment.from_json(request.json)
+
+    exp = Experiment.from_json(request.json['experiment'])
     db.add_experiment(exp)
 
     exp.odm.__class__ = PyODM

@@ -32,6 +32,7 @@ import {Subspace} from "../../../../models/results/Subspace";
 import {Literal} from "../../../../models/subspacelogic/Literal";
 import {Operation} from "../../../../models/subspacelogic/Operation";
 import {Operator} from "../../../../models/subspacelogic/Operator";
+import {parseSubspaceLogic} from "../../../../logic/subspace_logic_parser/SubspaceLogicParser";
 
 export default defineComponent({
   name: "InputSection",
@@ -68,12 +69,16 @@ export default defineComponent({
       this.$emit("onODMSelection", this.odmMap.get(odmName))
     },
     parseSubspaceLogic(logic: string) {
+      try {
+        let subspaceLogic = parseSubspaceLogic(logic)
+        console.log(subspaceLogic)
+        this.$emit("onSubspaceInput", subspaceLogic)
+      } catch (e) {
+        this.$emit("onSubspaceInput", null)
+        console.log(e)
+      }
 
-      //Parse Subspace Logic
-      let subspaceLogic = logic
-      //Emit null when subspacelogic is invalid
-      //Emit only when parsed successfully then its ensured the button can be clicked
-      this.$emit("onSubspaceInput", subspaceLogic)
+
     }
   }
 })

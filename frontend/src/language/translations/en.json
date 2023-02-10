@@ -62,7 +62,7 @@
       "defaultFileField": "Upload a file",
       "dataset": "Dataset",
       "groundtruth": "Groundtruth",
-      "logicHint": "Text for subspace logic hint",
+      "logicHint": "Subspace Logic consists of two parts\n1. Subspaces: For example [0, 2, 4] describes all outliers of the subspace containing the columns with indices 0, 2 and 4\n2. Operators: For example [0, 2] and [2, 3] describes all outliers in both the first and the second subspaces (available: and, or)\n\nIf you specify more than two subspaces, imagine parenthesis on the right side (right associativity)\nSo for example [0] and [1] and [2] is interpreted as \"[0] and ([1] and [2])\"\nNote that writing parenthesis yourself is currently not supported \uD83D\uDE15️\n\nSome examples\n[0, 1, 2] or [1, 2]\n[0, 1]\n[0, 1] and [1, 3] or [1, 32]",
       "paramHint": "empty field --> default value is used,\nred border --> invalid input type,\nblue border --> parameter is not optional and needs a value,\ngray border --> type is allowed but can still be incorrect",
       "odm": "Outlier Detection Method",
       "odmParameters": "ODM Parameters",

@@ -43,7 +43,9 @@ export default defineComponent({
       experiments: [] as Experiment[],
       shownParams: [] as Hyperparameter[],
       headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
-      intervalID: undefined as any
+      intervalID: undefined as any,
+      currentSearchTerm: '',
+      currentSorting: DashboardSortColumn.DATE,
     }
   },
   props: {
@@ -51,26 +53,13 @@ export default defineComponent({
       type: String,
       required: true
     },
-    currentSorting: {
-      type: String,
-      required: true
-    }
   },
 
   watch: {
     searchTerm: function (newSearchTerm: string) {
-      this.filteredData = this.data.filter((row) => {
-        for (let i = 0; i < row[1].length - 2; i++) {
-          if (row[1][i].toLowerCase().includes(newSearchTerm.toLowerCase())) {
-            return true
-          }
-        }
-        return false
-      })
+      this.currentSearchTerm = newSearchTerm
+      this.tableSearch()
     },
-    currentSorting: function (newSorting: DashboardSortColumn) {
-      this.tableSort(newSorting)
-    }
   },
   async mounted() {
 
@@ -141,9 +130,12 @@ export default defineComponent({
         }
       }
       this.filteredData = this.data
+      this.tableSort()
+      this.tableSearch()
     },
     headerClick(header: DashboardSortColumn) {
-      this.tableSort(header)
+      this.currentSorting = header
+      this.tableSort()
     },
     rowClick(row: [number, string[]]) {
       if (row[1][4] === "Running . . .") {
@@ -151,35 +143,44 @@ export default defineComponent({
       }
       this.$router.push("/experiment/" + row[0])
     },
-    tableSort(sortColumn: DashboardSortColumn) {
-      if (sortColumn === DashboardSortColumn.NAME) {
+    tableSearch() {
+      this.filteredData = this.data.filter((row) => {
+        for (let i = 0; i < row[1].length - 2; i++) {
+          if (row[1][i].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
+            return true
+          }
+        }
+        return false
+      })
+    },
+    tableSort() {
+      if (this.currentSorting === DashboardSortColumn.NAME) {
         this.filteredData.sort((a, b) => {
           return a[1][0].localeCompare(b[1][0])
         })
-      } else if (sortColumn === DashboardSortColumn.DATASET) {
+      } else if (this.currentSorting === DashboardSortColumn.DATASET) {
         this.filteredData.sort((a, b) => {
           return a[1][1].localeCompare(b[1][1])
         })
-      } else if (sortColumn === DashboardSortColumn.ODM) {
+      } else if (this.currentSorting === DashboardSortColumn.ODM) {
         this.filteredData.sort((a, b) => {
           return a[1][2].localeCompare(b[1][2])
         })
-      } else if (sortColumn === DashboardSortColumn.HYPERPARAMETER) {
+      } else if (this.currentSorting === DashboardSortColumn.HYPERPARAMETER) {
         this.filteredData.sort((a, b) => {
           return a[1][3].localeCompare(b[1][3])
         })
-      } else if (sortColumn === DashboardSortColumn.DATE) {
+      } else if (this.currentSorting === DashboardSortColumn.DATE) {
         this.filteredData.sort((a, b) => {
           return a[1][4].localeCompare(b[1][4])
         })
-      } else if (sortColumn === DashboardSortColumn.ACCURACY) {
+      } else if (this.currentSorting === DashboardSortColumn.ACCURACY) {
         this.filteredData.sort((a, b) => {
           return a[1][5].localeCompare(b[1][5])
         })
       }
     },
-
-  }
+  },
 })
 </script>
 

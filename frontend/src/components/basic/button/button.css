@@ -23,10 +23,8 @@ button:focus-visible {
 }
 
 .disabled:hover {
-  cursor: default;
+  cursor: not-allowed;
   outline: none;
-  border: 1px solid var(--color-stroke);
-  box-shadow: 0 0 30px 3px darkred;
 
 }
 

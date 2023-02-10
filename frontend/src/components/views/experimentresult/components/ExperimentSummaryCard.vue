@@ -21,7 +21,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult?.accuracy + "%" }}
+          {{ experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy + "%" : "No GT" }}
         </div>
       </div>
       <div class="row">

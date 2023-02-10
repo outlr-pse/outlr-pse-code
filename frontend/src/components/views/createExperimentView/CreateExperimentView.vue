@@ -11,7 +11,7 @@
 
         <!--        <div style="height: 50px">{{ experimentName }}</div> &lt;!&ndash; adfasdfassssssssssssssssssssssssssssssssssssssss   TODO &ndash;&gt;-->
       </div>
-      <Card style="width: 30vw; display: flex; flex-direction: column; margin-bottom: 25vh">
+      <Card style="width: 30vw; display: flex; flex-direction: column; margin-bottom: 0vh">
         <h3 style="font-size: 27px"> Upload Files</h3>
         <!--         <div style="width: 150px;  height: 2px;  background-color: var(&#45;&#45;color-lines);  margin: 0 7px; text-align: center"></div>-->
         <UploadFileField :input-name="$t('message.experimentCreate.dataset')" @file-uploaded="setDataset"/>
@@ -19,7 +19,7 @@
                          @file-uploaded="setGroundtruth"/>
       </Card>
       <Button :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
-              :size="[250,60]" :text-size="[22,600]" @buttonClick="createExperiment"/>
+              :size="[350,70]" :text-size="[22,600]" @buttonClick="createExperiment"/>
     </div>
     <div class="right-half">
       <InputSection @onODMSelection="onODMSelection" :hyperparameters="hyperparameters" v-bind:odms="odms"

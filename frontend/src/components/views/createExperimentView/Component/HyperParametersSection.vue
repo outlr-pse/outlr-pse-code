@@ -1,12 +1,12 @@
 <template>
   <div class="parameterSection">
     <div class="header">
-      <h3>
+      <h2>
         {{  $t('message.experimentCreate.odmParameters') }}
         <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         info
       </span>
-      </h3>
+      </h2>
       <transition name="fade">
         <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
           {{ $t('message.experimentCreate.paramHint') }}
@@ -73,7 +73,6 @@ export default defineComponent({
 
 <style scoped>
 .header {
-  font-size: 1.2vw;
   padding: 5px;
   text-align: left;
   width: 98%;

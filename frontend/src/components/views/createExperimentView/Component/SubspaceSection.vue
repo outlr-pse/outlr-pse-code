@@ -1,11 +1,11 @@
 <template>
   <div class="header">
-    <h3>
+    <h2>
       {{ $t('message.experimentCreate.subspaceLogic') }}
       <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
         info
     </span>
-    </h3>
+    </h2>
     <transition name="fade">
       <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
         {{ $t('message.experimentCreate.logicHint') }}
@@ -45,7 +45,6 @@ export default defineComponent({
 
 .header {
   position: relative;
-  font-size: 1.2vw;
   text-align: left;
   padding: 5px;
   width: 100%;
@@ -53,8 +52,7 @@ export default defineComponent({
 }
 
 .subspaceLogic {
-  margin-top: 1.5vh;
-  height: 68%;
+  height: 82%;
   display: flex;
   text-align: left;
   width: 100%;
@@ -70,6 +68,7 @@ export default defineComponent({
   background: transparent;
   font-family: Poppins, serif;
   resize: none;
+  margin: 15px;
 
 }
 
@@ -85,10 +84,10 @@ export default defineComponent({
 
 .card {
   position: absolute;
-  top: 80%;
-  left: 65%;
+  top: -530%;
+  left: 34%;
   right: 0;
-  width: 10vw;
+  width: 25vw;
   height: max-content;
   background-color: rgb(47, 41, 58);
   z-index: 100;
@@ -96,6 +95,7 @@ export default defineComponent({
   border: 1px solid var(--color-stroke);
   font-size: 14px;
   padding: 10px;
+  white-space: break-spaces;
 }
 
 .fade-enter-active, .fade-leave-active {

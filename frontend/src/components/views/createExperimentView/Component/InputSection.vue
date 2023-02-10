@@ -2,9 +2,9 @@
   <Card class="card">
     <div class="odmContainer">
       <div class="odm">
-        <h3>
+        <h2>
           {{ $t('message.experimentCreate.odm') }}
-        </h3>
+        </h2>
         <div style="border: 1px solid var(--color-lines);width: 20vw"/>
       </div>
       <Dropdown :options="odmNames" hint="Select ODM" class="dropdown" @onValueSelected="onODMSelection"/>
@@ -87,11 +87,10 @@ export default defineComponent({
 <style scoped>
 .card {
   width: 40vw;
-  height: 75vh;
+  height: 750px;
 }
 
 .odm {
-  font-size: 1.2vw;
   padding: 5px;
   text-align: left;
   width: 100%;

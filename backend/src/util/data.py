@@ -1,6 +1,6 @@
 from io import BytesIO
 from typing import Optional
-
+from pyod.models.knn import KNN   # kNN detector
 import pandas as pd
 from numpy.typing import NDArray
 from matplotlib import pyplot as plt
@@ -19,7 +19,7 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
         Dataset: The Dataset object.
 
     """
-    df = pd.read_csv(dataset)
+    df = pd.read_csv(dataset, header=None)
     dataset = Dataset(name, df)
 
     return dataset
@@ -86,7 +86,7 @@ def visualize_data(path_dataset: str, path_groundtruth: str) -> None:
 
 
 if __name__ == "__main__":
-    dataset: str = "C:\\Users\\erikw\\Downloads\\dataset.csv"
-    groundtruth: str = "C:\\Users\\erikw\\Downloads\\groundtruth.csv"
-    generate_data_as_csv(0.1, 200, 2, dataset, groundtruth)
+    dataset: str = "C:\\Users\\erikw\\Downloads\\dataset2.csv"
+    groundtruth: str = "C:\\Users\\erikw\\Downloads\\groundtruth2.csv"
+    generate_data_as_csv(0.1, 20, 2, dataset, groundtruth)
     visualize_data(dataset, groundtruth)

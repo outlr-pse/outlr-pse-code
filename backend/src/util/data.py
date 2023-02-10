@@ -70,22 +70,6 @@ def generate_data_as_csv(contamination: float, n_samples: int, n_features: int,
     y_train = pd.DataFrame(y_train)
     y_train.to_csv(path_groundtruth, index=False, header=False)
 
-# def visualize_data(dataset: str, groundtruth: str) -> None:
-#     """Visualizes a dataset and a groundtruth file.
-#     Args:
-#         dataset: The path to the dataset file.
-#         groundtruth: The path to the groundtruth file.
-#     """
-#     df = pd.read_csv(dataset, header=None)
-#     df = df.values.tolist()
-#     df = pd.DataFrame(df, columns=["x", "y"])
-#     df.plot.scatter(x="x", y="y", color='blue')
-#     plt.show()
-#     df = pd.read_csv(groundtruth, header=None)
-#     df = df.values.tolist()
-#     df = pd.DataFrame(df, columns=["x", "y"])
-#     df.plot.scatter(x="x", y="y", color='red')
-#     plt.show()
 
 def visualize_data(path_dataset: str, path_groundtruth: str) -> None:
     X = pd.read_csv(path_dataset, header=None)

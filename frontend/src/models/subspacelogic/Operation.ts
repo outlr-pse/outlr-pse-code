@@ -8,8 +8,8 @@ import {Outlier} from "../results/Outlier";
  */
 export class Operation implements SubspaceLogic {
 
-    private readonly operator: Operator
-    private readonly operands: SubspaceLogic[]
+    readonly operator: Operator
+    readonly operands: SubspaceLogic[]
 
     /**
      * Create a new Operation

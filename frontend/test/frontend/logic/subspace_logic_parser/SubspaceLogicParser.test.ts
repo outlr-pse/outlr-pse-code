@@ -75,7 +75,7 @@ describe("SubspaceLogicParser", () => {
     it("Test subspace logic with multiple operands", () => {
         let input = "[0, 1] and [1, 43] or [2, 32, 0] or [3] and [4]"
         let logic = parseSubspaceLogic(input)
-        console.log(logic?.serialize())
+        // console.log(logic?.serialize())
         expectOperation(
             logic,
             new Operation(Operator.AND, [
@@ -97,7 +97,7 @@ describe("SubspaceLogicParser", () => {
     it("Test subspace logic with multiple operands in bad format", () => {
         let input = "[0,1]and[1,     43  ]or[   2   ,32,0  ]or     [3  ]  and[ 4] "
         let logic = parseSubspaceLogic(input)
-        console.log(logic?.serialize())
+        // console.log(logic?.serialize())
         expectOperation(
             logic,
             new Operation(Operator.AND, [

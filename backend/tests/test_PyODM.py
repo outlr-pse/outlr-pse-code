@@ -51,7 +51,7 @@ class TestPyODM(unittest.TestCase):
 
     def test_working_knn(self):
         self.knn_y_train = (self.knn.run_odm(self.X_train_df, {}))
-        print(np.sum(self.knn_y_train == self.y_train) / 200)
+        # print(np.sum(self.knn_y_train == self.y_train) / 200)
         result = [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,

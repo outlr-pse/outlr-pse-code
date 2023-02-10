@@ -89,18 +89,15 @@ export default defineComponent({
   },
   methods: {
     async fetchExperiments() {
-      console.log("fetching experiments")
       this.data = []
       this.experiments = []
       let response = await requestAllExperiments();
       if (response.error) {
         return
       }
-      console.log(response.data)
       for (let experiment of response.data) {
         this.experiments.push(Experiment.fromJSON(experiment))
       }
-      console.log(this.experiments)
       for (let experiment of this.experiments) {
         let hyperParamString = ""
         for (let param of experiment.odm.hyperParameters) {

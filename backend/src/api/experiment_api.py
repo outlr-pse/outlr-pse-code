@@ -132,8 +132,8 @@ async def create() -> (Response, int):
     the request. Inserts the experiment in the database and runs it.
     """
     exp_json = request.json
-    user_id = 1
-    exp_json['user_id'] = get_jwt_identity()
+    user_id = get_jwt_identity()
+    exp_json['user_id'] = user_id
 
     if not path_exists(data_path(user_id, "dataset")):
         return error.no_dataset, error.no_dataset["status"]

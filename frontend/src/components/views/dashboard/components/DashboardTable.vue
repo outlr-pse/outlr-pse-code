@@ -72,6 +72,7 @@ export default defineComponent({
     }
   },
   async mounted() {
+
     let headerShown = [
       this.$t('message.dashboard.name'),
       this.$t('message.dashboard.dataset'),

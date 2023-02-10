@@ -16,7 +16,7 @@ secret_key = secret
 [database]
 url = postgresql://postgres:123@localhost:5432/outlr
 ```
-Afterwards start the PostgresSQL server, and run init.py in the backend.
+Afterwards start the PostgresSQL server, and create a database outlr, and run init.py in the backend.
 Finally, you can run npm run dev in the pse-implementation/frontend directory.
 
 # How to deploy

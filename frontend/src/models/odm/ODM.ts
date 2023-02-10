@@ -58,7 +58,9 @@ export class ODM implements JSONSerializable {
         this.name = json.name.split('.')[1];
         if (valuesJson) {
             for (let param of json.hyper_parameters) {
-                this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+                if(valuesJson[param.name] !== undefined){
+                    this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+                }
             }
         }
     }

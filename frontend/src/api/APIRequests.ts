@@ -1,7 +1,6 @@
 import axios, {AxiosError} from 'axios'
 import {authHeader} from "./DataRetrievalService";
 import {errorOther} from "./ErrorOther";
-import {MockStorage} from "./MockStorage";
 import {ODM} from "../models/odm/ODM";
 import {Experiment} from "../models/experiment/Experiment";
 

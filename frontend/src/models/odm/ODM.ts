@@ -20,9 +20,11 @@ export class ODM implements JSONSerializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
-        let hyperParametersJSON: { [key: number]: string } = {};
+        let hyperParametersJSON: { [name: string]: string } = {};
         for (let param of this.hyperParameters) {
-            hyperParametersJSON[param.id] = param.value;
+            if(param.value !== "") {
+                hyperParametersJSON[param.name] = param.value;
+            }
         }
         return {
             id: this.id,

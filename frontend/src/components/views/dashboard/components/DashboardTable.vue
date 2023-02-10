@@ -42,7 +42,8 @@ export default defineComponent({
       filteredData: [] as [number, string[]][],
       experiments: [] as Experiment[],
       shownParams: [] as Hyperparameter[],
-      headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6']
+      headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
+      intervalID: undefined as any
     }
   },
   props: {
@@ -90,12 +91,13 @@ export default defineComponent({
       [headerShown[5], DashboardSortColumn.ACCURACY]
     ]
 
-    await this.fetchExperiments();
-    console.log(this.experiments)
-    setInterval(this.fetchExperiments, 5000);
+    await this.fetchExperiments()
+    this.intervalID = setInterval(this.fetchExperiments, 3000);
 
   },
-
+  beforeUnmount() {
+    clearInterval(this.intervalID);
+  },
   methods: {
     async fetchExperiments() {
       console.log("fetching experiments")
@@ -134,7 +136,7 @@ export default defineComponent({
               experiment.odm.name,
               hyperParamString,
               experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-              experiment.experimentResult?.accuracy + "%",
+              experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy + "%" : "No GT",
             ]])
         }
       }

@@ -9,7 +9,7 @@ import {Experiment} from "../models/experiment/Experiment";
 export const axiosClient = axios.create({
     baseURL: 'http://127.0.0.1:1337/api'
 });
-export const storage = new MockStorage()
+export const storage = localStorage;
 
 export async function sendLogout(): Promise<any> {
     /**
@@ -169,7 +169,8 @@ export async function sendExperiment(experiment: Experiment): Promise<any> {
         await axiosClient.post('/experiment/upload-files', formData,
             {headers: authHeader()})
 
-        return await axiosClient.post('/experiment/create', experiment.toJSON(),
+
+        return await axiosClient.post('/experiment/create',experiment.toJSON(),
             {headers: authHeader()})
     } catch (error) {
         if (axios.isAxiosError(error)) {

@@ -85,7 +85,7 @@ export default defineComponent({
 
 .card {
   position: absolute;
-  top: 70%;
+  top: 80%;
   left: 65%;
   right: 0;
   width: 10vw;

@@ -15,7 +15,8 @@
         <h3 style="font-size: 27px"> Upload Files</h3>
         <!--         <div style="width: 150px;  height: 2px;  background-color: var(&#45;&#45;color-lines);  margin: 0 7px; text-align: center"></div>-->
         <UploadFileField :input-name="$t('message.experimentCreate.dataset')" @file-uploaded="setDataset"/>
-        <UploadFileField style="margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')" @file-uploaded="setGroundtruth"/>
+        <UploadFileField style="margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')"
+                         @file-uploaded="setGroundtruth"/>
       </Card>
       <Button :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
               :size="[250,60]" :text-size="[22,600]" @buttonClick="createExperiment"/>
@@ -107,12 +108,12 @@ export default defineComponent({
           return
         }
       }
-      if(this.dataset === null){
-         this.buttonType = ButtonType.DISABLED
+      if (this.dataset === null) {
+        this.buttonType = ButtonType.DISABLED
         console.log("no dataset")
-         return
+        return
       }
-      if(this.subspaceLogic === null) {
+      if (this.subspaceLogic === null) {
         this.buttonType = ButtonType.DISABLED
         console.log("no subspace logic")
         return
@@ -128,12 +129,12 @@ export default defineComponent({
           this.selectedODM as ODM,
           this.subspaceLogic as SubspaceLogic
       )
-      let response = await sendExperiment(experiment)
-      if (response.status === 200) {
-        this.$router.push('/dashboard')
-      } else {
-        console.log(response)
-      }
+
+      sendExperiment(experiment).then()
+      console.log("experiment created")
+      this.$router.push('/dashboard')
+
+
     }
   },
   async mounted() {

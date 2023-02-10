@@ -74,7 +74,7 @@ export default defineComponent({
       }
     });
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener("click", (event) => {
       if (!this.$el.contains(event.target)) {
         this.isOpen = false;

@@ -1,4 +1,4 @@
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
@@ -43,12 +43,12 @@ setup_db:
 
 
 frontend-build:
-    stage: build
-    image: node:latest
-    script:
-        - cd frontend
-        - npm install
-        - npm run build
+  stage: build
+  image: node:latest
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
 
 backend-test:
   image: python:3.10-bullseye
@@ -60,11 +60,11 @@ backend-test:
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
     PYTHONPATH: "/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/:/builds/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/backend/src/"
-  # Pip's cache doesn't store the python packages
-  # https://pip.pypa.io/en/stable/reference/pip_install/#caching
-  #
-  # If you want to also cache the installed packages, you have to install
-  # them in a virtualenv and cache it as well.
+    # Pip's cache doesn't store the python packages
+    # https://pip.pypa.io/en/stable/reference/pip_install/#caching
+    #
+    # If you want to also cache the installed packages, you have to install
+    # them in a virtualenv and cache it as well.
     POSTGRES_DB: outlr
     POSTGRES_USER: postgres
     POSTGRES_PASSWORD: 12345678
@@ -77,17 +77,22 @@ backend-test:
       - .cache/pip
       - venv/
   before_script:
-      - python3 -V  # Print out python version for debugging
-      - echo $PYTHONPATH
-      - pip3 install virtualenv
-      - virtualenv venv
-      - source venv/bin/activate
-      - pip3 install requests
-      - pip3 install python-dotenv
-      - cd backend
-      - pip3 install -r requirements.txt
+    - python3 -V  # Print out python version for debugging
+    - echo $PYTHONPATH
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+    - pip3 install requests
+    - pip3 install python-dotenv
+    - pip3 install coverage
+    - cd backend
+    - pip3 install -r requirements.txt
   script:
-    - python3 -m unittest discover tests
+    - python3 coverage run -m unittest discover tests
+    - python3 coverage html
+  artifacts:
+    paths:
+      - htmlcov/
 
 frontend-test:
   stage: test
@@ -129,7 +134,7 @@ frontend-test:
   dependencies:
     - backend-test
 
-lint-test:   # This job also runs in the test stage.
+lint-test: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
   image: python:3.10-alpine
   script:

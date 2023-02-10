@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <Card class="container-card">
+    <Card class="container-card" @keyup.enter="tryLoginSubmit">
       <div class="content">
 
         <div class="header">

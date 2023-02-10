@@ -119,7 +119,7 @@ export default defineComponent({
       }
       this.buttonType = ButtonType.ACTIVE
     },
-    createExperiment() {
+    async createExperiment() {
       let experiment = new Experiment(
           this.experimentName,
           this.dataset?.name as string,
@@ -128,7 +128,12 @@ export default defineComponent({
           this.selectedODM as ODM,
           this.subspaceLogic as SubspaceLogic
       )
-      sendExperiment(experiment)
+      let response = await sendExperiment(experiment)
+      if (response.status === 200) {
+        //this.$router.push('/dashboard')
+      } else {
+        console.log(response)
+      }
     }
   },
   async mounted() {

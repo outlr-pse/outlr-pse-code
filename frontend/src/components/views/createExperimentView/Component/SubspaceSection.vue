@@ -74,7 +74,7 @@ export default defineComponent({
 }
 
 .icon {
-  color: var(--color-text);
+  color: var(--color-main);
   width: auto;
   font-size: 18px;
 }

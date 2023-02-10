@@ -8,8 +8,6 @@
            align-self: flex-end; margin-bottom: 10px; font-size: 20px">border_color</i>
         </div>
         <div style="width: 30vw;  height: 2px;  background-color: var(--color-lines); margin-bottom: 35px"></div>
-
-        <!--        <div style="height: 50px">{{ experimentName }}</div> &lt;!&ndash; adfasdfassssssssssssssssssssssssssssssssssssssss   TODO &ndash;&gt;-->
       </div>
       <Card style="width: 30vw; display: flex; flex-direction: column; margin-bottom: 0vh">
         <h3 style="font-size: 27px"> Upload Files</h3>

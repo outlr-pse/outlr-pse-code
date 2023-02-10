@@ -42,7 +42,7 @@ const routes = [
     path: '/create',
     name: "create-experiment",
     component: () => import('../components/views/createExperimentView/CreateExperimentView.vue'),
-    meta: { requiresAuth: false }
+    meta: { requiresAuth: true }
   },
   {
     path:'/:pathMatch(.*)*',

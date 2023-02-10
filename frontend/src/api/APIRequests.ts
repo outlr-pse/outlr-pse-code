@@ -165,7 +165,7 @@ export async function sendExperiment(experiment: Experiment): Promise<any> {
     try {
         const formData = new FormData()
         formData.append('dataset', (experiment.dataset as Blob))
-        formData.append('groundTruth', (experiment.groundTruth as Blob))
+        formData.append('ground_truth', (experiment.groundTruth as Blob))
         await axiosClient.post('/experiment/upload-files', formData,
             {headers: authHeader()})
 

@@ -4,7 +4,7 @@
       <div style="display: inline-grid; grid-template-rows: auto auto;">
         <div> {{ text }}</div>
         <div>
-          <Icon class="material-icons md-dark icon" style="font-size: 30px; font-weight: 100; color: var(--color-stroke)" > {{startIcon}} </Icon>
+          <span class="material-icons md-dark icon" style="font-size: 30px; font-weight: 100; color: var(--color-stroke)" > {{startIcon}} </span>
         </div>
     </div>
     </div>

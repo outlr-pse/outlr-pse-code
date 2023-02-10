@@ -303,7 +303,7 @@ class Experiment(Base):
             'odm': self.odm.to_json(),
             'odm_params': self.param_values,
             'error_json': self.error_json,
-            'experiment_result': self.experiment_result.to_json(with_outliers),
+            'experiment_result': self.experiment_result.to_json(with_outliers) if self.experiment_result else None
         }
         if with_outliers:
             exp['subspace_logic'] = self.subspace_logic.to_client_json()

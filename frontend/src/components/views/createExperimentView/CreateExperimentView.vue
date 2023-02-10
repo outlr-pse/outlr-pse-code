@@ -11,7 +11,7 @@
 
         <!--        <div style="height: 50px">{{ experimentName }}</div> &lt;!&ndash; adfasdfassssssssssssssssssssssssssssssssssssssss   TODO &ndash;&gt;-->
       </div>
-      <Card style="width: 30vw; display: flex; flex-direction: column; ">
+      <Card style="width: 30vw; display: flex; flex-direction: column; margin-bottom: 25vh">
         <h3 style="font-size: 27px"> Upload Files</h3>
         <!--         <div style="width: 150px;  height: 2px;  background-color: var(&#45;&#45;color-lines);  margin: 0 7px; text-align: center"></div>-->
         <UploadFileField :input-name="$t('message.experimentCreate.dataset')" @file-uploaded="setDataset"/>
@@ -130,7 +130,7 @@ export default defineComponent({
       )
       let response = await sendExperiment(experiment)
       if (response.status === 200) {
-        //this.$router.push('/dashboard')
+        this.$router.push('/dashboard')
       } else {
         console.log(response)
       }

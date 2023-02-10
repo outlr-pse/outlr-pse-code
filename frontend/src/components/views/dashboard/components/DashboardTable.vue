@@ -72,7 +72,6 @@ export default defineComponent({
     }
   },
   async mounted() {
-
     let headerShown = [
       this.$t('message.dashboard.name'),
       this.$t('message.dashboard.dataset'),
@@ -89,47 +88,57 @@ export default defineComponent({
       [headerShown[4], DashboardSortColumn.DATE],
       [headerShown[5], DashboardSortColumn.ACCURACY]
     ]
-    let response = await requestAllExperiments();
-    if(response.error !== null) {
-      return
-    }
-    for (let experiment of response.data) {
-      this.experiments.push(Experiment.fromJSON(experiment))
-    }
-    for (let experiment of this.experiments) {
-      let hyperParamString = ""
-      for (let param of experiment.odm.hyperParameters) {
-        hyperParamString += param.name + ": " + param.value + ", "
-      }
-      if (experiment.running) {
-        this.data.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            hyperParamString,
-            "Running . . .",
-            "",
-          ]
-        ])
-      } else {
-        this.data.push([
-          experiment.id ? experiment.id : 0,
-          [
-            experiment.name,
-            experiment.datasetName,
-            experiment.odm.name,
-            hyperParamString,
-            experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-            experiment.experimentResult?.accuracy + "%",
-          ]])
-      }
-    }
-    this.filteredData = this.data
+
+    await this.fetchExperiments();
+    console.log(this.experiments)
+    setInterval(this.fetchExperiments, 5000);
+
   },
 
   methods: {
+    async fetchExperiments() {
+      console.log("fetching experiments")
+      this.data = []
+      this.experiments = []
+      let response = await requestAllExperiments();
+      if (response.error) {
+        return
+      }
+      for (let experiment of response.data) {
+        this.experiments.push(Experiment.fromJSON(experiment))
+      }
+      for (let experiment of this.experiments) {
+        let hyperParamString = ""
+        for (let param of experiment.odm.hyperParameters) {
+          hyperParamString += param.name + ": " + param.value + ", "
+        }
+        if (experiment.running) {
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              hyperParamString,
+              "Running . . .",
+              "",
+            ]
+          ])
+        } else {
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              hyperParamString,
+              experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
+              experiment.experimentResult?.accuracy + "%",
+            ]])
+        }
+      }
+      this.filteredData = this.data
+    },
     headerClick(header: DashboardSortColumn) {
       this.tableSort(header)
     },

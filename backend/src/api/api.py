@@ -18,7 +18,7 @@ from api import error
 
 app = Flask(__name__)
 # allows requests from anywhere
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(experiment_api, url_prefix='/api/experiment')
 app.register_blueprint(user_management_api, url_prefix='/api/user')
 app.register_blueprint(odm_api, url_prefix='/api/odm')

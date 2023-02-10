@@ -169,7 +169,7 @@ export async function sendExperiment(experiment: Experiment): Promise<any> {
         await axiosClient.post('/experiment/upload-files', formData,
             {headers: authHeader()})
 
-        return await axiosClient.post('/experiment/create', {experiment: experiment.toJSON()},
+        return await axiosClient.post('/experiment/create', experiment.toJSON(),
             {headers: authHeader()})
     } catch (error) {
         if (axios.isAxiosError(error)) {

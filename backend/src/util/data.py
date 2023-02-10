@@ -30,7 +30,7 @@ def csv_to_list(csv: str) -> list:
     """
     df = pd.read_csv(csv, header=None)
 
-    return df.values.tolist()[0]
+    return df[0].tolist()
 
 
 def write_list_to_csv(data: list[int], path: Optional[str] = None) -> BytesIO | None:

@@ -139,7 +139,7 @@ export default defineComponent({
               experiment.odm.name,
               hyperParamString,
               experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-              experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy + "%" : "No GT",
+              experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy + "%" : "No GT",
             ]])
         }
       }

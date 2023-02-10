@@ -28,6 +28,11 @@
     line-height: normal;
 }
 
+/* GLOBAL global styles */
+* {
+  font-family: "Poppins", Calibri, sans-serif;
+  letter-spacing: 0.02em;
+}
 
 body {
     margin: 0;
@@ -75,7 +80,7 @@ p {
   --color-stroke: var(--palette-grey-1);
   --color-default-text-textbox: var(--palette-grey-1);
   --color-textboxfill: var(--palette-grey-9);
-  --color-topbar: rgba(47, 41, 58, 0.79); /* vlt zu palette ändern */
+  --color-topbar: #2f293a; /* vlt zu palette ändern */
   --color-lines: var(--palette-grey-3);
   --color-subheader: var(--palette-grey-1);
   --color-input-textbox: var(--palette-grey--1);

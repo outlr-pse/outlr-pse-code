@@ -60,17 +60,17 @@ import Card from "../../../basic/Card.vue";
 import Button from "../../../basic/button/Button.vue";
 import {ButtonType} from "../../../basic/button/ButtonType";
 import Dashboard from "../../dashboard/Dashboard.vue";
+import {downloadExperiment} from "../../../../api/APIRequests";
 
 export default defineComponent({
   name: "ExperimentSummaryCard",
   components: {Dashboard, Button, Card},
   methods: {
     download() {
-      // TODO: delete this:
-      window.open('http://localhost:1337/api/experiment/download-result/' + this.experiment.id);
-      // TODO: and use this instead:
-      // only works if backend and frontend are hostet on the same port
-      // this.$router.push('/api/experiment/download-result/' + this.experiment.id);
+      if (this.experiment.id == null) {
+        return;
+      }
+      downloadExperiment(this.experiment);
     },
   },
   computed: {

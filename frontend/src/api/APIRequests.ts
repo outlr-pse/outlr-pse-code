@@ -200,6 +200,34 @@ export async function requestExperimentResult(experimentId:number) : Promise<any
     }
 }
 
+export async function downloadExperiment(experiment: Experiment) : Promise<any>{
+    /**
+     * Sends request to back-end to respond with the result of the experiment with id = experimentId.
+     */
+    axiosClient.get(
+        '/experiment/download-result/' + experiment.id,
+        {
+            responseType: 'blob', // important
+            headers: authHeader()
+    }).then((response) => {
+        // create file link in browser's memory
+        const href = URL.createObjectURL(response.data);
+
+        // create "a" HTML element with href to file & click
+        const link = document.createElement('a');
+        link.href = href;
+        console.log(response);
+        const expName = experiment.name;
+        link.setAttribute('download', expName + '-result.csv'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+
+        // clean up "a" element & remove ObjectURL
+        document.body.removeChild(link);
+        URL.revokeObjectURL(href);
+    });
+}
+
 export async function requestODMNames() : Promise<any>{
     /**
      * Sends request to back-end to respond with all ODMs

@@ -53,7 +53,7 @@ def write_list_to_csv(data: list[int], path: Optional[str] = None) -> BytesIO | 
 
 
 def generate_data_as_csv(contamination: float, n_samples: int, n_features: int,
-                             path_dataset: str, path_groundtruth: str) -> None:
+                         path_dataset: str, path_groundtruth: str) -> None:
     """Generates a dataset and a groundtruth file.
     Args:
         contamination: The percentage of outliers.
@@ -63,20 +63,20 @@ def generate_data_as_csv(contamination: float, n_samples: int, n_features: int,
         path_groundtruth: The path to the groundtruth file.
     """
     n_train = n_samples  # number of training points
-    X_train, y_train = generate_data(n_train=n_train, n_features=n_features,
-                                                     contamination=contamination, train_only=True)
-    X_train = pd.DataFrame(X_train)
-    X_train.to_csv(path_dataset, index=False, header=False)
+    x_train, y_train = generate_data(n_train=n_train, n_features=n_features,
+                                     contamination=contamination, train_only=True)
+    x_train = pd.DataFrame(x_train)
+    x_train.to_csv(path_dataset, index=False, header=False)
     y_train = pd.DataFrame(y_train)
     y_train.to_csv(path_groundtruth, index=False, header=False)
 
 
 def visualize_data(path_dataset: str, path_groundtruth: str) -> None:
-    X = pd.read_csv(path_dataset, header=None)
+    x = pd.read_csv(path_dataset, header=None)
     y = pd.read_csv(path_groundtruth, header=None)
 
-    inliers = X[y[0] == 0]
-    outliers = X[y[0] == 1]
+    inliers = x[y[0] == 0]
+    outliers = x[y[0] == 1]
 
     plt.scatter(inliers[0], inliers[1], color='blue', label='Inliers')
     plt.scatter(outliers[0], outliers[1], color='red', label='Outliers')

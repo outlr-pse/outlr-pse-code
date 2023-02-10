@@ -98,7 +98,7 @@ def count() -> (Response, int):
 
 
 @experiment_api.route('/upload-files', methods=['POST'])
-# @jwt_required()
+@jwt_required()
 def upload_files() -> (Response, int):
     """
     Requires a jwt access token. Expects a dataset and optionally a ground truth file
@@ -108,7 +108,7 @@ def upload_files() -> (Response, int):
     if "dataset" not in request.files:
         return jsonify(error.no_dataset), error.no_dataset["status"]
 
-    user_id = 1
+    user_id = get_jwt_identity()
     if not os.path.exists(data_path(user_id)):
         os.makedirs(data_path(user_id))
 

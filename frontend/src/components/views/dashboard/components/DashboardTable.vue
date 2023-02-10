@@ -89,7 +89,6 @@ export default defineComponent({
   },
   methods: {
     async fetchExperiments() {
-      console.log("fetching experiments")
       this.data = []
       this.experiments = []
       let response = await requestAllExperiments();

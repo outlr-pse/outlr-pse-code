@@ -63,7 +63,7 @@ export default defineComponent({
     padding: 0.5em;
     border-radius: 7px;
     margin: 5px;
-
+    color: var(--color-main-white);
 }
 
 </style>

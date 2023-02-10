@@ -35,13 +35,13 @@ const routes = [
   {
     path: '/experiment',
     name: "create-experiment-fallback",
-    component: () => import('../components/views/CreateExperimentView.vue'),
+    component: () => import('../components/views/createExperimentView/CreateExperimentView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/create',
     name: "create-experiment",
-    component: () => import('../components/views/CreateExperimentView.vue'),
+    component: () => import('../components/views/createExperimentView/CreateExperimentView.vue'),
     meta: { requiresAuth: true }
   },
   {

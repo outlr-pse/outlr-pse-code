@@ -3,28 +3,29 @@
 @import './constants.css';
 
 :root {
-  font-family: "Poppins", Calibri, sans-serif;
-  letter-spacing: 0.02em;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: normal;
+    font-family: "Poppins", Calibri, sans-serif;
+    letter-spacing: 0.02em;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: normal;
 
-  color-scheme: light dark;
-  color: var(--color-text);
-  background-color: var(--color-background);
+    color-scheme: light dark;
+    color: var(--color-text);
+    background-color: var(--color-background);
 
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
 }
 
 /*vue.js global value*/
 #app {
-  text-align: center;
-  min-width: auto;
-  width: 100vw;
-  height: 100vh;
+    text-align: center;
+    min-width: auto;
+    width: 100vw;
+    height: 100vh;
+    line-height: normal;
 }
 
 /* GLOBAL global styles */
@@ -34,13 +35,41 @@
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+    margin: 0;
+    display: flex;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
 }
 
+h1 {
+    margin: 10px
+}
+
+h2 {
+    margin: 10px;
+    font-weight: 600;
+}
+
+h3 {
+    margin: 10px;
+    font-weight: 600;
+}
+
+h4 {
+    margin: 10px;
+    font-weight: 600;
+}
+
+h5 {
+    margin: 10px;
+    font-weight: 600;
+}
+
+
+p {
+    margin: 10px;
+}
 
 /* semantic color variables for this project */
 :root {
@@ -51,7 +80,7 @@ body {
   --color-stroke: var(--palette-grey-1);
   --color-default-text-textbox: var(--palette-grey-1);
   --color-textboxfill: var(--palette-grey-9);
-  --color-topbar: rgba(47, 41, 58, 0.79); /* vlt zu palette ändern */
+  --color-topbar: #2f293a; /* vlt zu palette ändern */
   --color-lines: var(--palette-grey-3);
   --color-subheader: var(--palette-grey-1);
   --color-input-textbox: var(--palette-grey--1);
@@ -65,6 +94,7 @@ body {
   --color-table-header: #514478;
   --color-running: #31de84;
   --color-auth-form-background: #2E2E2E;
+  --color-input-optional: rgb(19, 104, 211);
 }
 
 /* add colors for light mode here */
@@ -74,35 +104,45 @@ body {
 
 /* material icon css rules */
 .material-icons {
-  font-family: 'Material Icons';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;  /* Preferred icon size */
-  display: inline-block;
-  line-height: 1;
-  text-transform: none;
-  letter-spacing: normal;
-  word-wrap: normal;
-  white-space: nowrap;
-  direction: ltr;
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px; /* Preferred icon size */
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
 
-  /* Support for all WebKit browsers. */
-  -webkit-font-smoothing: antialiased;
-  /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
 
-  /* Support for Firefox. */
-  -moz-osx-font-smoothing: grayscale;
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
 
-  /* Support for IE. */
-  font-feature-settings: 'liga';
+    /* Support for IE. */
+    font-feature-settings: 'liga';
 }
 
 /* Rules for using icons as black on a light background. */
-.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+.material-icons.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+}
+
+.material-icons.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+}
 
 /* Rules for using icons as white on a dark background. */
-.material-icons.md-light { color: rgba(255, 255, 255, 1); }
-.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+.material-icons.md-light {
+    color: rgba(255, 255, 255, 1);
+}
+
+.material-icons.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+}
 

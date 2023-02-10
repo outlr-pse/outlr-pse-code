@@ -37,11 +37,10 @@ class CoroutineExperimentScheduler(ExperimentScheduler):
             with db.session.no_autoflush:
                 # The creation of outliers (which are added to subspaces) must be done without flushing the session
                 ExperimentScheduler.create_outlier_objects(experiment_result, subspaces)
-            ExperimentScheduler.write_accuracy(experiment_result, experiment.ground_truth)
+                ExperimentScheduler.write_accuracy(experiment_result, experiment.ground_truth)
+                experiment_result.execution_time = datetime.now() - experiment_result.execution_date
+                experiment.experiment_result = experiment_result
 
-            experiment_result.execution_time = datetime.now() - experiment_result.execution_date
-
-            experiment.experiment_result = experiment_result
         except ExecutionError as e:
             ExperimentScheduler.fail_execution(experiment, e)
         except Exception as e:

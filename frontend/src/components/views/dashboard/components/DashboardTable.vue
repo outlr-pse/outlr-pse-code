@@ -90,7 +90,7 @@ export default defineComponent({
       [headerShown[5], DashboardSortColumn.ACCURACY]
     ]
     let response = await requestAllExperiments();
-    if(response.error !== null) {
+    if(response.error !== undefined) {
       return
     }
     for (let experiment of response.data) {

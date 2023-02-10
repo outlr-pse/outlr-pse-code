@@ -1,7 +1,10 @@
 <template>
   <Card>
     <div class="summary">
-      {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
+      <h3 class="header">
+        {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
+      </h3>
+      <Button text="Download" :buttonType="ButtonType.CONTRAST" :size="[120,40]" @buttonClick="download"/>
     </div>
     <div style="border: 1px solid var(--color-stroke);"></div>
     <div class="content">
@@ -54,18 +57,26 @@
 import {defineComponent} from "vue";
 import {Experiment} from "../../../../models/experiment/Experiment";
 import Card from "../../../basic/Card.vue";
-import {ODM} from "../../../../models/odm/ODM";
-import {Subspace} from "../../../../models/results/Subspace";
-import {Literal} from "../../../../models/subspacelogic/Literal";
-import {Operation} from "../../../../models/subspacelogic/Operation";
-import {Operator} from "../../../../models/subspacelogic/Operator";
-import {Outlier} from "../../../../models/results/Outlier";
-import {ExperimentResult} from "../../../../models/results/ExperimentResult";
+import Button from "../../../basic/button/Button.vue";
+import {ButtonType} from "../../../basic/button/ButtonType";
+import Dashboard from "../../dashboard/Dashboard.vue";
 
 export default defineComponent({
   name: "ExperimentSummaryCard",
-  components: {Card},
+  components: {Dashboard, Button, Card},
+  methods: {
+    download() {
+      // TODO: delete this:
+      window.open('http://localhost:1337/api/experiment/download-result/' + this.experiment.id);
+      // TODO: and use this instead:
+      // only works if backend and frontend are hostet on the same port
+      // this.$router.push('/api/experiment/download-result/' + this.experiment.id);
+    },
+  },
   computed: {
+    ButtonType() {
+      return ButtonType
+    },
     time() {
       let time = this.experiment.experimentResult?.executionTime;
       if (time == null) {
@@ -101,7 +112,10 @@ export default defineComponent({
   font-size: 3.5vh;
   font-weight: 500;
   text-align: left;
-  padding: 2vh;
+  padding-left: 1vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .row {
@@ -120,6 +134,11 @@ export default defineComponent({
   height: max-content;
   width: max-content;
   padding: 2.5vh 2vw 1vh;
+}
+
+.header {
+  margin: 15px;
+  width: 50%;
 }
 
 </style>

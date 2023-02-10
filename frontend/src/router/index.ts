@@ -29,7 +29,7 @@ const routes = [
   {
     path: '/experiment/:expId',
     name: "experiment-result",
-    component: () => import('../components/views/ExperimentResultView.vue'),
+    component: () => import('../components/views/experimentresult/ExperimentResultView.vue'),
     meta: { requiresAuth: true }
   },
   {
@@ -48,7 +48,7 @@ const routes = [
     path:'/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../components/views/PageNotFound.vue'),
-  }
+  },
 ]
 const router = createRouter({
   history: createWebHistory(),

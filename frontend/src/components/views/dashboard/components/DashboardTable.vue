@@ -14,6 +14,9 @@
             <td v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
               {{ cell }}
             </td>
+            <td v-else-if="row[1][4] === 'Failed :(' " v-for="cell in row[1]" class="failed">
+              {{ cell }}
+            </td>
             <td v-for="cell in row[1]" v-else class="notRunning">
               {{ cell }}
             </td>
@@ -103,7 +106,19 @@ export default defineComponent({
         for (let param of experiment.odm.hyperParameters) {
           hyperParamString += param.name + ": " + param.value + ", "
         }
-        if (experiment.running) {
+        if (experiment.failed) {
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              hyperParamString,
+              "Failed :(",
+              "",
+            ]
+          ])
+        } else if (experiment.running) {
           this.data.push([
             experiment.id ? experiment.id : 0,
             [
@@ -275,6 +290,9 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 
 .running {
   color: var(--color-running);
+}
+.failed {
+  color: var(--color-close-button);
 }
 
 .running:hover {

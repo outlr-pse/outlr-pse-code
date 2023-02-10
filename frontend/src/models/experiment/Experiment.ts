@@ -19,6 +19,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     subspaceLogic: SubspaceLogic | null;
     experimentResult: ExperimentResult | null;
     running: boolean = false;
+    failed: boolean = false;
 
     constructor(name: string,
                 datasetName: string,
@@ -77,6 +78,9 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         let subspaceMap = new Map<number, Subspace>();
         let outlierMap = new Map<number, Outlier>();
 
+        if(json.error_json){
+            this.failed = true;
+        }
         if (json.subspace_logic != null) {
             this.subspaceLogic = SubspaceLogic.fromJSONObject(json.subspace_logic, subspaceMap, outlierMap);
         } else {

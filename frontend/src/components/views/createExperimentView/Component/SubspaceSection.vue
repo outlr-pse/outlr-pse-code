@@ -69,7 +69,7 @@ export default defineComponent({
   font-family: Poppins, serif;
   resize: none;
   margin: 15px;
-
+  color: var(--color-main-white)
 }
 
 .icon {

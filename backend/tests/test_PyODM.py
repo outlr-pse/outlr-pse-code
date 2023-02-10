@@ -36,6 +36,7 @@ class TestPyODM(unittest.TestCase):
         self.assertListEqual(result, list(self.abod_y_train))
 
     @unittest.skip("Skipping ABOD2")
+
     def test_working_abod2(self):
         self.abod2_y_train = self.abod.run_odm(self.X_train_df,
                                                {'contamination': 0.1, 'n_neighbors': 3, 'method': 'default'})
@@ -58,5 +59,5 @@ class TestPyODM(unittest.TestCase):
                   0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0,
                   0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
+        print(len(result))
         self.assertListEqual(result, list(self.knn_y_train))

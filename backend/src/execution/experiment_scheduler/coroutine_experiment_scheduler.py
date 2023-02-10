@@ -21,29 +21,44 @@ class CoroutineExperimentScheduler(ExperimentScheduler):
     async def schedule(self, experiment: Experiment) -> None:
         experiment_result = ExperimentResult(execution_date=datetime.now())
         subspaces = experiment.subspaces
-        experiment.subspaces = []  # Make sure a session flush doesn't add partially initialized outliers to the db
-        try:
-            subspace_results = await asyncio.gather(*[
-                self.odm_scheduler.schedule(
-                    experiment.odm,
-                    experiment.param_values,
-                    ExperimentScheduler.get_subspace(experiment.dataset.dataset, subspace.columns)
-                ) for subspace in subspaces
-            ])
-            for index, result in enumerate(subspace_results):
-                subspaces[index].outlier_array = result
+        with db.session.no_autoflush:
+            # Prevent session from flushing before the experiment is finished
+            # TODO The session could still be flushed when other api requests are made, find a better solution
+            experiment.subspaces = []
+            try:
+                subspace_results = await asyncio.gather(*[
+                    self.odm_scheduler.schedule(
+                        experiment.odm,
+                        experiment.param_values,
+                        ExperimentScheduler.get_subspace(experiment.dataset.dataset, subspace.columns)
+                    ) for subspace in subspaces
+                ])
+                for index, result in enumerate(subspace_results):
+                    subspaces[index].outlier_array = result
 
-            ExperimentScheduler.write_result_space(experiment_result, experiment.subspace_logic)
-            with db.session.no_autoflush:
-                # The creation of outliers (which are added to subspaces) must be done without flushing the session
+                ExperimentScheduler.write_result_space(experiment_result, experiment.subspace_logic)
                 ExperimentScheduler.create_outlier_objects(experiment_result, subspaces)
                 ExperimentScheduler.write_accuracy(experiment_result, experiment.ground_truth)
                 experiment_result.execution_time = datetime.now() - experiment_result.execution_date
                 experiment.experiment_result = experiment_result
 
-        except ExecutionError as e:
-            ExperimentScheduler.fail_execution(experiment, e)
-        except Exception as e:
-            ExperimentScheduler.fail_execution(experiment, ExecutionError(str(e)))
-        finally:
-            experiment.subspaces = subspaces
+            except ExecutionError as e:
+                CoroutineExperimentScheduler.clean_up_db(experiment_result, subspaces)
+                ExperimentScheduler.fail_execution(experiment, e)
+            except Exception as e:
+                CoroutineExperimentScheduler.clean_up_db(experiment_result, subspaces)
+                ExperimentScheduler.fail_execution(experiment, ExecutionError(str(e)))
+            finally:
+                experiment.subspaces = subspaces
+
+    @staticmethod
+    def clean_up_db(experiment_result: ExperimentResult, subspaces: list[Subspace]) -> None:
+        """
+        Removes the outlier objects from the database
+        This is necessary because the outlier objects are not added to the session
+        """
+        with db.session.no_autoflush:
+            for subspace in subspaces:
+                subspace.experiment_result = None
+
+        db.session.delete(experiment_result)

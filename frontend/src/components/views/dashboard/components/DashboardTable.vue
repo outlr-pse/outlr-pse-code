@@ -11,14 +11,14 @@
         </template>
         <template #body>
           <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
-            <td v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
-              {{ cell }}
+            <td v-if="row[1][4][1] === 'Running . . .' " v-for="cell in row[1]" class="running">
+              {{ cell[1] }}
             </td>
-            <td v-else-if="row[1][4] === 'Failed :(' " v-for="cell in row[1]" class="failed">
-              {{ cell }}
+            <td v-else-if="row[1][4][1] === 'Failed :(' " v-for="cell in row[1]" class="failed">
+              {{ cell[1] }}
             </td>
             <td v-for="cell in row[1]" v-else class="notRunning">
-              {{ cell }}
+              {{ cell[1] }}
             </td>
           </tr>
         </template>
@@ -41,8 +41,8 @@ export default defineComponent({
   data() {
     return {
       headers: [] as [string, DashboardSortColumn][],
-      data: [] as [number, string[]][],
-      filteredData: [] as [number, string[]][],
+      data: [] as [number, [any, string][]][],
+      filteredData: [] as [number, [any, string][]][],
       experiments: [] as Experiment[],
       shownParams: [] as Hyperparameter[],
       headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
@@ -109,38 +109,69 @@ export default defineComponent({
         if (experiment.failed) {
           this.data.push([
             experiment.id ? experiment.id : 0,
-            [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              "Failed :(",
-              "",
+            [[experiment.name,experiment.name],
+              [experiment.datasetName,experiment.datasetName],
+              [experiment.odm.name,experiment.odm.name],
+              [hyperParamString,hyperParamString],
+              [0, "Failed :("],
+              [0, ""],
             ]
           ])
         } else if (experiment.running) {
           this.data.push([
             experiment.id ? experiment.id : 0,
             [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              "Running . . .",
-              "",
+              [experiment.name,experiment.name],
+              [experiment.datasetName,experiment.datasetName],
+              [experiment.odm.name,experiment.odm.name],
+              [hyperParamString,hyperParamString],
+              [ Number.POSITIVE_INFINITY, "Running . . ."],
+              [0, experiment.id ? experiment.id.toString() : ""],
             ]
           ])
         } else {
+          let nowDate = new Date()
+          let experimentDate = experiment.experimentResult?.executionDate
+          let dateString = ""
+          let timeDiff = 0
+          if(experimentDate) {
+            timeDiff = nowDate.getTime() - experimentDate.getTime()
+            if(timeDiff < 64800000 ) {
+              let days = Math.floor(timeDiff / 86400000)
+              let hours = Math.floor((timeDiff % 86400000) / 3600000)
+              let minutes = Math.floor(((timeDiff % 86400000) % 3600000) / 60000)
+              let seconds = Math.floor((((timeDiff % 86400000) % 3600000) % 60000) / 1000)
+              if(days >  0) {
+                dateString = days + "d ago"
+              } else if (hours > 0) {
+                dateString = hours + "h ago"
+              } else if (minutes > 0) {
+                dateString = minutes + "m ago"
+              } else if (seconds > 0) {
+                dateString = seconds + "s ago"
+              } else {
+                dateString = "Just now"
+              }
+            } else {
+              dateString = experimentDate.toLocaleString()
+            }
+          }
+          let accuracy = 0
+          if(experiment.experimentResult){
+            accuracy =  experiment.experimentResult?.accuracy*100
+          }
+
           this.data.push([
             experiment.id ? experiment.id : 0,
             [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-              experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy*100 + "%" : "No GT",
-            ]])
+              [experiment.name,experiment.name],
+              [experiment.datasetName,experiment.datasetName],
+              [experiment.odm.name,experiment.odm.name],
+              [hyperParamString,hyperParamString],
+              [experimentDate?.getTime(), dateString],
+              [accuracy, accuracy != null ? accuracy + "%" : "No GT"],
+            ]
+          ])
         }
       }
       this.filteredData = this.data
@@ -160,7 +191,7 @@ export default defineComponent({
     tableSearch() {
       this.filteredData = this.data.filter((row) => {
         for (let i = 0; i < row[1].length - 2; i++) {
-          if (row[1][i].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
+          if (row[1][i][1].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
             return true
           }
         }
@@ -170,27 +201,27 @@ export default defineComponent({
     tableSort() {
       if (this.currentSorting === DashboardSortColumn.NAME) {
         this.filteredData.sort((a, b) => {
-          return a[1][0].localeCompare(b[1][0])
+          return a[1][0][0].localeCompare(b[1][0][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATASET) {
         this.filteredData.sort((a, b) => {
-          return a[1][1].localeCompare(b[1][1])
+          return a[1][1][0].localeCompare(b[1][1][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.ODM) {
         this.filteredData.sort((a, b) => {
-          return a[1][2].localeCompare(b[1][2])
+          return a[1][2][0].localeCompare(b[1][2][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.HYPERPARAMETER) {
         this.filteredData.sort((a, b) => {
-          return a[1][3].localeCompare(b[1][3])
+          return a[1][3][0].localeCompare(b[1][3][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATE) {
         this.filteredData.sort((a, b) => {
-          return a[1][4].localeCompare(b[1][4])
+          return a[1][4][0] > b[1][4][0] ? -1 : 1
         })
       } else if (this.currentSorting === DashboardSortColumn.ACCURACY) {
         this.filteredData.sort((a, b) => {
-          return a[1][5].localeCompare(b[1][5])
+          return a[1][5][0] > b[1][5][0] ? -1 : 1
         })
       }
     },

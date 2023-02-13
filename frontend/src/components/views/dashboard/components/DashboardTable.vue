@@ -136,7 +136,7 @@ export default defineComponent({
           let timeDiff = 0
           if(experimentDate) {
             timeDiff = nowDate.getTime() - experimentDate.getTime()
-            if(timeDiff < 64800000 ) {
+            if(timeDiff < 604800000 ) {
               let days = Math.floor(timeDiff / 86400000)
               let hours = Math.floor((timeDiff % 86400000) / 3600000)
               let minutes = Math.floor(((timeDiff % 86400000) % 3600000) / 60000)

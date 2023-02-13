@@ -1,19 +1,18 @@
 import {requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData, storage} from "./APIRequests";
 import store from "../store"
 import {errorOther} from "./ErrorOther";
-export async function initialValidityCheck() : Promise<void> {
+
+export async function initialValidityCheck(): Promise<void> {
     let responseJson = await requestTokenIdentity()
 
     if (responseJson != null && "username" in responseJson && "access_token" in responseJson) {
         await store.dispatch("auth/setAuthenticated", responseJson.username)
-    }
-
-    else {
+    } else {
         storage.clear()
     }
 }
 
-export function validateUsername(username : string) : boolean {
+export function validateUsername(username: string): boolean {
     /**
      * validate the login data and return either true, when username is valid, or false, when username is not valid
      *
@@ -31,7 +30,7 @@ export function validateUsername(username : string) : boolean {
     return usernameRegex.test(username)
 }
 
-export function validatePassword(password:string) {
+export function validatePassword(password: string) {
     /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
@@ -53,7 +52,7 @@ export function validatePassword(password:string) {
     return passwordRegex.test(password)
 }
 
-export async function login(username : string, password : string){
+export async function login(username: string, password: string) {
     /**
      * This method tries to log in using {@link sendLoginData}
      * the provided credentials to send a request to the API. It returns
@@ -64,7 +63,7 @@ export async function login(username : string, password : string){
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-     try {
+    try {
         const response = await sendLoginData(username, password)
         if (response.error != null) {
             return response
@@ -79,14 +78,13 @@ export async function login(username : string, password : string){
         storage.setItem('access_token', userJson.access_token)
         await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
         return response.data
-        }
-    catch (error) {
+    } catch (error) {
         return errorOther
     }
 }
 
 
-export async function register(username : string, password : string){
+export async function register(username: string, password: string) {
     /**
      * This method tries to register a user in using {@link sendRegisterData}
      * the provided credentials to send a request to the API. It returns
@@ -112,8 +110,7 @@ export async function register(username : string, password : string){
         storage.setItem('access_token', userJson.access_token)
         await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
         return response.data
-        }
-    catch (error) {
+    } catch (error) {
         return errorOther
     }
 }
@@ -129,19 +126,20 @@ export async function logout() {
      * @param password the password, the user provided
      */
     try {
-            const response = await sendLogout()
-            if (response.error != null) {
-                storage.removeItem('access_token')
-                await store.dispatch("auth/unsetAuthenticated")
-                return response
-            }
-
+        const response = await sendLogout()
+        if (response.error != null) {
             storage.removeItem('access_token')
             await store.dispatch("auth/unsetAuthenticated")
-            return response.data
-        } catch (error) {
-            storage.removeItem('access_token')
-            return errorOther
+            return response
         }
+
+        storage.removeItem('access_token')
+        await store.dispatch("auth/unsetAuthenticated")
+        return response.data
+    } catch (error) {
+        storage.removeItem('access_token')
+        await store.dispatch("auth/unsetAuthenticated")
+        return errorOther
+    }
 }
 

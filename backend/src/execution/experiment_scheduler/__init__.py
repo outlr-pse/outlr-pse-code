@@ -91,7 +91,6 @@ class ExperimentScheduler(ABC):
         correct_predictions = np.sum(ground_truth.astype(int) == experiment_result.result_space.outlier_array.astype(int))
         experiment_result.accuracy = correct_predictions / ground_truth.size
 
-
     @staticmethod
     def get_subspace(dataset: pd.DataFrame, columns: list[int]):
         """

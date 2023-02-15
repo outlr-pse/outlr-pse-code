@@ -11,7 +11,7 @@ export class Subspace implements JSONSerializable {
     outliers: Outlier[] | null;
     rocCurve: Record<any, any>[] | null;
 
-    constructor(id: number, name: string | null,
+    constructor(id: number | null, name: string | null,
                 columns: number[]) {
         this.id = id;
         this.name = name;

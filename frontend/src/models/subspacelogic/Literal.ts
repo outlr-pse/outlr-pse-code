@@ -7,7 +7,7 @@ import {Outlier} from "../results/Outlier";
  */
 export class Literal implements SubspaceLogic {
 
-    private readonly subspace: Subspace
+    readonly subspace: Subspace
 
     /**
      * Create a new Literal

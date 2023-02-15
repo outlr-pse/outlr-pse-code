@@ -1,13 +1,13 @@
-from typing import Type, Iterator
+from typing import Type, Iterator, Optional
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models.base import Base
-from models.experiment.experiment import Experiment
-from models.odm.hyper_parameter import HyperParameter
-from models.odm.odm import ODM
-from models.user.user import User
+from models.experiment import Experiment
+from models.odm import HyperParameter
+from models.odm import ODM
+from models.user import User
 
 from odmprovider.pyod_scraper import PyODScraper
 import config
@@ -19,13 +19,18 @@ session: Session = Session()
 
 
 def add_experiment(experiment: Experiment) -> Experiment:
-    session.add(experiment)
+    if experiment not in session:
+        session.add(experiment)
+
+    session.flush()
+
+    experiment.update_subspace_logic_json()
     session.commit()
     return experiment
 
 
-def get_experiment(exp_id: int) -> Experiment | None:
-    return session.get(Experiment, exp_id)
+def get_experiment(user_id: int, exp_id: int) -> Experiment | None:
+    return session.get(Experiment, {'user_id': user_id, 'id': exp_id})
 
 
 def add_user(user: User) -> User:
@@ -34,8 +39,18 @@ def add_user(user: User) -> User:
     return user
 
 
-def get_user(user_id: int) -> User | None:
-    return session.get(User, user_id)
+def get_user(user: int | str) -> Optional[User]:
+    """Returns the user with the given id or name.
+
+    Args:
+        user: Either the user id as an int or the user's name as a str.
+
+    Returns:
+        The user or None if no such user exists.
+    """
+    if isinstance(user, str):
+        return session.query(User).filter_by(name=user).first()
+    return session.get(User, user)
 
 
 def add_odm(odm: ODM):

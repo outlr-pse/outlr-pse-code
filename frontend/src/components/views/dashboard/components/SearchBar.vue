@@ -1,7 +1,7 @@
 <template>
   <div >
-    <input type="text" v-model="searchTerm" placeholder="Search..." class="field" />
-    <Button @click="clear" class="clear-button" text="clear" :button-type="ButtonType.OUTLINE" :size="[100,47]" :text-size="[20,400]"></Button>
+    <input type="text" v-model="searchTerm" :placeholder=" $t('message.dashboard.search')" class="field" />
+    <Button @click="clear" class="clear-button" :text=" $t('message.dashboard.clear')" :button-type="ButtonType.OUTLINE" :size="[100,47]" :text-size="[20,400]"></Button>
   </div>
 </template>
 
@@ -9,6 +9,7 @@
 import {defineComponent} from "vue";
 import Button from "../../../basic/button/Button.vue";
 import {ButtonType} from "../../../basic/button/ButtonType";
+import {Languages} from "../../../../language/Languages";
 
 export default defineComponent({
   name: "SearchBar",

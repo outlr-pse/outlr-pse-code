@@ -2,11 +2,18 @@
 
 This module contains the ODM model, which is used to store the ODMs.
 
+Note that currently only the attributes of the ODM class are stored in the database.
+Once there are more than just a single type of ODM the database should be setup for class hierarchies.
+See https://docs.sqlalchemy.org/en/20/orm/inheritance.html#single-table-inheritance
+
 """
 from typing import Any
 
+import pandas as pd
+from numpy.typing import NDArray
+
 from models.base import Base
-from models.dataset.dataset import Dataset
+from models.dataset import Dataset
 from models.odm.hyper_parameter import HyperParameter
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
@@ -40,6 +47,6 @@ class ODM(Base):
             if repr(type(args[param.name])) != param.param_type:
                 return False
 
-    def run_odm(self, subspace: Dataset, hyper_params: dict[str, Any]) -> list[int]:
+    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
         """Runs the ODM on the given subspace"""
         raise NotImplementedError

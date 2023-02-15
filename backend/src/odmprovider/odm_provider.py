@@ -2,7 +2,7 @@
 from abc import ABC, abstractmethod
 from typing import Iterator
 
-from models.odm.odm import ODM
+from models.odm import ODM
 
 
 class ODMProvider(ABC):

@@ -1,5 +1,6 @@
 import {Hyperparameter} from "./Hyperparameter";
 import {JSONSerializable} from "../JSONSerializable";
+import {HyperparameterType} from "./HyperparameterType";
 
 /**
  * This class represents an ODM.
@@ -20,9 +21,19 @@ export class ODM implements JSONSerializable {
      * It is called by the JSON.stringify() method.
      */
     toJSON() {
-        let hyperParametersJSON: { [key: number]: string } = {};
+        let hyperParametersJSON: { [name: string]: any } = {};
         for (let param of this.hyperParameters) {
-            hyperParametersJSON[param.id] = param.value;
+            if (param.value !== "") {
+                if (param.paramType === HyperparameterType.BOOLEAN)
+                    hyperParametersJSON[param.name] = param.value === "true" ? 1 : 0;
+                else if (param.paramType === HyperparameterType.INTEGER) {
+                    hyperParametersJSON[param.name] = parseInt(param.value);
+                } else if (param.paramType === HyperparameterType.NUMERIC) {
+                    hyperParametersJSON[param.name] = parseFloat(param.value);
+                } else {
+                    hyperParametersJSON[param.name] = param.value;
+                }
+            }
         }
         return {
             id: this.id,
@@ -53,10 +64,12 @@ export class ODM implements JSONSerializable {
      */
     deserialize(json: any, valuesJson?: any): void {
         this.id = json.id;
-        this.name = json.name;
+        this.name = json.name.split('.')[1];
         if (valuesJson) {
             for (let param of json.hyper_parameters) {
-                this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+                if (valuesJson[param.name] !== undefined) {
+                    this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson));
+                }
             }
         }
     }

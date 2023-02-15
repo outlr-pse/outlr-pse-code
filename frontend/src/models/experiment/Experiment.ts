@@ -19,6 +19,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     subspaceLogic: SubspaceLogic | null;
     experimentResult: ExperimentResult | null;
     running: boolean = false;
+    failed: boolean = false;
 
     constructor(name: string,
                 datasetName: string,
@@ -57,7 +58,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      * This method creates an experiment from a JSON string.
      * @param json
      */
-    public static fromJSON(json: string): Experiment {
+    public static fromJSON(json: any): Experiment {
         let experiment = new Experiment("", "", null, null, new ODM(0, "", []));
         experiment.deserialize(json);
         return experiment;
@@ -68,23 +69,25 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      * When the experiment result is given, the experiment is not running anymore.
      * @param json The JSON string.
      */
-    deserialize(json: string): void {
-        let jsonObject = JSON.parse(json);
-        this.id = jsonObject.id;
-        this.name = jsonObject.name;
-        this.datasetName = jsonObject.dataset_name;
-        this.odm = ODM.fromJSON(jsonObject.odm, jsonObject.param_values);
+    deserialize(json: any): void {
+        this.id = json.id;
+        this.name = json.name;
+        this.datasetName = json.dataset_name;
+        this.odm = ODM.fromJSON(json.odm, json.odm_params);
 
         let subspaceMap = new Map<number, Subspace>();
         let outlierMap = new Map<number, Outlier>();
 
-        if (jsonObject.subspace_logic != null) {
-            this.subspaceLogic = SubspaceLogic.fromJSONObject(jsonObject.subspace_logic, subspaceMap, outlierMap);
+        if(json.error_json){
+            this.failed = true;
+        }
+        if (json.subspace_logic != null) {
+            this.subspaceLogic = SubspaceLogic.fromJSONObject(json.subspace_logic, subspaceMap, outlierMap);
         } else {
             this.subspaceLogic = null;
         }
-        if (jsonObject.experiment_result != undefined) {
-            this.experimentResult = ExperimentResult.fromJSONObject(jsonObject.experiment_result, subspaceMap, outlierMap);
+        if (json.experiment_result != undefined) {
+            this.experimentResult = ExperimentResult.fromJSONObject(json.experiment_result, subspaceMap, outlierMap);
             this.running = false;
         } else {
             this.running = true

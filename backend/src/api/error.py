@@ -46,22 +46,40 @@ username_already_taken = {
     "status": 409,
 }
 
-token_not_provided = {
-    "error": "token_not_provided",
-    "message": "The provided token is not linked to any User or no token provided",
+token_not_valid = {
+    "error": "token_not_valid",
+    "message": "The provided token is not valid or no token provided",
     "status": 401,
 }
 
-token_not_linked = {
-    "error": "token_not_linked",
-    "message": "The provided token is not linked to any User or no token provided",
-    "status": 401,
+token_not_provided_on_identity_check = {
+    "error": "token_not_provided_on_identity_check",
+    "message": "No token was provided for identity check",
+    "status": 202,
 }
 
-dataset_not_valid = {
-    "error": "dataset_not_valid",
+user_look_up_failed = {
+    "error": "user_look_up_failed",
+    "message": "The user look up failed",
+    "status": 400,
+}
+
+invalid_dataset = {
+    "error": "invalid_dataset",
     "message": "Provided dataset is not valid",
     "status": 422,
+}
+
+no_dataset = {
+    "error": "no_dataset",
+    "message": "No dataset provided. Use the /experiment/upload-files endpoint to upload a dataset",
+    "status": 400,
+}
+
+not_implemented = {
+    "error": "not_implemented",
+    "message": "This feature is not implemented yet",
+    "status": 501,
 }
 
 ground_truth_not_valid = {
@@ -72,7 +90,7 @@ ground_truth_not_valid = {
 
 no_experiment_with_id = {
     "error": "no_experiment_with_id",
-    "message": "No experiment exists with provided id",
+    "message": "No experiment found with provided id",
     "status": 404,
 }
 
@@ -103,5 +121,11 @@ no_odms_found = {
 error_other = {
     "error": "error_other",
     "message": "Something went wrong",
+    "status": 400,
+}
+
+experiment_not_run = {
+    "error": "experiment_not_run",
+    "message": "The experiment has not been run yet",
     "status": 400,
 }

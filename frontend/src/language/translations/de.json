@@ -1,6 +1,44 @@
 {
   "message": {
     "greeting": "Hallo",
-    "name": "Deutschland"
+    "name": "Deutschland",
+    "dashboard": {
+      "search": "Suche...",
+      "clear": "Lösche",
+      "name": "Name",
+      "dataset": "Datenset",
+      "odm": "ODM",
+      "hyperparameters": "Hyperparameter",
+      "date": "Datum",
+      "accuracy": "Genauigkeit",
+      "running": "In Ausführung . . ."
+    },
+    "register-view": {
+      "title": "Hallo!",
+      "subtitle": "Bitte geben Sie Daten zur Accounterstellung an.",
+      "requirements": "A username is valid, if:\n- It starts with a letter\n- it only contains characters, numbers or an underscore\n- it is not shorter than 3 letters, not longer than 30 characters\n\nA password is valid, if:\n- it has 6 characters\n- it contains at least one digit\n- it contains at least one uppercase letter, one lowercase letter and one special character",
+      "errors": {
+        "provided-credentials-wrong": "Bitte gültige Daten angeben! Ein gültiges Passwort ist mindestens 6 Zeichen lang, hat ein Uppercase,  ein Lowercase Zeichen und ein Sonderzeichen.",
+        "username_already_taken": "Benutzername schon vergeben!",
+        "other": "Ein unerwarteter Fehler ist aufgetreten. Server läuft möglicherweise nicht."
+      }
+    },
+    "experimentResultView": {
+      "experimentSummaryCard": {
+        "summary": "Zusammenfassung",
+        "odm": "ODM",
+        "accuracy": "Genauigkeit",
+        "executionDate": "Ausführungsdatum",
+        "executionTime": "Ausführungsdauer",
+        "detectedOutliers": "Anzahl gefundener Outliers"
+      }
+    },
+    "login-view": {
+      "title": "Wilkommen zurück!",
+      "subtitle": "Bitte melden Sie sich an",
+      "errors": {
+        "provided-credentials-wrong": "Bitte geben Sie gültige Daten an!"
+      }
+    }
   }
 }

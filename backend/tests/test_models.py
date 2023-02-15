@@ -1,21 +1,20 @@
 import unittest
 
-from models.odm.odm import ODM
-from models.odm.hyper_parameter import HyperParameter
-from models.user.user import User
+from models.odm import ODM
+from models.odm import HyperParameter
+from models.user import User
 
 
 # TODO: Add more tests for Experiment, ODM and User
 class TestUser(unittest.TestCase):
-    def test_deserialize(self):
+    def test_serialize(self):
         user_json = {
-            "name": "overleafer"
+            "username": "overleafer",
+            "access_token": "jwt"
         }
 
-        user = User.from_json(user_json)
-        user.id = 0
-        user_json["id"] = user.id
-        self.assertEqual(user.to_json(), user_json)
+        user = User(name="overleafer")
+        self.assertEqual(user.to_json("jwt"), user_json)
 
 
 class TestHyperParameter(unittest.TestCase):

@@ -4,30 +4,21 @@
       <BaseTable :style="{ width: '100%'}">
         <template #header>
           <tr class="firstRow">
-            <td v-for="header in headers" @click="headerClick(header)" class="headerCells">
-              {{ header }}
+            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]">
+              {{ header[0] }}
             </td>
           </tr>
         </template>
         <template #body>
-          <tr v-for="(row, rowIndex) in filteredData" @click="rowClick(row[0])" class="tableData">
-            <td v-for="(cell, cellIndex) in row[1]" :key="cellIndex" @click="cellClick(row[0], rowIndex, cellIndex)">
-              <div v-if="cellIndex === 0" class="cell">
-                <Icon class="material-icons md-dark icon"
-                      style="font-size: 2.5vh; font-weight: 100; color: var(--color-stroke)"
-                      @click="iconClick(row[0], rowIndex)">chevron_right
-                </Icon>
-                {{ cell }}
-              </div>
-              <div v-else class="cell">
-                 <div v-if="showDetails && rowIndex === selectedRow" class="details">
-                  {{ cell }}
-                </div>
-                <div v-else>
-                  {{ cell }}
-                </div>
-              </div>
-
+          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
+            <td v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
+              {{ cell }}
+            </td>
+            <td v-else-if="row[1][4] === 'Failed :(' " v-for="cell in row[1]" class="failed">
+              {{ cell }}
+            </td>
+            <td v-for="cell in row[1]" v-else class="notRunning">
+              {{ cell }}
             </td>
           </tr>
         </template>
@@ -43,20 +34,21 @@ import {Experiment} from "../../../../models/experiment/Experiment";
 import {requestAllExperiments} from "../../../../api/APIRequests";
 import Card from "../../../basic/Card.vue";
 import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
-import {DashboardSortColumn, getDashboardSortColumnLabel} from "./DashboardSortColumn";
+import {DashboardSortColumn} from "./DashboardSortColumn";
 
 export default defineComponent({
   components: {Card, BaseTable},
   data() {
     return {
-      headers: [] as string[],
+      headers: [] as [string, DashboardSortColumn][],
       data: [] as [number, string[]][],
       filteredData: [] as [number, string[]][],
       experiments: [] as Experiment[],
-      experimentMap: new Map<number, Experiment>(),
       shownParams: [] as Hyperparameter[],
-      showDetails: false,
-      selectedRow: -1
+      headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
+      intervalID: undefined as any,
+      currentSearchTerm: '',
+      currentSorting: DashboardSortColumn.DATE,
     }
   },
   props: {
@@ -64,105 +56,81 @@ export default defineComponent({
       type: String,
       required: true
     },
-    currentSorting: {
-      type: String,
-      required: true
-    }
   },
 
   watch: {
     searchTerm: function (newSearchTerm: string) {
-      this.filteredData = this.data.filter((row) => {
-        for (let cell of row[1]) {
-          if (cell.toLowerCase().includes(newSearchTerm.toLowerCase())) {
-            return true
-          }
-        }
-        return false
-      })
-    },
-    currentSorting: function (newSorting: DashboardSortColumn) {
-      console.log("hello im watching currentSorting")
-      this.tableSort(newSorting)
-    }
-  },
-  methods: {
-    headerClick(header: string) {
-      let sortColumn = getDashboardSortColumnLabel(header)
-      this.tableSort(sortColumn)
-    },
-    rowClick(row: number) {
-      //this.$router.push("/experiment/" + row)
-    },
-    cellClick(id: number, rowIndex: number, cellIndex: number) {
-      if (cellIndex == 0) {
-        return
-      } else {
-        this.$router.push("/experiment/" + id)
-      }
-    },
-    iconClick(id: number, rowIndex: number) {
-      let experiment = this.experimentMap.get(id)
-      if (experiment) {
-        this.showDetails = !this.showDetails
-        this.selectedRow = rowIndex
-        this.shownParams = experiment.odm.hyperParameters
-      }
-    },
-
-
-    tableSort(sortColumn: DashboardSortColumn) {
-      if (sortColumn === DashboardSortColumn.NAME) {
-        this.filteredData.sort((a, b) => {
-          return a[1][0].localeCompare(b[1][0])
-        })
-      } else if (sortColumn === DashboardSortColumn.DATASET) {
-        this.filteredData.sort((a, b) => {
-          return a[1][1].localeCompare(b[1][1])
-        })
-      } else if (sortColumn === DashboardSortColumn.ODM) {
-        this.filteredData.sort((a, b) => {
-          return a[1][2].localeCompare(b[1][2])
-        })
-      } else if (sortColumn === DashboardSortColumn.HYPERPARAMETER) {
-        this.filteredData.sort((a, b) => {
-          return a[1][3].localeCompare(b[1][3])
-        })
-      } else if (sortColumn === DashboardSortColumn.DATE) {
-        this.filteredData.sort((a, b) => {
-          return a[1][4].localeCompare(b[1][4])
-        })
-      } else if (sortColumn === DashboardSortColumn.ACCURACY) {
-        this.filteredData.sort((a, b) => {
-          return a[1][5].localeCompare(b[1][5])
-        })
-      }
+      this.currentSearchTerm = newSearchTerm
+      this.tableSearch()
     },
   },
   async mounted() {
-      this.experiments = await requestAllExperiments();
-      this.headers = ["Name", "Dataset", "ODM", "Hyperparameter", "Date", "Accuracy"]
 
+    let headerShown = [
+      this.$t('message.dashboard.name'),
+      this.$t('message.dashboard.dataset'),
+      this.$t('message.dashboard.odm'),
+      this.$t('message.dashboard.hyperparameters'),
+      this.$t('message.dashboard.date'),
+      this.$t('message.dashboard.accuracy')
+    ]
+    this.headers = [
+      [headerShown[0], DashboardSortColumn.NAME],
+      [headerShown[1], DashboardSortColumn.DATASET],
+      [headerShown[2], DashboardSortColumn.ODM],
+      [headerShown[3], DashboardSortColumn.HYPERPARAMETER],
+      [headerShown[4], DashboardSortColumn.DATE],
+      [headerShown[5], DashboardSortColumn.ACCURACY]
+    ]
+
+    await this.fetchExperiments()
+    this.intervalID = setInterval(this.fetchExperiments, 3000);
+
+  },
+  beforeUnmount() {
+    clearInterval(this.intervalID);
+  },
+  methods: {
+    async fetchExperiments() {
+      this.data = []
+      this.experiments = []
+      let response = await requestAllExperiments();
+      if (response.error) {
+        return
+      }
+      for (let experiment of response.data) {
+        this.experiments.push(Experiment.fromJSON(experiment))
+      }
       for (let experiment of this.experiments) {
-        this.experimentMap.set(experiment.id ? experiment.id : 0, experiment)
-        if (experiment.running) {
+        let hyperParamString = ""
+        for (let param of experiment.odm.hyperParameters) {
+          hyperParamString += param.name + ": " + param.value + ", "
+        }
+        if (experiment.failed) {
           this.data.push([
             experiment.id ? experiment.id : 0,
             [
               experiment.name,
               experiment.datasetName,
               experiment.odm.name,
-              "Running . . .",
+              hyperParamString,
+              "Failed :(",
               "",
+            ]
+          ])
+        } else if (experiment.running) {
+          this.data.push([
+            experiment.id ? experiment.id : 0,
+            [
+              experiment.name,
+              experiment.datasetName,
+              experiment.odm.name,
+              hyperParamString,
+              "Running . . .",
               "",
             ]
           ])
         } else {
-          let hyperParamString = ""
-          for (let param of experiment.odm.hyperParameters) {
-            hyperParamString += param.name + ": " + param.value + ", "
-          }
-
           this.data.push([
             experiment.id ? experiment.id : 0,
             [
@@ -171,13 +139,62 @@ export default defineComponent({
               experiment.odm.name,
               hyperParamString,
               experiment.experimentResult?.executionDate.toLocaleString() ?? "Not yet executed",
-              experiment.experimentResult?.accuracy + "%",
+              experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy*100 + "%" : "No GT",
             ]])
         }
       }
       this.filteredData = this.data
-
-    }
+      this.tableSort()
+      this.tableSearch()
+    },
+    headerClick(header: DashboardSortColumn) {
+      this.currentSorting = header
+      this.tableSort()
+    },
+    rowClick(row: [number, string[]]) {
+      if (row[1][4] === "Running . . .") {
+        return
+      }
+      this.$router.push("/experiment/" + row[0])
+    },
+    tableSearch() {
+      this.filteredData = this.data.filter((row) => {
+        for (let i = 0; i < row[1].length - 2; i++) {
+          if (row[1][i].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
+            return true
+          }
+        }
+        return false
+      })
+    },
+    tableSort() {
+      if (this.currentSorting === DashboardSortColumn.NAME) {
+        this.filteredData.sort((a, b) => {
+          return a[1][0].localeCompare(b[1][0])
+        })
+      } else if (this.currentSorting === DashboardSortColumn.DATASET) {
+        this.filteredData.sort((a, b) => {
+          return a[1][1].localeCompare(b[1][1])
+        })
+      } else if (this.currentSorting === DashboardSortColumn.ODM) {
+        this.filteredData.sort((a, b) => {
+          return a[1][2].localeCompare(b[1][2])
+        })
+      } else if (this.currentSorting === DashboardSortColumn.HYPERPARAMETER) {
+        this.filteredData.sort((a, b) => {
+          return a[1][3].localeCompare(b[1][3])
+        })
+      } else if (this.currentSorting === DashboardSortColumn.DATE) {
+        this.filteredData.sort((a, b) => {
+          return a[1][4].localeCompare(b[1][4])
+        })
+      } else if (this.currentSorting === DashboardSortColumn.ACCURACY) {
+        this.filteredData.sort((a, b) => {
+          return a[1][5].localeCompare(b[1][5])
+        })
+      }
+    },
+  },
 })
 </script>
 
@@ -185,7 +202,7 @@ export default defineComponent({
 
 .tableBox {
   height: max-content;
-  max-height: 50vh;
+  max-height: 65vh;
   width: 80vw;
   border-style: solid;
   border-radius: 7px;
@@ -219,18 +236,7 @@ tr td {
 }
 
 td {
-  max-width: 7vw;
-
-}
-
-.cell {
-  overflow: hidden;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-}
-.details{
-  white-space: normal;
+  max-height: 1vh;
 }
 
 .firstRow {
@@ -247,18 +253,53 @@ tr:nth-child(even).tableData {
   background-color: var(--color-table-secondary);
 }
 
-.headerCells {
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6 {
   background-color: var(--color-cell-background);
   border: 1px solid var(--color-table-border);
 
 }
 
-td:hover.headerCells {
+td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.col-6 {
   background-color: var(--color-table-header);
   cursor: pointer;
 }
 
-.tableData td:hover {
+.col-1 {
+  width: 15%;
+}
+
+.col-2 {
+  width: 15%;
+}
+
+.col-3 {
+  width: 10%;
+}
+
+.col-4 {
+  width: 42%;
+}
+
+.col-5 {
+  width: 15%;
+}
+
+.col-6 {
+  width: 3%;
+}
+
+.running {
+  color: var(--color-running);
+}
+.failed {
+  color: var(--color-close-button);
+}
+
+.running:hover {
+  cursor: default;
+}
+
+.notRunning:hover {
   cursor: pointer;
 }
 

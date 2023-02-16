@@ -10,7 +10,7 @@ import {Outlier} from "../results/Outlier";
  * This class represents an experiment.
  */
 export class Experiment implements JSONSerializable, JSONDeserializable {
-    id: number | null;
+    id: number;
     name: string;
     datasetName: string;
     dataset: File | null;
@@ -27,7 +27,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
                 groundTruth: File | null,
                 odm: ODM,
                 subspaceLogic?: SubspaceLogic) {
-        this.id = null;
+        this.id = -1;
         this.name = name;
         this.datasetName = datasetName;
         this.dataset = dataset;

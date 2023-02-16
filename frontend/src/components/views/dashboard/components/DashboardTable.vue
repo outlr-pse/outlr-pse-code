@@ -10,14 +10,14 @@
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
-            <td v-if="row[1][4][1] === 'Running . . .' " v-for="cell in row[1]" class="running">
+          <tr v-for="row in filteredData" class="tableData">
+            <td v-if="row[1][4][0] === Infinity " v-for="cell in row[1]" class="running">
               {{ cell[1] }}
             </td>
-            <td v-else-if="row[1][4][1] === 'Failed :(' " v-for="cell in row[1]" class="failed">
+            <td v-else-if="row[1][4][0] === -1 " v-for="cell in row[1]" class="failed">
               {{ cell[1] }}
             </td>
-            <td v-for="cell in row[1]" v-else class="notRunning">
+            <td v-for="cell in row[1]" v-else class="notRunning" @click="rowClick(row)">
               {{ cell[1] }}
             </td>
           </tr>
@@ -35,6 +35,7 @@ import {requestAllExperiments} from "../../../../api/APIRequests";
 import Card from "../../../basic/Card.vue";
 import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
 import {DashboardSortColumn} from "./DashboardSortColumn";
+import {dateCalculation} from "./DashboardUtil";
 
 export default defineComponent({
   components: {Card, BaseTable},
@@ -102,77 +103,45 @@ export default defineComponent({
         this.experiments.push(Experiment.fromJSON(experiment))
       }
       for (let experiment of this.experiments) {
-        let hyperParamString = ""
-        for (let param of experiment.odm.hyperParameters) {
-          hyperParamString += param.name + ": " + param.value + ", "
-        }
-        if (experiment.failed) {
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [[experiment.name,experiment.name],
-              [experiment.datasetName,experiment.datasetName],
-              [experiment.odm.name,experiment.odm.name],
-              [hyperParamString,hyperParamString],
-              [0, "Failed :("],
-              [0, ""],
-            ]
-          ])
-        } else if (experiment.running) {
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [
-              [experiment.name,experiment.name],
-              [experiment.datasetName,experiment.datasetName],
-              [experiment.odm.name,experiment.odm.name],
-              [hyperParamString,hyperParamString],
-              [ Number.POSITIVE_INFINITY, "Running . . ."],
-              [0, experiment.id ? experiment.id.toString() : ""],
-            ]
-          ])
-        } else {
-          let nowDate = new Date()
-          let experimentDate = experiment.experimentResult?.executionDate
-          let dateString = ""
-          let timeDiff = 0
-          if(experimentDate) {
-            timeDiff = nowDate.getTime() - experimentDate.getTime()
-            if(timeDiff < 604800000 ) {
-              let days = Math.floor(timeDiff / 86400000)
-              let hours = Math.floor((timeDiff % 86400000) / 3600000)
-              let minutes = Math.floor(((timeDiff % 86400000) % 3600000) / 60000)
-              let seconds = Math.floor((((timeDiff % 86400000) % 3600000) % 60000) / 1000)
-              if(days >  0) {
-                dateString = days + "d ago"
-              } else if (hours > 0) {
-                dateString = hours + "h ago"
-              } else if (minutes > 0) {
-                dateString = minutes + "m ago"
-              } else if (seconds > 0) {
-                dateString = seconds + "s ago"
-              } else {
-                dateString = "Just now"
-              }
+        let id = experiment.id
+        type TableCell = [any, string]; // [metaData for sorting, string representation]
+        type TableRow = [number, TableCell[]];
+        let row: TableRow = [id, []]
+
+        for (let header of this.headers) { //6 headers
+          let cell: TableCell = [undefined, '']
+          if (header[1] === DashboardSortColumn.NAME) {
+            cell = [experiment.name, experiment.name]
+          } else if (header[1] === DashboardSortColumn.DATASET) {
+            cell = [experiment.datasetName, experiment.datasetName]
+          } else if (header[1] === DashboardSortColumn.ODM) {
+            cell = [experiment.odm.name, experiment.odm.name]
+          } else if (header[1] === DashboardSortColumn.HYPERPARAMETER) {
+            let shownParams = experiment.odm.hyperParameters
+            let shownParamString = shownParams.map((param: { name: string; value: string; }) => {
+              return param.name + ': ' + param.value
+            }).join(', ')
+            cell = [shownParams, shownParamString]
+          } else if (header[1] === DashboardSortColumn.DATE) {
+            if (experiment.running) {
+              cell = [Infinity, 'Running . . .']
+            } else if (experiment.failed) {
+              cell = [-1, 'Failed :(']
             } else {
-              dateString = experimentDate.toLocaleString()
+              let date = dateCalculation(experiment.experimentResult?.executionDate)
+              cell = [experiment.experimentResult?.executionDate, date]
+            }
+          } else if (header[1] === DashboardSortColumn.ACCURACY) {
+            if (experiment.running || experiment.failed) {
+              cell = [undefined, '']
+            } else {
+              let accuracy = experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy * 100 : -1
+              cell = [accuracy, accuracy != -1 ? accuracy.toFixed(1) + '%' : 'No GT']
             }
           }
-          let accuracy = 0
-          if(experiment.experimentResult){
-            accuracy =  experiment.experimentResult?.accuracy*100
-          }
-
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [
-              [experiment.name,experiment.name],
-              [experiment.datasetName,experiment.datasetName],
-              [experiment.odm.name,experiment.odm.name],
-              [hyperParamString,hyperParamString],
-              [experimentDate?.getTime(), dateString],
-              [accuracy, accuracy != null ? accuracy + "%" : "No GT"],
-            ]
-          ])
+          row[1].push(cell)
         }
+        this.data.push(row)
       }
       this.filteredData = this.data
       this.tableSort()
@@ -182,10 +151,7 @@ export default defineComponent({
       this.currentSorting = header
       this.tableSort()
     },
-    rowClick(row: [number, string[]]) {
-      if (row[1][4] === "Running . . .") {
-        return
-      }
+    rowClick(row: [number, [any, string][]]) {
       this.$router.push("/experiment/" + row[0])
     },
     tableSearch() {

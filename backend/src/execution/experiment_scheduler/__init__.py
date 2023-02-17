@@ -22,22 +22,25 @@ class ExperimentScheduler(ABC):
     @abstractmethod
     def schedule(self, experiment: Experiment) -> Awaitable[None]:
         """
-        Schedule the execution of an experiment
-        This method writes the result into the passed ``experiment``
-        This method is guaranteed to work even if the passed ``experiment`` is currently added to a database session
+        Schedule the execution of an experiment.
+        This method writes the result into the passed ``experiment``.
+        This method expects the passed experiment to be not added to any session,
+        that means it must be either transient or detached.
         Args:
-            experiment: The experiment to be executed
+            experiment: The experiment to be executed (in transient or detached state)
         """
         pass
 
     @staticmethod
     def fail_execution(experiment: Experiment, error: ExecutionError):
         """
-        Remove everything that relates to experiment results from an experiment.
-        Add error to experiment
-        This method should be called to reset experiments to a defined state when the execution fails
+        Set the experiment to a "failed state".
+        That means removing all results from the experiment, and it's child objects.
+        More specifically the experiment_result and the outliers of all subspaces are removed.
+        Also, an error_json is added to the experiment.
+        This method should be called when the execution fails.
         Args:
-            experiment: The experiment to reset
+            experiment: The experiment that failed
             error: The error that occurred during execution
         """
         experiment.error_json = error.to_json()

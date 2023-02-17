@@ -8,8 +8,6 @@ Endpoints defined:
     /create
     /download-result/<exp_id>
 """
-import asyncio
-import multiprocessing
 import os
 from os.path import exists as path_exists
 from concurrent.futures import ProcessPoolExecutor
@@ -66,11 +64,12 @@ def get_result(exp_id: int) -> (Response, int):
     If the experiment was found, returns status code "200 OK" and the
     experiment results encoded as json.
     """
-    user_id = get_jwt_identity()
-    exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
-    if exp is None:
-        return jsonify(error.no_experiment_with_id), error.no_experiment_with_id["status"]
-    return exp.to_json(with_outliers=True), 200
+    with db.Session() as session:
+        user_id = get_jwt_identity()
+        exp = db.get_experiment(session, user_id=user_id, exp_id=exp_id)
+        if exp is None:
+            return jsonify(error.no_experiment_with_id), error.no_experiment_with_id["status"]
+        return exp.to_json(with_outliers=True), 200
 
 
 @experiment_api.route('/get-all', methods=['GET'])
@@ -80,9 +79,10 @@ def get_all() -> list:
     Requires a jwt access token. Returns a list of all experiments the user
     has encoded as json and status code "200 OK".
     """
-    user = db.get_user(get_jwt_identity())
-    experiments = user.experiments
-    return [e.to_json(False) for e in experiments]
+    with db.Session() as session:
+        user = db.get_user(session, user=get_jwt_identity())
+        experiments = user.experiments
+        return [e.to_json(False) for e in experiments]
 
 
 @experiment_api.route('/count', methods=['GET'])
@@ -92,9 +92,10 @@ def count() -> (Response, int):
     Requires a jwt access token. Returns the amount of experiments the user
     has and status code "200 OK".
     """
-    user = db.get_user(get_jwt_identity())
-    amount = len(user.experiments)
-    return {"amount": amount}, 200
+    with db.Session() as session:
+        user = db.get_user(session, user=get_jwt_identity())
+        amount = len(user.experiments)
+        return {"amount": amount}, 200
 
 
 @experiment_api.route('/upload-files', methods=['POST'])
@@ -131,26 +132,32 @@ async def create() -> (Response, int):
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
     """
-    exp_json = request.json
-    user_id = get_jwt_identity()
-    exp_json['user_id'] = user_id
+    with db.Session(expire_on_commit=False) as session:
+        # expire_on_commit=False ensures that all the experiment's attributes
+        # are still accessible after adding it to the session
 
-    if not path_exists(data_path(user_id, "dataset")):
-        return error.no_dataset, error.no_dataset["status"]
+        user_id = get_jwt_identity()
 
-    exp = Experiment.from_json(request.json)
-    db.add_experiment(exp)
+        if not path_exists(data_path(user_id, "dataset")):
+            return error.no_dataset, error.no_dataset["status"]
 
-    exp.odm.__class__ = PyODM
+        exp = Experiment.from_json(request.json)
+        exp.user_id = user_id  # User id is not in the json
+        db.add_experiment(session, experiment=exp)
+        exp.odm.__class__ = PyODM  # TODO the ORM should do this automatically in the future
+
+    # Add dataset and optionally ground truth
     exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
     if path_exists(data_path(user_id, "ground_truth")):
         exp.ground_truth = data_utils.csv_to_numpy_array(data_path(user_id, "ground_truth"))
-        pass
 
+    # Delete the csv files
     remove_user_data(user_id)
 
     await _experiment_scheduler.schedule(exp)
-    db.session.commit()
+    with db.Session() as session:
+        session.add(exp)  # Subspace logic does not need to be updated so db.add_experiment is not needed
+        session.commit()
     return 'OK', 200
 
 
@@ -162,16 +169,17 @@ def download_result(exp_id: int) -> (Response, int):
     If the experiment was found, returns a CSV file with all the outliers
     from the given experiment and status code "200 OK".
     """
-    user_id = get_jwt_identity()
-    exp = db.get_experiment(user_id=user_id, exp_id=exp_id)
-    if exp is None:
-        return error.no_experiment_with_id, error.no_experiment_with_id["status"]
-    if exp.experiment_result is None:
-        return error.experiment_not_run, error.experiment_not_run["status"]
+    with db.Session() as session:
+        user_id = get_jwt_identity()
+        exp = db.get_experiment(session, user_id=user_id, exp_id=exp_id)
+        if exp is None:
+            return error.no_experiment_with_id, error.no_experiment_with_id["status"]
+        if exp.experiment_result is None:
+            return error.experiment_not_run, error.experiment_not_run["status"]
 
-    outliers = [o.index for o in exp.experiment_result.result_space.outliers]
-    file = data_utils.write_list_to_csv(outliers)
-    return send_file(file, download_name=f'{exp.name}-result.csv', as_attachment=True)
+        outliers = [o.index for o in exp.experiment_result.result_space.outliers]
+        file = data_utils.write_list_to_csv(outliers)
+        return send_file(file, download_name=f'{exp.name}-result.csv', as_attachment=True)
 
 
 def data_path(user_id: int, file: str = "") -> str:

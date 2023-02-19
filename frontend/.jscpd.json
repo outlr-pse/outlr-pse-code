@@ -1,0 +1,7 @@
+{
+    "threshold": 5,
+    "reporters": ["console"],
+    "ignore": ["**/__snapshots__/**", "**/*.css", "**/*.svg"],
+    "absolute": true,
+    "gitignore": true
+  }

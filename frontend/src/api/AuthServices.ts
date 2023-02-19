@@ -130,18 +130,18 @@ export async function logout() {
      * @param password the password, the user provided
      */
     try {
-            const response = await sendLogout()
-            if (response.error != null) {
-                storage.removeItem('access_token')
-                await store.dispatch("auth/unsetAuthenticated")
-                return response
-            }
-
+            //const response = await sendLogout()
+            //if (response.error != null) {
+            //    storage.removeItem('access_token')
+            //    await store.dispatch("auth/unsetAuthenticated")
+            //    return response
+            //}
             storage.removeItem('access_token')
             await store.dispatch("auth/unsetAuthenticated")
-            return response.data
+            return {message:"success", status:200}
         } catch (error) {
             storage.removeItem('access_token')
+            await store.dispatch("auth/unsetAuthenticated")
             return errorOther
         }
 }

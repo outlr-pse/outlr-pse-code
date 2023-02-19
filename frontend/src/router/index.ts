@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from "../components/views/LandingPageView.vue";
 import store from "../store";
 import { initialValidityCheck } from "../api/AuthServices";
+import { storage } from "../api/APIRequests";
 const routes = [
   {
     path: '/',
@@ -58,13 +59,15 @@ const router = createRouter({
 
 
 router.beforeEach(async (to, from, next) => {
-  await initialValidityCheck()
   if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
-    next('/')
+    await initialValidityCheck()
+    if (store.getters['auth/isAuthenticated']) {
+      next('/')
+    }
     return;
   }
 
-  if (to.matched.some((record => record.meta.requiresAuth)) && !store.getters['auth/isAuthenticated']) {
+  if (to.matched.some((record => record.meta.requiresAuth)) && (!storage.getItem("access_token") || !store.getters['auth/isAuthenticated'])) {
     next('/login')
     return;
   }

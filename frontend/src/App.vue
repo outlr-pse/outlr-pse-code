@@ -12,23 +12,33 @@ import { RouterView, useRoute, useRouter } from "vue-router";
 import { onBeforeMount } from "vue";
 import store from "./store";
 import { initialValidityCheck } from "./api/AuthServices";
+import { mapState } from "vuex";
 
 export default {
     setup() {
         const route = useRoute();
         const router = useRouter();
-
-        onBeforeMount(async () => {
-            await initialValidityCheck()
-            await router.isReady();
-            if ((route.path==="login" || route.path==="register") && store.getters["auth/isAuthenticated"]) {
+        const rerouteIfNecessary = async () => {
+            if ((route.path === "login" || route.path === "register") && store.getters["auth/isAuthenticated"]) {
                 await router.push("/");
             }
 
             if (route.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {
                 await router.push("/login");
             }
+        }
+
+        onBeforeMount(async () => {
+            await initialValidityCheck()
+            await router.isReady();
+            await rerouteIfNecessary()
         });
+
+        store.subscribeAction({after: async (action, state) => {
+                if (action.type === "auth/unsetAuthenticated") {
+                    await rerouteIfNecessary();
+                }
+            }})
     },
     data() {
         return {

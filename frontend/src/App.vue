@@ -1,35 +1,52 @@
 <template>
-  <div id="app">
-    <Topbar/>
-    <RouterView class="routerView"/>
-  </div>
+    <div id="app">
+        <Topbar />
+        <RouterView class="routerView" />
+    </div>
 </template>
 
 <script lang="ts">
 
 import Topbar from "./components/topbar/Topbar.vue";
-import {RouterView} from "vue-router";
+import { RouterView, useRoute, useRouter } from "vue-router";
+import { onBeforeMount } from "vue";
+import store from "./store";
+import { initialValidityCheck } from "./api/AuthServices";
 
 export default {
-  data() {
-    return {
-      loggedIn: false
+    setup() {
+        const route = useRoute();
+        const router = useRouter();
+
+        onBeforeMount(async () => {
+            await initialValidityCheck()
+            await router.isReady();
+            if ((route.path==="login" || route.path==="register") && store.getters["auth/isAuthenticated"]) {
+                await router.push("/");
+            }
+
+            if (route.meta.requiresAuth && !store.getters["auth/isAuthenticated"]) {
+                await router.push("/login");
+            }
+        });
+    },
+    data() {
+        return {
+            loggedIn: false
+        };
+    },
+    components: {
+        Topbar,
+        RouterView
     }
-  },
-
-  components: {
-    Topbar,
-    RouterView
-  },
-
-}
+};
 </script>
 
 
 <style scoped>
 
 .routerView {
-  height: var(--router-view-height);
-  overflow: auto;
+    height: var(--router-view-height);
+    overflow: auto;
 }
 </style>

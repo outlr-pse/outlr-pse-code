@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from "../components/views/LandingPageView.vue";
 import store from "../store";
+import { initialValidityCheck } from "../api/AuthServices";
 const routes = [
   {
     path: '/',
@@ -56,7 +57,8 @@ const router = createRouter({
 })
 
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
+  await initialValidityCheck()
   if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
     next('/')
     return;

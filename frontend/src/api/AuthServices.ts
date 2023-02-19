@@ -10,6 +10,7 @@ export async function initialValidityCheck() : Promise<void> {
 
     else {
         storage.clear()
+        await store.dispatch("auth/unsetAuthenticated")
     }
 }
 

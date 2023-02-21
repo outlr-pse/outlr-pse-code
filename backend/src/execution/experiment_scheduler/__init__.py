@@ -7,6 +7,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from execution.execution_error import ExecutionError
+from execution.execution_error.subspace_error import SubspaceError
 from execution.odm_scheduler import ODMScheduler
 from models.experiment import Experiment, Subspace, Outlier, ExperimentResult
 from models.subspacelogic import SubspaceLogic
@@ -109,8 +110,12 @@ class ExperimentScheduler(ABC):
         Args:
             dataset: The dataset to get the subspace from
             columns: The columns of the subspace
-
         Returns:
             The subspace
+        Raises:
+            SubspaceError: If a column index of a subspace is out of bounds
         """
-        return dataset.iloc[:, columns]
+        try:
+            return dataset.iloc[:, columns]
+        except IndexError as e:
+            raise SubspaceError() from e

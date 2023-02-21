@@ -21,6 +21,7 @@ class BackgroundThreadEventLoopExperimentScheduler(EventLoopExperimentScheduler)
         Create a new ``BackgroundThreadEventLoopExperimentScheduler``.
         This will start a new thread on which a new event loop is run forever.
         Call ``EventLoopExperimentScheduler.stop`` to stop the event loop and consequently also the background thread.
+        The ``stop`` method is automatically called when the scheduler is garbage collected.
         Args:
             odm_scheduler: The ``ODMScheduler`` that is used to schedule the execution of individual ODMs
         """

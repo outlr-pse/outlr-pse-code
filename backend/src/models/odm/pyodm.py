@@ -7,10 +7,12 @@ from typing import Any
 
 import pandas as pd
 from numpy.typing import NDArray
-
-from models.odm import ODM
 import pyod  # maybe this is necessary for importlib
 import importlib
+
+from execution.execution_error.odm_failure_error import ODMFailureError
+from execution.execution_error.unknown_odm_error import UnknownODMError
+from models.odm import ODM
 
 
 class PyODM(ODM):
@@ -21,10 +23,20 @@ class PyODM(ODM):
             hyper_params (dict[str, Any]): The hyper parameters for the ODM
         Returns:
             list[int]: The labels for the outliers on this subspace
+        Raises:
+            ODMFailureError: If the execution of the odm raised an error
         """
-        pyOD_module_name, cls_name = self.name.split('.')
-        module = importlib.import_module(f'pyod.models.{pyOD_module_name}')
-        pyODM_cls = getattr(module, cls_name)
-        pyODM = pyODM_cls(**hyper_params)
-        pyODM.fit(subspace)
-        return pyODM.labels_
+        try:
+            pyod_module_name, cls_name = self.name.split('.')
+            module = importlib.import_module(f'pyod.models.{pyod_module_name}')
+        except Exception as e:
+            raise UnknownODMError(odm_name=self.name) from e
+
+        try:
+            pyodm_cls = getattr(module, cls_name)
+            pyodm = pyodm_cls(**hyper_params)
+            pyodm.fit(subspace)
+            return pyodm.labels_
+
+        except Exception as e:
+            raise ODMFailureError(odm_message=str(e)) from e

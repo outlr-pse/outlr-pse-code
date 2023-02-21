@@ -16,7 +16,8 @@ from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.experiment import Experiment
-from execution.experiment_scheduler.event_loop_experiment_scheduler import EventLoopExperimentScheduler
+from execution.experiment_scheduler.background_thread_event_loop_experiment_scheduler \
+    import BackgroundThreadEventLoopExperimentScheduler
 from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
 import database.database_access as db
 import util.data as data_utils
@@ -25,7 +26,7 @@ from models.odm import PyODM
 
 experiment_api = Blueprint('experiment', __name__)
 
-_experiment_scheduler = EventLoopExperimentScheduler(ExecutorODMScheduler(ProcessPoolExecutor()))
+_experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(ExecutorODMScheduler(ProcessPoolExecutor()))
 
 _user_files = {
     "dataset": "dataset.csv",

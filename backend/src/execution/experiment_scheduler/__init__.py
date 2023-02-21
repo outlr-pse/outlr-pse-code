@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Awaitable
+from concurrent.futures import Future
 
 import pandas as pd
 import numpy as np
@@ -17,10 +18,14 @@ class ExperimentScheduler(ABC):
     """
 
     def __init__(self, odm_scheduler: ODMScheduler):
+        """
+        Args:
+            odm_scheduler: The ``ODMScheduler`` that is used to schedule the execution of individual ODMs
+        """
         self.odm_scheduler = odm_scheduler
 
     @abstractmethod
-    def schedule(self, experiment: Experiment) -> Awaitable[None]:
+    def schedule(self, experiment: Experiment) -> Future[None]:
         """
         Schedule the execution of an experiment.
         This method writes the result into the passed ``experiment``.
@@ -28,6 +33,9 @@ class ExperimentScheduler(ABC):
         that means it must be either transient or detached.
         Args:
             experiment: The experiment to be executed (in transient or detached state)
+        Returns: Returns a future containing just None.
+            The future can be used to add callbacks that are called once the execution is finished.
+            The future is guaranteed to contain no exceptions.
         """
         pass
 

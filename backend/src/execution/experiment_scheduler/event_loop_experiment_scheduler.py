@@ -12,8 +12,6 @@ class EventLoopExperimentScheduler(ExperimentScheduler):
     """
     A scheduler that runs the experiment as a coroutine on a given event loop.
     The event loop can run on a different thread than the thread that calls the schedule method.
-    TODO: Is this class really useful? Does using asyncio provide any benefits over
-        dealing with concurrent.futures.Futures directly?
     """
 
     def __init__(self, odm_scheduler: ODMScheduler, loop: asyncio.AbstractEventLoop):

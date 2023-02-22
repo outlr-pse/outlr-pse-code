@@ -2,6 +2,7 @@ from io import BytesIO
 from typing import Optional
 
 import pandas as pd
+from numpy.typing import NDArray
 from matplotlib import pyplot as plt
 
 from models.dataset import Dataset
@@ -24,7 +25,7 @@ def csv_to_dataset(name: str, dataset: str) -> Dataset:
     return dataset
 
 
-def csv_to_list(csv: str) -> list:
+def csv_to_numpy_array(csv: str) -> NDArray:
     """Converts a CSV file to a list.
     Args:
         csv: The path to the CSV file.
@@ -33,7 +34,7 @@ def csv_to_list(csv: str) -> list:
     """
     df = pd.read_csv(csv, header=None)
 
-    return df[0].tolist()
+    return df[0].to_numpy()
 
 
 def write_list_to_csv(data: list[int], path: Optional[str] = None) -> BytesIO | None:

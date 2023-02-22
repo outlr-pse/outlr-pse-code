@@ -2,7 +2,7 @@ import unittest
 import pandas as pd
 
 from models.dataset import Dataset
-from util.data import csv_to_dataset, csv_to_list, write_list_to_csv
+from util.data import csv_to_dataset, csv_to_numpy_array, write_list_to_csv
 
 
 class TestCsvMethods(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestCsvMethods(unittest.TestCase):
     @unittest.skip("Not implemented yet")
     def test_csv_to_list(self):
         # test the csv_to_ndarray function
-        result = csv_to_list("sample.csv")
+        result = csv_to_numpy_array("sample.csv")
         expected = self.sample_csv.values.tolist()
         self.assertEqual(result, expected)
 
@@ -40,5 +40,5 @@ class TestCsvMethods(unittest.TestCase):
     def test_list_to_csv(self):
         # test the ndarray_to_csv function
         write_list_to_csv("sample_array.csv", self.sample_list)
-        result = csv_to_list("sample_array.csv")
+        result = csv_to_numpy_array("sample_array.csv")
         self.assertEqual(result, self.sample_list)

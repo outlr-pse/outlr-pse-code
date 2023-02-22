@@ -72,7 +72,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
         this.id = json.id;
         this.name = json.name;
         this.datasetName = json.dataset_name;
-        this.odm = ODM.fromJSON(json.odm, json.param_values);
+        this.odm = ODM.fromJSON(json.odm, json.odm_params);
 
         let subspaceMap = new Map<number, Subspace>();
         let outlierMap = new Map<number, Outlier>();

@@ -151,7 +151,6 @@ def logout() -> (Response, int):
 
     return '', 200
 
-
 @user_management_api.route('/get-token-identity', methods=['GET'])
 @jwt_required()
 def get_token_identity() -> (Response, int):
@@ -167,3 +166,13 @@ def get_token_identity() -> (Response, int):
     response = jsonify(user.to_json(token))
     response.status = 202
     return response
+
+@user_management_api.route('/get-token-identity', methods=['GET'])
+@jwt_required()
+def delete_account() -> (Response, int):
+    user_id = get_jwt_identity()
+    user = database_access.get_user(user_id)
+    if not user:
+        return jsonify(error.token_not_valid), error.token_not_valid["status"]
+    database_access.delete_user(user)
+    return '', 200

@@ -33,6 +33,11 @@ def get_experiment(user_id: int, exp_id: int) -> Experiment | None:
     return session.get(Experiment, {'user_id': user_id, 'id': exp_id})
 
 
+def delete_user(user: User) -> User:
+    session.delete(user)
+    session.commit()
+
+
 def add_user(user: User) -> User:
     session.add(user)
     session.commit()

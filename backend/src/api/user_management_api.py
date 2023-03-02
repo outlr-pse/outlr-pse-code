@@ -167,7 +167,7 @@ def get_token_identity() -> (Response, int):
     response.status = 202
     return response
 
-@user_management_api.route('/delete-account', methods=['GET'])
+@user_management_api.route('/delete-account', methods=['POST'])
 @jwt_required()
 def delete_account() -> (Response, int):
     user_id = get_jwt_identity()

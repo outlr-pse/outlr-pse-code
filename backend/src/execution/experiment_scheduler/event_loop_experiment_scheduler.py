@@ -49,7 +49,7 @@ class EventLoopExperimentScheduler(ExperimentScheduler):
         except ExecutionError as e:
             ExperimentScheduler.fail_execution(experiment, e)
         except Exception as e:
-            ExperimentScheduler.fail_execution(experiment, ExecutionError(str(e)))
+            ExperimentScheduler.fail_execution(experiment, ExecutionError(type(e).__name__ + ": " + str(e)))
 
     def schedule(self, experiment: Experiment) -> concurrent.futures.Future[None]:
         # Schedule the coroutine in the given loop (which might be on another thread)

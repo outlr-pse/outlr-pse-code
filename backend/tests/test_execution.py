@@ -9,7 +9,6 @@ from models.experiment import Experiment, Subspace
 from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
-from models.dataset import Dataset
 from models.user import User
 from models.odm.pyodm import PyODM
 import database.database_access as db
@@ -43,7 +42,7 @@ class TestCoroutineScheduler(unittest.IsolatedAsyncioTestCase):
             self.X_train, self.X_test, self.y_train, self.y_test = generate_data(
                 n_train=self.n_train, n_test=self.n_test, contamination=self.contamination, random_state=999, n_features=3)
 
-            self.dataset = Dataset(name="dataset", dataset=pd.DataFrame(self.X_train))
+            self.dataset = pd.DataFrame(self.X_train)
             self.ground_truth = self.y_train
 
             self.sub1 = Subspace(columns=[0, 1, 2], outliers=[])

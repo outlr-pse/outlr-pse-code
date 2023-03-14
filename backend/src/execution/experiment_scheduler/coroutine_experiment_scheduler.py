@@ -20,7 +20,7 @@ class CoroutineExperimentScheduler(ExperimentScheduler):
                 self.odm_scheduler.schedule(
                     experiment.odm,
                     experiment.param_values,
-                    ExperimentScheduler.get_subspace(experiment.dataset.dataset, subspace.columns)
+                    ExperimentScheduler.get_subspace(experiment.dataset, subspace.columns)
                 ) for subspace in experiment.subspaces
             ])
             for index, result in enumerate(subspace_results):

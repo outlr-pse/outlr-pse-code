@@ -27,10 +27,10 @@ import models.odm
 experiment_api = Blueprint('experiment', __name__)
 
 _experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(
-        ExecutorODMScheduler(
-            concurrent.futures.ProcessPoolExecutor()
-        )
+    ExecutorODMScheduler(
+        concurrent.futures.ProcessPoolExecutor()
     )
+)
 
 _user_files = {
     "dataset": "dataset.csv",

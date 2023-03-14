@@ -33,6 +33,7 @@ class BackgroundThreadEventLoopExperimentScheduler(EventLoopExperimentScheduler)
             target=BackgroundThreadEventLoopExperimentScheduler.start_loop,
             args=(self.loop,)
         )
+        # Maybe it would be better to make the thread a daemon thread (thread.daemon = True)
         thread.start()
 
     def __del__(self):

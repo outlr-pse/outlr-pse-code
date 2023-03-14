@@ -33,7 +33,7 @@ class EventLoopExperimentScheduler(ExperimentScheduler):
                     future=self.odm_scheduler.schedule(
                         experiment.odm,
                         experiment.param_values,
-                        ExperimentScheduler.get_subspace(experiment.dataset.dataset, subspace.columns)
+                        ExperimentScheduler.get_subspace(experiment.dataset, subspace.columns)
                     ),
                     loop=self.loop
                 ) for subspace in experiment.subspaces

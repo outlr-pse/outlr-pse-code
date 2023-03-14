@@ -26,11 +26,14 @@ class PyODM(ODM):
         Raises:
             ODMFailureError: If the execution of the odm raised an error
         """
+        # For some reason when raising an exception that was constructed with keyword arguments
+        # and with a ProcessPoolExecutor as the executor, the process pool breaks.
+        # Passing the same arguments without keywords somehow fixes this. No idea why.
         try:
             pyod_module_name, cls_name = self.name.split('.')
             module = importlib.import_module(f'pyod.models.{pyod_module_name}')
         except Exception as e:
-            raise UnknownODMError(odm_name=self.name) from e
+            raise UnknownODMError(self.name) from e
 
         try:
             pyodm_cls = getattr(module, cls_name)
@@ -39,4 +42,4 @@ class PyODM(ODM):
             return pyodm.labels_
 
         except Exception as e:
-            raise ODMFailureError(odm_message=str(e)) from e
+            raise ODMFailureError(str(e)) from e

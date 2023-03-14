@@ -10,30 +10,32 @@ Endpoints defined:
 """
 import os
 from os.path import exists as path_exists
-from concurrent.futures import ProcessPoolExecutor
+import concurrent.futures
 
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from models.experiment import Experiment
 from execution.experiment_scheduler.background_thread_event_loop_experiment_scheduler \
     import BackgroundThreadEventLoopExperimentScheduler
 from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
+from models.experiment import Experiment
 import database.database_access as db
 import util.data as data_utils
 import api.error as error
-from models.odm import PyODM
+import models.odm
 
 experiment_api = Blueprint('experiment', __name__)
 
-_experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(ExecutorODMScheduler(ProcessPoolExecutor()))
+_experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(
+        ExecutorODMScheduler(
+            concurrent.futures.ProcessPoolExecutor()
+        )
+    )
 
 _user_files = {
     "dataset": "dataset.csv",
     "ground_truth": "ground_truth.csv"
 }
-
-_background_tasks = set()
 
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
@@ -145,7 +147,7 @@ def create() -> (Response, int):
         exp = Experiment.from_json(request.json)
         exp.user_id = user_id  # User id is not in the json
         db.add_experiment(session, experiment=exp)
-        exp.odm.__class__ = PyODM  # TODO the ORM should do this automatically in the future
+        exp.odm.__class__ = models.odm.PyODM  # TODO the ORM should do this automatically in the future
 
     # Add dataset and optionally ground truth
     exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))

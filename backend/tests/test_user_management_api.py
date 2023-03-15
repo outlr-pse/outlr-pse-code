@@ -22,18 +22,17 @@ class TestUserManagementAPI(unittest.TestCase):
 
     def test_register_valid_data(self):
         """Tests registering a user with valid username and password"""
-        self.assertTrue(True)
-    #     username = "ValidData01"
-    #     password = 'TestPasswordValid0!'
-    #     response = self.client.post("/api/user/register",
-    #                                 json={'username': username, 'password': password})
-    #     assert response.status_code == 200
-    #     response_dict = response.get_json()
-    #     assert "username" in response_dict
-    #     assert response_dict.get("username") == username
-    #     assert "access_token" in response_dict
-    #     assert "error" not in response_dict
-    #
+        username = "ValidData01"
+        password = 'TestPasswordValid0!'
+        response = self.client.post("/api/user/register",
+                                    json={'username': username, 'password': password})
+        assert response.status_code == 200
+        response_dict = response.get_json()
+        assert "username" in response_dict
+        assert response_dict.get("username") == username
+        assert "access_token" in response_dict
+        assert "error" not in response_dict
+
     # def test_register_invalid_username(self):
     #     """Tests registering a user with invalid username"""
     #     username = "*hilkdsfskdfkjlffjdkglöi28o3u4rlgh21"

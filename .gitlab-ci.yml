@@ -1,5 +1,6 @@
 stages:          # List of stages for jobs, and their order of execution
   - build
+  - lint
   - test
   - deploy
 #
@@ -44,11 +45,12 @@ setup_db:
 
 frontend-build:
     stage: build
-    image: node:latest
+    image: node:19
     script:
         - cd frontend
         - npm install
         - npm run build
+
 
 backend-test:
   image: python:3.10-bullseye
@@ -130,13 +132,21 @@ frontend-test:
     - backend-test
 
 lint-test:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  stage: lint    # It can run at the same time as unit-test-job (in parallel).
   image: python:3.10-alpine
   script:
     - cd backend
     - pip install flake8
     - flake8 --ignore=E501,F401 --statistics --count .
 
+
+frontend-lint:
+    stage: build
+    image: node:19
+    script:
+        - cd frontend
+        - npm install
+        - npm run lint
 
 #deploy-job:      # This job runs in the deploy stage.
 #  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.

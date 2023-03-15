@@ -14,6 +14,9 @@ describe("SubspaceLogic", () => {
     const logicJustLiteral = new Literal(subspace2)
     const logicJustLiteralJSON = `{"literal":{"subspace":${subspace2json}}}`
 
+    const invalidLogicJSON= `{"literals":{"subspace":${subspace2json}}}`
+    const invalidLogicJSON2= `{"literal":{"subspace":${subspace2json}}, "operation":{"operator":"and","operands":[{"literal":{"subspace":${subspace1json}}}}`
+
     const logicOneLayer = new Operation(
         Operator.AND,
         [ new Literal(subspace1), new Literal(subspace2) ],
@@ -54,5 +57,15 @@ describe("SubspaceLogic", () => {
 
     it("Deserialize logic with three layers", () => {
         expect(SubspaceLogic.fromJSON(logicThreeLayerJSON)).toEqual(logicThreeLayer)
+    })
+
+    it("no opearands", () => {
+        expect(() => new Operation(Operator.AND, [])).toThrow()
+    })
+    it("unknown root", () => {
+        expect(() => SubspaceLogic.fromJSON(invalidLogicJSON)).toThrow()
+    })
+    it("multiple keys", () => {
+        expect(() => SubspaceLogic.fromJSON(invalidLogicJSON2)).toThrow()
     })
 })

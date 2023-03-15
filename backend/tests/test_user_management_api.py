@@ -33,18 +33,18 @@ class TestUserManagementAPI(unittest.TestCase):
         assert "access_token" in response_dict
         assert "error" not in response_dict
 
-    # def test_register_invalid_username(self):
-    #     """Tests registering a user with invalid username"""
-    #     username = "*hilkdsfskdfkjlffjdkglöi28o3u4rlgh21"
-    #     password = 'TestPasswordValid0!'
-    #     response = self.client.post("/api/user/register",
-    #                                 json={'username': username, 'password': password})
-    #     assert response.status_code == 401
-    #     response_dict = response.get_json()
-    #     assert "username" not in response_dict
-    #     assert "access_token" not in response_dict
-    #     assert "error" in response_dict
-    #     assert response_dict.get("error") == error.invalid_username.get("error")
+    def test_register_invalid_username(self):
+        """Tests registering a user with invalid username"""
+        username = "*hilkdsfskdfkjlffjdkglöi28o3u4rlgh21"
+        password = 'TestPasswordValid0!'
+        response = self.client.post("/api/user/register",
+                                    json={'username': username, 'password': password})
+        assert response.status_code == 401
+        response_dict = response.get_json()
+        assert "username" not in response_dict
+        assert "access_token" not in response_dict
+        assert "error" in response_dict
+        assert response_dict.get("error") == error.invalid_username.get("error")
     #
     # def test_register_invalid_password(self):
     #     """Tests registering a user with invalid password"""

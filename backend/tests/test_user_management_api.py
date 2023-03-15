@@ -1,7 +1,7 @@
 import unittest
 
 from api import error
-from api.api import app
+from api import app
 from models.base import Base
 import database.database_access as db
 

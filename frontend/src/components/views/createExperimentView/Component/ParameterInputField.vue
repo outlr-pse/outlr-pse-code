@@ -3,16 +3,16 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "ParameterInputField",
-  data() {
+  name: 'ParameterInputField',
+  data () {
     return {
-      value: "",
+      value: ''
     }
   },
-  props:{
+  props: {
     placeholder: {
       type: String,
       required: true
@@ -20,33 +20,33 @@ export default defineComponent({
     parameterId: {
       type: Number,
       default: null
-  },
+    },
     optional: {
       type: Boolean,
       default: false
     }
   },
   methods: {
-    wrongInput() {
-      this.$el.style.border = "1px solid var(--color-close-button)";
+    wrongInput () {
+      this.$el.style.border = '1px solid var(--color-close-button)'
     },
-    correctInput() {
-      this.$el.style.border = "1px solid var(--color-stroke)";
+    correctInput () {
+      this.$el.style.border = '1px solid var(--color-stroke)'
     },
-    optionalInput() {
-      this.$el.style.border = "1px solid var(--color-input-optional)";
+    optionalInput () {
+      this.$el.style.border = '1px solid var(--color-input-optional)'
     },
-    checkData(){
-      this.$emit("check-data")
+    checkData () {
+      this.$emit('check-data')
     }
   },
   watch: {
     value: function () {
-      this.$emit("input-change", this.value, this.parameterId)
+      this.$emit('input-change', this.value, this.parameterId)
     }
   },
-  mounted() {
-    if(!this.optional){
+  mounted () {
+    if (!this.optional) {
       this.optionalInput()
     }
   }

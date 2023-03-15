@@ -8,10 +8,10 @@
 
 <script lang="ts">
 export default {
-  name: "OutlrLogo",
-  data() {
+  name: 'OutlrLogo',
+  data () {
     return {
-      path: "@/assets/OutlrLogo.svg"
+      path: '@/assets/OutlrLogo.svg'
     }
   },
   props: {

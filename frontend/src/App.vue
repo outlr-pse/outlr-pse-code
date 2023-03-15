@@ -7,11 +7,11 @@
 
 <script lang="ts">
 
-import Topbar from "./components/topbar/Topbar.vue";
-import {RouterView} from "vue-router";
+import Topbar from './components/topbar/Topbar.vue'
+import { RouterView } from 'vue-router'
 
 export default {
-  data() {
+  data () {
     return {
       loggedIn: false
     }
@@ -20,11 +20,10 @@ export default {
   components: {
     Topbar,
     RouterView
-  },
+  }
 
 }
 </script>
-
 
 <style scoped>
 

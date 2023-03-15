@@ -15,7 +15,7 @@ describe("SubspaceLogic", () => {
     const logicJustLiteralJSON = `{"literal":{"subspace":${subspace2json}}}`
 
     const invalidLogicJSON= `{"literals":{"subspace":${subspace2json}}}`
-    const invalidLogicJSON2= `{"literal":{"subspace":${subspace2json}}, "operation":{"operator":"and","operands":[{"literal":{"subspace":${subspace1json}}}}`
+    const invalidLogicJSON2= `{"literal":{"subspace":${subspace2json}}, "operation":{"operator":"and","operands":[{"literal":{"subspace":${subspace1json}}},"literal":{"subspace":${subspace2json}}}`
 
     const logicOneLayer = new Operation(
         Operator.AND,

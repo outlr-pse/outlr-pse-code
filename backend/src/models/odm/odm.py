@@ -47,5 +47,9 @@ class ODM(Base):
                 return False
 
     def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
-        """Runs the ODM on the given subspace"""
+        """Runs the ODM on the given subspace and returns labels for the outliers of {0,1}"""
+        raise NotImplementedError
+
+    def run_odm_score(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
+        """Runs the ODM on the given subspace and returns decision scores for the outliers of """
         raise NotImplementedError

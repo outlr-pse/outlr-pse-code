@@ -73,6 +73,7 @@ class TestUserManagementAPI(unittest.TestCase):
         password = 'TestPasswordValid0!'
         response_second_register = self.client.post("/api/user/register",
                                                     json={'username': username, 'password': password})
+        # username was already taken
         assert response_second_register.status_code == error.username_already_taken.get("status")
         response_dict = response_second_register.get_json()
         assert "username" not in response_dict

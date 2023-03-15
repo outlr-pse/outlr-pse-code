@@ -17,8 +17,8 @@ class TestUserManagementAPI(unittest.TestCase):
     def setUp(self) -> None:
         self.client = app.test_client()
 
-    def tearDown(self) -> None:
-        self.client.environ_base['HTTP_AUTHORIZATION'] = ""
+    # def tearDown(self) -> None:
+    #     self.client.environ_base['HTTP_AUTHORIZATION'] = ""
 
     def test_register_valid_data(self):
         """Tests registering a user with valid username and password"""

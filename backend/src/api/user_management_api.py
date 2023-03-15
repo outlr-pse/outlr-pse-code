@@ -117,17 +117,17 @@ def login() -> (Response, int):
         if input_error:
             return input_error
 
-    username = request.json["username"]
-    # the password hash
-    password = request.json["password"]
-    user = db.get_user(session, user=username)
-    if user is None:
-        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
+        username = request.json["username"]
+        # the password hash
+        password = request.json["password"]
+        user = db.get_user(session, user=username)
+        if user is None:
+            return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
 
-    if not check_password_hash(user.password, password):
-        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
-    access_token = create_access_token(identity=user.id)
-    return jsonify(username=user.name, access_token=access_token)
+        if not check_password_hash(user.password, password):
+            return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
+        access_token = create_access_token(identity=user.id)
+        return jsonify(username=user.name, access_token=access_token)
 
 
 @user_management_api.route('/register', methods=['POST'])
@@ -145,12 +145,12 @@ def register() -> (Response, int):
         username = request.json["username"]
         password = request.json["password"]
 
-    password_hash_bytes = generate_password_hash(password)
-    password_hashed = password_hash_bytes.decode('utf-8')
-    user = User(name=username, password=password_hashed)
-    # check if username is already linked to User in database
-    if db.get_user(session, username):
-        return jsonify(error.username_already_taken), error.username_already_taken["status"]
+        password_hash_bytes = generate_password_hash(password)
+        password_hashed = password_hash_bytes.decode('utf-8')
+        user = User(name=username, password=password_hashed)
+        # check if username is already linked to User in database
+        if db.get_user(session, username):
+            return jsonify(error.username_already_taken), error.username_already_taken["status"]
 
         # no User in database with username -> create a User with provided username in the database
         db.add_user(session, user)

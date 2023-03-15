@@ -1,11 +1,10 @@
-import {JSONSerializable} from "../JSONSerializable";
 import {Subspace} from "./Subspace";
 import {Outlier} from "./Outlier";
 
 /**
  * This class represents an experiment result.
  */
-export class ExperimentResult implements JSONSerializable {
+export class ExperimentResult {
     accuracy: number;
     executionDate: Date;
     executionTime: number;
@@ -27,9 +26,6 @@ export class ExperimentResult implements JSONSerializable {
         this.resultSpace = resultSpace;
     }
 
-    serialize(): string {
-        return JSON.stringify(this);
-    }
 
     /**
      * This method creates an experiment result from a JSON object.

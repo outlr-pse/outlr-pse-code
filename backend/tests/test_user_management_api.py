@@ -6,10 +6,10 @@ from models.base import Base
 import database.database_access as db
 
 
-# def setUpModule() -> None:
-#     Base.metadata.drop_all(bind=db.engine, checkfirst=True)
-#     Base.metadata.create_all(bind=db.engine)
-#     db.setup_db()
+def setUpModule() -> None:
+    Base.metadata.drop_all(bind=db.engine, checkfirst=True)
+    Base.metadata.create_all(bind=db.engine)
+    db.setup_db()
 
 
 class TestUserManagementAPI(unittest.TestCase):

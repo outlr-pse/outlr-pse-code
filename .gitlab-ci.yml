@@ -91,7 +91,7 @@ backend-test:
       - pip3 install -r requirements.txt
   script:
     - python3 -m coverage run -m unittest discover tests
-    - python3 -m coverage report -m
+#    - python3 -m coverage report -m
 
 frontend-test:
   stage: test

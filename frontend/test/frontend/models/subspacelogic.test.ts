@@ -15,7 +15,7 @@ describe("SubspaceLogic", () => {
     const logicJustLiteralJSON = `{"literal":{"subspace":${subspace2json}}}`
 
     const invalidLogicJSON= `{"literals":{"subspace":${subspace2json}}}`
-    const invalidLogicJSON2= `{"literal":{"subspace":${subspace2json}}, "operation":{"operator":"and","operands":[{"literal":{"subspace":${subspace1json}}},"literal":{"subspace":${subspace2json}}}`
+    const invalidLogicJSON2= `{"literal":{"subspace":${subspace2json}},"operation":{"operation":{"operator":"and","operands":[{"literal":{"subspace":${subspace1json}}},{"literal":{"subspace":${subspace2json}}}]}},"literal":{"subspace":${subspace2json}}}`
 
     const logicOneLayer = new Operation(
         Operator.AND,
@@ -60,12 +60,12 @@ describe("SubspaceLogic", () => {
     })
 
     it("no opearands", () => {
-        expect(() => new Operation(Operator.AND, [])).toThrow()
+        expect(() => new Operation(Operator.AND, [])).toThrow("Tried to create Operation with no operands")
     })
     it("unknown root", () => {
         expect(() => SubspaceLogic.fromJSON(invalidLogicJSON)).toThrow()
     })
     it("multiple keys", () => {
-        expect(() => SubspaceLogic.fromJSON(invalidLogicJSON2)).toThrow()
+        expect(() => SubspaceLogic.fromJSON(invalidLogicJSON2)).toThrow("Tries to read SubspaceLogic from JSON where a node had multiple keys")
     })
 })

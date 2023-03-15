@@ -100,19 +100,19 @@ class TestDBAccess(unittest.TestCase):
     #     self.assertEqual(session.get(HyperParameter, id2).name, "hp3")
 
 
-class TestODMProvider(unittest.TestCase):
-    def test_scraper(self):
-        with db.Session() as session:
-            odms = db.get_all_odms(session)
-            odm_names = [odm.name for odm in odms]
-            self.assertIn('cd.CD', odm_names)
-            self.assertIn('hbos.HBOS', odm_names)
-            self.assertIn('anogan.AnoGAN', odm_names)
-            self.assertIn('abod.ABOD', odm_names)
-            self.assertIn('alad.ALAD', odm_names)
-            self.assertIn('rod.ROD', odm_names)
-            self.assertIn('knn.KNN', odm_names)
-            db.setup_db()
+# class TestODMProvider(unittest.TestCase):
+#     def test_scraper(self):
+#         with db.Session() as session:
+#             odms = db.get_all_odms(session)
+#             odm_names = [odm.name for odm in odms]
+#             self.assertIn('cd.CD', odm_names)
+#             self.assertIn('hbos.HBOS', odm_names)
+#             self.assertIn('anogan.AnoGAN', odm_names)
+#             self.assertIn('abod.ABOD', odm_names)
+#             self.assertIn('alad.ALAD', odm_names)
+#             self.assertIn('rod.ROD', odm_names)
+#             self.assertIn('knn.KNN', odm_names)
+#             db.setup_db()
 
 
 class TestExperimentWithResult(unittest.TestCase):

@@ -1,5 +1,9 @@
 import {Hyperparameter} from "../../../src/models/odm/Hyperparameter";
-import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
+import {
+    getHyperparameterType,
+    HyperparameterType,
+    validateHyperparameterType
+} from "../../../src/models/odm/HyperparameterType";
 import {ODM} from "../../../src/models/odm/ODM";
 
 
@@ -23,7 +27,7 @@ describe('getHyperparameters', () => {
 
 
         let jsonObject = JSON.parse("[{\"id\":1,\"name\":\"hidden_activation\",\"type\":\"string\",\"optional\":true},{\"id\":2,\"name\":\"output_activation\",\"type\":\"string\",\"optional\":true},{\"id\":3,\"name\":\"loss\",\"type\":\"string\",\"optional\":true},{\"id\":4,\"name\":\"optimizer\",\"type\":\"string\",\"optional\":false},{\"id\":5,\"name\":\"epochs\",\"type\":\"integer\",\"optional\":true},{\"id\":6,\"name\":\"batch_size\",\"type\":\"integer\",\"optional\":true},{\"id\":7,\"name\":\"dropout_rate\",\"type\":\"numeric\",\"optional\":false},{\"id\":8,\"name\":\"l2_regularizer\",\"type\":\"numeric\",\"optional\":true},{\"id\":9,\"name\":\"validation_size\",\"type\":\"numeric\",\"optional\":true},{\"id\":10,\"name\":\"preprocessing\",\"type\":\"boolean\",\"optional\":false},{\"id\":11,\"name\":\"verbose\",\"type\":\"integer\",\"optional\":true},{\"id\":12,\"name\":\"contamination\",\"type\":\"numeric\",\"optional\":false}]")
-            let hyperparams = [];
+        let hyperparams = [];
         for (let paramJson of jsonObject) {
             hyperparams.push(Hyperparameter.fromJSON(paramJson))
         }
@@ -32,8 +36,8 @@ describe('getHyperparameters', () => {
 
     it.skip('should return list of odms', function () {
         const realODMs = [
-            new ODM(1,"odm1",[]),
-            new ODM(2,"odm2",[])
+            new ODM(1, "odm1", []),
+            new ODM(2, "odm2", [])
         ];
 
         let jsonObject = JSON.parse("[{\"id\":1,\"name\":\"odm1\"},{\"id\":2,\"name\":\"odm2\"}]")
@@ -45,7 +49,48 @@ describe('getHyperparameters', () => {
 
     });
 
-    it('i need a test', function () {
+    it('test validateHyperparameterType', function () {
+        const StringParam = new Hyperparameter(1, "hidden_activation", "relu", HyperparameterType.STRING, true);
+        const IntegerParam = new Hyperparameter(2, "epochs", "10", HyperparameterType.INTEGER, true);
+        const NumericParam = new Hyperparameter(3, "dropout_rate", "0.1", HyperparameterType.NUMERIC, false);
+        const BooleanParam = new Hyperparameter(4, "preprocessing", "true", HyperparameterType.BOOLEAN, false);
+        const InvalidIntegerParam = new Hyperparameter(6, "epochs", "string", HyperparameterType.INTEGER, true);
+        const InvalidNumericParam = new Hyperparameter(7, "dropout_rate", "string", HyperparameterType.NUMERIC, false);
+        const InvalidBooleanParam = new Hyperparameter(8, "preprocessing", "20", HyperparameterType.BOOLEAN, false);
+        expect(validateHyperparameterType(StringParam)).toBe(true);
+        expect(validateHyperparameterType(IntegerParam)).toBe(true);
+        expect(validateHyperparameterType(NumericParam)).toBe(true);
+        expect(validateHyperparameterType(BooleanParam)).toBe(true);
+        expect(validateHyperparameterType(InvalidIntegerParam)).toBe(false);
+        expect(validateHyperparameterType(InvalidNumericParam)).toBe(false);
+        expect(validateHyperparameterType(InvalidBooleanParam)).toBe(false);
+    });
+
+    it('test getHyperparameterType', function () {
+        let stringType = getHyperparameterType("<class 'str'>");
+        let integerType = getHyperparameterType("<class 'int'>");
+        let numericType = getHyperparameterType("<class 'float'>");
+        let booleanType = getHyperparameterType("<class 'bool'>");
+        expect(stringType).toBe(HyperparameterType.STRING);
+        expect(integerType).toBe(HyperparameterType.INTEGER);
+        expect(numericType).toBe(HyperparameterType.NUMERIC);
+        expect(booleanType).toBe(HyperparameterType.BOOLEAN);
+    });
+
+    it('test hyperparams in ODM to Json ', function () {
+        let odm = new ODM(1, "odm1", []);
+        let hyperparams = [
+            new Hyperparameter(1, "hidden_activation", "relu", HyperparameterType.STRING, true),
+            new Hyperparameter(2, "epochs", "10", HyperparameterType.INTEGER, true),
+            new Hyperparameter(3, "dropout_rate", "0.1", HyperparameterType.NUMERIC, false),
+            new Hyperparameter(4, "preprocessing", "true", HyperparameterType.BOOLEAN, false)
+        ];
+        odm.hyperParameters = hyperparams;
+        let json = odm.toJSON();
+        expect(json.hyper_parameters.hidden_activation).toBe("relu");
+        expect(json.hyper_parameters.epochs).toBe(10);
+        expect(json.hyper_parameters.dropout_rate).toBe(0.1);
+        expect(json.hyper_parameters.preprocessing).toBe(1);
 
     });
 

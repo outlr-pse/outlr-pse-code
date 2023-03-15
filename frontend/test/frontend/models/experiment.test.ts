@@ -77,5 +77,10 @@ describe('Experiment', () => {
         expect(experiment.running).toBe(true)
     })
 
+    it('no subspacelogic', () => {
+        let experiment = new Experiment("", "", null, null, new ODM(0, "", []));
+        expect(experiment.subspaceLogic).toBe(null)
+    })
+
 
 });

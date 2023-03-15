@@ -1,8 +1,8 @@
 stages:          # List of stages for jobs, and their order of execution
   - build
-  - lint
   - test
   - deploy
+  - lint
 #
 #services:
 #  - docker:dind
@@ -141,7 +141,7 @@ lint-test:   # This job also runs in the test stage.
 
 
 frontend-lint:
-    stage: build
+    stage: lint
     image: node:19
     script:
         - cd frontend

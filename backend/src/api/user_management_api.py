@@ -11,14 +11,25 @@ import re
 
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 import api.error as error
-from werkzeug.security import check_password_hash, generate_password_hash
-
+import bcrypt
 from database import database_access
 from models.user import User
 
 user_management_api = Blueprint('user_management', __name__)
 username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
 password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})"
+
+
+def generate_password_hash(password) -> bytes:
+    password_bytes = password.encode('utf-8')
+    salt = bcrypt.gensalt(rounds=14)
+    return bcrypt.hashpw(password_bytes, salt)
+
+
+def check_password_hash(actual_password, password) -> bool:
+    password_bytes = password.encode('utf-8')
+    hashed_password = actual_password.encode('utf-8')
+    return bcrypt.checkpw(password_bytes, hashed_password)
 
 
 def get_token() -> str | None:
@@ -106,6 +117,7 @@ def login() -> (Response, int):
         return input_error
 
     username = request.json["username"]
+    # the password hash
     password = request.json["password"]
     user = database_access.get_user(username)
     if user is None:
@@ -131,7 +143,8 @@ def register() -> (Response, int):
     username = request.json["username"]
     password = request.json["password"]
 
-    password_hashed = generate_password_hash(password, 'sha256')
+    password_hash_bytes = generate_password_hash(password)
+    password_hashed = password_hash_bytes.decode('utf-8')
     user = User(name=username, password=password_hashed)
     # check if username is already linked to User in database
     if database_access.get_user(username):

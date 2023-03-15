@@ -5,24 +5,18 @@ import pandas as pd
 from numpy.typing import NDArray
 from matplotlib import pyplot as plt
 
-from models.dataset import Dataset
-
 from pyod.utils import generate_data
 
 
-def csv_to_dataset(name: str, dataset: str) -> Dataset:
+def csv_to_dataset(dataset: str) -> pd.DataFrame:
     """Converts a CSV string to a Dataset object.
     Args:
-        name: The name of the dataset.
         dataset: The path to the CSV file.
     Returns:
         Dataset: The Dataset object.
 
     """
-    df = pd.read_csv(dataset, header=None)
-    dataset = Dataset(name, df)
-
-    return dataset
+    return pd.read_csv(dataset, header=None)
 
 
 def csv_to_numpy_array(csv: str) -> NDArray:

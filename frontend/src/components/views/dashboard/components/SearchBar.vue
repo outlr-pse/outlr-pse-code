@@ -6,32 +6,32 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import Button from "../../../basic/button/Button.vue";
-import {ButtonType} from "../../../basic/button/ButtonType";
-import {Languages} from "../../../../language/Languages";
+import { defineComponent } from 'vue'
+import Button from '../../../basic/button/Button.vue'
+import { ButtonType } from '../../../basic/button/ButtonType'
+import { Languages } from '../../../../language/Languages'
 
 export default defineComponent({
-  name: "SearchBar",
+  name: 'SearchBar',
   computed: {
-    ButtonType() {
+    ButtonType () {
       return ButtonType
     }
   },
-  components: {Button},
-  data() {
+  components: { Button },
+  data () {
     return {
-      searchTerm: ""
-    };
+      searchTerm: ''
+    }
   },
   watch: {
-    searchTerm: function() {
-      this.$emit("search-term-changed", this.searchTerm);
+    searchTerm: function () {
+      this.$emit('search-term-changed', this.searchTerm)
     }
   },
   methods: {
-    clear(){
-      this.searchTerm = "";
+    clear () {
+      this.searchTerm = ''
     }
   }
 })
@@ -51,6 +51,5 @@ export default defineComponent({
   margin-left: 1vw;
   margin-top: 1vh;
 }
-
 
 </style>

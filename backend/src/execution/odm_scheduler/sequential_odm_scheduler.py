@@ -1,4 +1,5 @@
 from typing import Any
+import concurrent.futures as futures
 
 import pandas as pd
 from numpy.typing import NDArray
@@ -14,17 +15,12 @@ class SequentialODMScheduler(ODMScheduler):
     This is implemented using coroutines, but since the coroutine never awaits, the execution is sequential.
     """
 
-    async def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> NDArray:
-        """
-        Schedule the execution of an individual outlier detection method
-        Args:
-            odm: ODM to be used
-            hyperparams: Hyperparameters to be used
-            dataset: The dataset to be used. This can be a dataset that is reduced to a subspace
-        Raises: ODMFailureError: Raises and ODMFailureError if the execution fails
-        """
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> futures.Future[NDArray]:
+        # Run the outlier detection method sequentially and wrap its result in a future
+        future = futures.Future()
         try:
             result = odm.run_odm(dataset, hyperparams)
+            future.set_result(result)
         except Exception as e:
-            raise ODMFailureError(str(e))
-        return result
+            future.set_exception(ODMFailureError(str(e)))
+        return future

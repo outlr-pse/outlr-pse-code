@@ -1,6 +1,6 @@
-from typing import Awaitable, Any
+from typing import Any
 from concurrent.futures import Executor
-import asyncio
+import concurrent.futures as futures
 
 import pandas as pd
 from numpy.typing import NDArray
@@ -22,7 +22,5 @@ class ExecutorODMScheduler(ODMScheduler):
         """
         self.executor = executor
 
-    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> Awaitable[NDArray]:
-        return asyncio.wrap_future(
-            self.executor.submit(odm.run_odm, dataset, hyperparams)
-        )
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> futures.Future[NDArray]:
+        return self.executor.submit(odm.run_odm, dataset, hyperparams)

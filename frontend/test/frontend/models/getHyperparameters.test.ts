@@ -83,7 +83,8 @@ describe('getHyperparameters', () => {
             new Hyperparameter(1, "hidden_activation", "relu", HyperparameterType.STRING, true),
             new Hyperparameter(2, "epochs", "10", HyperparameterType.INTEGER, true),
             new Hyperparameter(3, "dropout_rate", "0.1", HyperparameterType.NUMERIC, false),
-            new Hyperparameter(4, "preprocessing", "true", HyperparameterType.BOOLEAN, false)
+            new Hyperparameter(4, "preprocessing", "true", HyperparameterType.BOOLEAN, false),
+            new Hyperparameter(4, "preprocessing2", "false", HyperparameterType.BOOLEAN, false)
         ];
         odm.hyperParameters = hyperparams;
         let json = odm.toJSON();
@@ -91,12 +92,31 @@ describe('getHyperparameters', () => {
         expect(json.hyper_parameters.epochs).toBe(10);
         expect(json.hyper_parameters.dropout_rate).toBe(0.1);
         expect(json.hyper_parameters.preprocessing).toBe(1);
+        expect(json.hyper_parameters.preprocessing2).toBe(0);
     });
 
     it('test odm serialization', function () {
         let odm = new ODM(1, "odm1", []);
         let json = odm.serialize();
         expect(json).toBe("{\"id\":1,\"hyper_parameters\":{}}");
+    });
+
+    it('should return list of parameters', function () {
+        const realParameters = [
+            new Hyperparameter(1, "hidden_activation", "", HyperparameterType.STRING, true),
+            new Hyperparameter(2, "epochs", "", HyperparameterType.INTEGER, true),
+            new Hyperparameter(3, "dropout_rate", "", HyperparameterType.NUMERIC, false),
+        ];
+
+
+        let jsonObject = JSON.parse("[{\"id\":1,\"name\":\"hidden_activation\",\"type\":\"<class 'str'>\",\"optional\":true},{\"id\":2,\"name\":\"epochs\",\"type\":\"<class 'int'>\",\"optional\":true},{\"id\":3,\"name\":\"dropout_rate\",\"type\":\"<class 'float'>\",\"optional\":false}]")
+        let params = [];
+        for (let paramJSON of jsonObject) {
+            params.push(Hyperparameter.fromJSON(paramJSON))
+        }
+        expect(params).toEqual(realParameters);
+
+
     });
 
 

@@ -3,11 +3,20 @@ import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
 import { type ODM } from '../models/odm/ODM'
 import { type Experiment } from '../models/experiment/Experiment'
+import axiosClient from "./AxiosClient";
 
-export const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:1337/api'
-})
-export const storage = localStorage
+
+export async function getUrl() {
+  return await axiosClient.get("/user/get-token-identity", { headers: authHeader() })
+}
+
+export async function postUrl() {
+  return await axiosClient.post('/register', {
+      username : "Ud0",
+      password : "hallo123"
+  })
+}
+
 
 export async function sendLogout (): Promise<any> {
   /**

@@ -1,5 +1,4 @@
-import { requestTokenIdentity, storage } from './APIRequests'
-import { errorOther } from './ErrorOther'
+import { storage } from './AuthServices'
 
 export function authHeader () {
   /**

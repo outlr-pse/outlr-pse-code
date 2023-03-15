@@ -13,7 +13,7 @@ from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_requir
 import api.error as error
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database import database_access
+import database.database_access as db
 from models.user import User
 
 user_management_api = Blueprint('user_management', __name__)
@@ -101,20 +101,21 @@ def login() -> (Response, int):
     password were correct a user json (with the jwt token connected to the user) and the status code "200 OK"
     is returned, status code "401 Unauthorized" otherwise.
     """
-    input_error = handle_user_input()
-    if input_error:
-        return input_error
+    with db.Session() as session:
+        input_error = handle_user_input()
+        if input_error:
+            return input_error
 
-    username = request.json["username"]
-    password = request.json["password"]
-    user = database_access.get_user(username)
-    if user is None:
-        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
+        username = request.json["username"]
+        password = request.json["password"]
+        user = db.get_user(session, user=username)
+        if user is None:
+            return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
 
-    if not check_password_hash(user.password, password):
-        return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
-    access_token = create_access_token(identity=user.id)
-    return jsonify(username=user.name, access_token=access_token)
+        if not check_password_hash(user.password, password):
+            return jsonify(error.provided_credentials_wrong), error.provided_credentials_wrong["status"]
+        access_token = create_access_token(identity=user.id)
+        return jsonify(username=user.name, access_token=access_token)
 
 
 @user_management_api.route('/register', methods=['POST'])
@@ -124,23 +125,24 @@ def register() -> (Response, int):
     into the database if username and password are valid and returns a user json
     (with the jwt token connected to the user), otherwise "409 Conflict"
     """
-    input_error = handle_user_input()
-    if input_error:
-        return input_error
+    with db.Session() as session:
+        input_error = handle_user_input()
+        if input_error:
+            return input_error
 
-    username = request.json["username"]
-    password = request.json["password"]
+        username = request.json["username"]
+        password = request.json["password"]
 
-    password_hashed = generate_password_hash(password, 'sha256')
-    user = User(name=username, password=password_hashed)
-    # check if username is already linked to User in database
-    if database_access.get_user(username):
-        return jsonify(error.username_already_taken), error.username_already_taken["status"]
+        password_hashed = generate_password_hash(password, 'sha256')
+        user = User(name=username, password=password_hashed)
+        # check if username is already linked to User in database
+        if db.get_user(session, username):
+            return jsonify(error.username_already_taken), error.username_already_taken["status"]
 
-    # no User in database with username -> create a User with provided username in the database
-    database_access.add_user(user)
-    access_token = create_access_token(identity=user.id)
-    return jsonify(user.to_json(access_token))
+        # no User in database with username -> create a User with provided username in the database
+        db.add_user(session, user)
+        access_token = create_access_token(identity=user.id)
+        return jsonify(user.to_json(access_token))
 
 
 @user_management_api.route('/logout', methods=['POST'])
@@ -159,11 +161,12 @@ def get_token_identity() -> (Response, int):
     In the case of a valid JWT Token
     the username and the access token are returned with status code "202 Accepted".
     """
-    user_id = get_jwt_identity()
-    token = get_token()
-    user = database_access.get_user(user_id)
-    if not user:
-        return jsonify(error.token_not_valid), error.token_not_valid["status"]
-    response = jsonify(user.to_json(token))
-    response.status = 202
-    return response
+    with db.Session() as session:
+        user_id = get_jwt_identity()
+        token = get_token()
+        user = db.get_user(session, user=user_id)
+        if not user:
+            return jsonify(error.token_not_valid), error.token_not_valid["status"]
+        response = jsonify(user.to_json(token))
+        response.status = 202
+        return response

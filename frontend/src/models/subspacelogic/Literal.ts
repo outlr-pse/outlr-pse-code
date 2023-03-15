@@ -1,23 +1,22 @@
-import {Subspace} from "../results/Subspace"
-import {SubspaceLogic} from "./SubspaceLogic";
-import {Outlier} from "../results/Outlier";
+import { Subspace } from '../results/Subspace'
+import { type SubspaceLogic } from './SubspaceLogic'
+import { type Outlier } from '../results/Outlier'
 
 /**
  * This class represents a literal in the {@link SubspaceLogic}
  */
 export class Literal implements SubspaceLogic {
+  readonly subspace: Subspace
 
-    readonly subspace: Subspace
-
-    /**
+  /**
      * Create a new Literal
      * @param subspace Subspace
      */
-    constructor(subspace: Subspace) {
-        this.subspace = subspace
-    }
+  constructor (subspace: Subspace) {
+    this.subspace = subspace
+  }
 
-    /**
+  /**
      * Reads a Literal from a JSON object
      * Expects the jsonObject to a valid representation of a Literal
      * @param jsonObject JSON as an object. This is what {@link JSON.parse} returns
@@ -34,33 +33,30 @@ export class Literal implements SubspaceLogic {
      *      So after the subspace logic is created all outliers that are used will be in the map.
      * @throws Throws when the given JSON object is not a valid SubspaceLogic
      */
-    public static fromJSONObject(
-        jsonObject: any,
-        subspaceMap: Map<number, Subspace>,
-        outlierMap: Map<number, Outlier>
-    ): Literal {
-        if(subspaceMap.has(jsonObject.subspace.id) ){
-            return new Literal(subspaceMap.get(jsonObject.subspace.id) as Subspace);
-        }
-        let subspace = Subspace.fromJSONObject(jsonObject.subspace, outlierMap);
-        subspaceMap.set(subspace.id as number, subspace);
-        return new Literal(subspace);
+  public static fromJSONObject (
+    jsonObject: any,
+    subspaceMap: Map<number, Subspace>,
+    outlierMap: Map<number, Outlier>
+  ): Literal {
+    if (subspaceMap.has(jsonObject.subspace.id)) {
+      return new Literal(subspaceMap.get(jsonObject.subspace.id) as Subspace)
     }
+    const subspace = Subspace.fromJSONObject(jsonObject.subspace, outlierMap)
+    subspaceMap.set(subspace.id as number, subspace)
+    return new Literal(subspace)
+  }
 
-    /**
+  /**
      * Converts Literal to a json object
      */
-    public toJSON() {
-        return { literal: { subspace: this.subspace } }
-        // Possible issue: If a subspace appears multiple times in the subspace logic (which might be the case)
-        // every appearance of the subspace is in the json completely.
-        // The JSON could get very big potentially, because the subspace json can also contain an ROC curve
-    }
+  public toJSON () {
+    return { literal: { subspace: this.subspace } }
+    // Possible issue: If a subspace appears multiple times in the subspace logic (which might be the case)
+    // every appearance of the subspace is in the json completely.
+    // The JSON could get very big potentially, because the subspace json can also contain an ROC curve
+  }
 
-    public serialize(): string {
-        return JSON.stringify(this)
-    }
-
-
-
+  public serialize (): string {
+    return JSON.stringify(this)
+  }
 }

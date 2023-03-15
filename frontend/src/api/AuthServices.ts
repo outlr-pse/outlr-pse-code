@@ -1,20 +1,18 @@
-import {requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData, storage} from "./APIRequests";
-import store from "../store"
-import {errorOther} from "./ErrorOther";
-export async function initialValidityCheck() : Promise<void> {
-    let responseJson = await requestTokenIdentity()
+import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData, storage } from './APIRequests'
+import store from '../store'
+import { errorOther } from './ErrorOther'
+export async function initialValidityCheck (): Promise<void> {
+  const responseJson = await requestTokenIdentity()
 
-    if (responseJson != null && "username" in responseJson && "access_token" in responseJson) {
-        await store.dispatch("auth/setAuthenticated", responseJson.username)
-    }
-
-    else {
-        storage.clear()
-    }
+  if (responseJson != null && 'username' in responseJson && 'access_token' in responseJson) {
+    await store.dispatch('auth/setAuthenticated', responseJson.username)
+  } else {
+    storage.clear()
+  }
 }
 
-export function validateUsername(username : string) : boolean {
-    /**
+export function validateUsername (username: string): boolean {
+  /**
      * validate the login data and return either true, when username is valid, or false, when username is not valid
      *
      * A username is valid, if:
@@ -24,15 +22,15 @@ export function validateUsername(username : string) : boolean {
      *
      * @param username the username, the user provided
      */
-    if (username == null) {
-        return false
-    }
-    let usernameRegex = new RegExp("^[A-Za-z][A-Za-z0-9_]{2,29}$")
-    return usernameRegex.test(username)
+  if (username == null) {
+    return false
+  }
+  const usernameRegex = new RegExp('^[A-Za-z][A-Za-z0-9_]{2,29}$')
+  return usernameRegex.test(username)
 }
 
-export function validatePassword(password:string) {
-    /**
+export function validatePassword (password: string) {
+  /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
      *
@@ -45,16 +43,16 @@ export function validatePassword(password:string) {
      *
      * @param password the password, the user provided
      */
-    if (password == null) {
-        return false
-    }
+  if (password == null) {
+    return false
+  }
 
-    let passwordRegex = new RegExp("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})")
-    return passwordRegex.test(password)
+  const passwordRegex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})')
+  return passwordRegex.test(password)
 }
 
-export async function login(username : string, password : string){
-    /**
+export async function login (username: string, password: string) {
+  /**
      * This method tries to log in using {@link sendLoginData}
      * the provided credentials to send a request to the API. It returns
      * the JSON, which either can be successful and then contains the user (especially the token)
@@ -64,30 +62,28 @@ export async function login(username : string, password : string){
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-     try {
-        const response = await sendLoginData(username, password)
-        if (response.error != null) {
-            return response
-        }
-
-        const userJson = response.data
-        if (userJson == null) {
-            return errorOther
-        }
-
-        storage.removeItem('access_token')
-        storage.setItem('access_token', userJson.access_token)
-        await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
-        return response.data
-        }
-    catch (error) {
-        return errorOther
+  try {
+    const response = await sendLoginData(username, password)
+    if (response.error != null) {
+      return response
     }
+
+    const userJson = response.data
+    if (userJson == null) {
+      return errorOther
+    }
+
+    storage.removeItem('access_token')
+    storage.setItem('access_token', userJson.access_token)
+    await store.dispatch('auth/setAuthenticated', userJson.username, userJson.access_token)
+    return response.data
+  } catch (error) {
+    return errorOther
+  }
 }
 
-
-export async function register(username : string, password : string){
-    /**
+export async function register (username: string, password: string) {
+  /**
      * This method tries to register a user in using {@link sendRegisterData}
      * the provided credentials to send a request to the API. It returns
      * the JSON, which either can be successful and then contains the user (especially the token)
@@ -97,29 +93,28 @@ export async function register(username : string, password : string){
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-    try {
-        const response = await sendRegisterData(username, password)
-        if (response.error != null) {
-            return response
-        }
-
-        const userJson = response.data
-        if (userJson == null) {
-            return errorOther
-        }
-
-        storage.removeItem('access_token')
-        storage.setItem('access_token', userJson.access_token)
-        await store.dispatch("auth/setAuthenticated", userJson.username, userJson.access_token)
-        return response.data
-        }
-    catch (error) {
-        return errorOther
+  try {
+    const response = await sendRegisterData(username, password)
+    if (response.error != null) {
+      return response
     }
+
+    const userJson = response.data
+    if (userJson == null) {
+      return errorOther
+    }
+
+    storage.removeItem('access_token')
+    storage.setItem('access_token', userJson.access_token)
+    await store.dispatch('auth/setAuthenticated', userJson.username, userJson.access_token)
+    return response.data
+  } catch (error) {
+    return errorOther
+  }
 }
 
-export async function logout() {
-    /**
+export async function logout () {
+  /**
      * This method logs out a user using {@link sendLogout}
      * to request the deletion of the token on API side - it also removes
      * the current access token, which will be invalidated by API, from the local storage.
@@ -128,20 +123,19 @@ export async function logout() {
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-    try {
-            const response = await sendLogout()
-            if (response.error != null) {
-                storage.removeItem('access_token')
-                await store.dispatch("auth/unsetAuthenticated")
-                return response
-            }
+  try {
+    const response = await sendLogout()
+    if (response.error != null) {
+      storage.removeItem('access_token')
+      await store.dispatch('auth/unsetAuthenticated')
+      return response
+    }
 
-            storage.removeItem('access_token')
-            await store.dispatch("auth/unsetAuthenticated")
-            return response.data
-        } catch (error) {
-            storage.removeItem('access_token')
-            return errorOther
-        }
+    storage.removeItem('access_token')
+    await store.dispatch('auth/unsetAuthenticated')
+    return response.data
+  } catch (error) {
+    storage.removeItem('access_token')
+    return errorOther
+  }
 }
-

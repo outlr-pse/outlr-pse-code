@@ -1,12 +1,12 @@
-export enum ButtonType{
-    DEFAULT = "default",
-    CONTRAST = "contrast",
-    ACTIVE = "active",
-    DISABLED = "disabled",
-    OUTLINE = "outline",
-    TRANSPARENT = "transparent",
-    DARKPURPLESIGNUP = "darkPurpleSignUp",
+export enum ButtonType {
+  DEFAULT = 'default',
+  CONTRAST = 'contrast',
+  ACTIVE = 'active',
+  DISABLED = 'disabled',
+  OUTLINE = 'outline',
+  TRANSPARENT = 'transparent',
+  DARKPURPLESIGNUP = 'darkPurpleSignUp',
 
-    DARKPURPLENAVIGATETODASHBOARD = "darkPurpleNavigateToDashboard"
+  DARKPURPLENAVIGATETODASHBOARD = 'darkPurpleNavigateToDashboard'
 
 }

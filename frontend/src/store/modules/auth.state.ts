@@ -1,4 +1,4 @@
 export interface AuthModuleState {
-    isAuthenticated : boolean,
-    username : string
+  isAuthenticated: boolean
+  username: string
 }

@@ -1,18 +1,14 @@
-import {Subspace} from "./Subspace";
+import { type Subspace } from './Subspace'
 
 /**
  * This class represents an outlier.
  */
 export class Outlier {
-    index: number;
-    subspaces: Subspace[];
+  index: number
+  subspaces: Subspace[]
 
-    constructor(index: number, subspaces: Subspace[]) {
-        this.index = index;
-        this.subspaces = subspaces;
-    }
-
-
-
-
+  constructor (index: number, subspaces: Subspace[]) {
+    this.index = index
+    this.subspaces = subspaces
+  }
 }

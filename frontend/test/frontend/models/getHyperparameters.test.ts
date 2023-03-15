@@ -34,13 +34,13 @@ describe('getHyperparameters', () => {
         expect(hyperparams).toEqual(realHyperparameters);
     });
 
-    it.skip('should return list of odms', function () {
+    it('should return list of odms', function () {
         const realODMs = [
             new ODM(1, "odm1", []),
             new ODM(2, "odm2", [])
         ];
 
-        let jsonObject = JSON.parse("[{\"id\":1,\"name\":\"odm1\"},{\"id\":2,\"name\":\"odm2\"}]")
+        let jsonObject = JSON.parse("[{\"id\":1,\"name\":\"odm1.odm1\"},{\"id\":2,\"name\":\"odm2.odm2\"}]")
         let odms = [];
         for (let odmJson of jsonObject) {
             odms.push(ODM.fromJSON(odmJson))
@@ -91,7 +91,12 @@ describe('getHyperparameters', () => {
         expect(json.hyper_parameters.epochs).toBe(10);
         expect(json.hyper_parameters.dropout_rate).toBe(0.1);
         expect(json.hyper_parameters.preprocessing).toBe(1);
+    });
 
+    it('test odm serialization', function () {
+        let odm = new ODM(1, "odm1", []);
+        let json = odm.serialize();
+        expect(json).toBe("{\"id\":1,\"hyper_parameters\":{}}");
     });
 
 

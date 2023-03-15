@@ -2,6 +2,10 @@ import {Experiment} from '../../../src/models/experiment/Experiment';
 import {ODM} from "../../../src/models/odm/ODM";
 import {Hyperparameter} from "../../../src/models/odm/Hyperparameter";
 import {HyperparameterType} from "../../../src/models/odm/HyperparameterType";
+import {Subspace} from "../../../src/models/results/Subspace";
+import {Literal} from "../../../src/models/subspacelogic/Literal";
+import {Operation} from "../../../src/models/subspacelogic/Operation";
+import {Operator} from "../../../src/models/subspacelogic/Operator";
 
 describe('Experiment', () => {
 
@@ -80,6 +84,15 @@ describe('Experiment', () => {
     it('no subspacelogic', () => {
         let experiment = new Experiment("", "", null, null, new ODM(0, "", []));
         expect(experiment.subspaceLogic).toBe(null)
+        const subspace1 = new Subspace(1, "sub1", [1])
+        const subspace2 = new Subspace(2, "sub2", [2, 3, 4])
+        const logicOneLayer = new Operation(
+            Operator.AND,
+            [new Literal(subspace1), new Literal(subspace2)],
+        )
+        let experiment2 = new Experiment("", "", null, null, new ODM(0, "", []), logicOneLayer);
+        expect(experiment2.subspaceLogic).not.toBe(null)
+        expect(experiment2.subspaceLogic).toBe(logicOneLayer)
     })
 
 

@@ -34,48 +34,46 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import Card from "../../basic/Card.vue";
-import Button from "../../basic/button/Button.vue";
-import Tip from "../../basic/Tip.vue";
-import {login, validatePassword, validateUsername} from "../../../api/AuthServices";
-import {defineComponent} from "vue";
-import router from "../../../router";
-import store from "../../../store";
+import Card from '../../basic/Card.vue'
+import Button from '../../basic/button/Button.vue'
+import Tip from '../../basic/Tip.vue'
+import { login, validatePassword, validateUsername } from '../../../api/AuthServices'
+import { defineComponent } from 'vue'
+import router from '../../../router'
+import store from '../../../store'
 
 export default defineComponent({
-  name: "Register",
-  components: {Tip, Button, Card},
+  name: 'Register',
+  components: { Tip, Button, Card },
   data: () => {
     return {
       withValidInput: [false, false, false],
-      username: "",
-      password: "",
-      passwordRepeated: "",
+      username: '',
+      password: '',
+      passwordRepeated: '',
       error: false,
-      errorMessage: "Something went wrong!",
-      inputTypePassword: "password",
-      visiblePassword: "visibility"
-    };
+      errorMessage: 'Something went wrong!',
+      inputTypePassword: 'password',
+      visiblePassword: 'visibility'
+    }
   },
   methods: {
-    resetInputFields() {
-      this.username = ""
-      this.password = ""
+    resetInputFields () {
+      this.username = ''
+      this.password = ''
     },
-    toggleVisibilityPassword() {
-      this.inputTypePassword = this.inputTypePassword === "password" ? "text" : "password"
-      this.visiblePassword = this.visiblePassword === "visibility_off" ? "visibility" : "visibility_off"
-      this.error = false;
+    toggleVisibilityPassword () {
+      this.inputTypePassword = this.inputTypePassword === 'password' ? 'text' : 'password'
+      this.visiblePassword = this.visiblePassword === 'visibility_off' ? 'visibility' : 'visibility_off'
+      this.error = false
     },
-    async tryLoginSubmit() {
-
+    async tryLoginSubmit () {
       if (!validateUsername(this.username) || !validatePassword(this.password)) {
-        this.error = true;
+        this.error = true
         this.errorMessage = this.$t('message.login-view.errors.provided_credentials_wrong')
         this.resetInputFields()
-        return;
+        return
       }
 
       const response = await login(this.username, this.password)
@@ -83,11 +81,11 @@ export default defineComponent({
         this.error = true
         this.errorMessage = this.$t(`message.login-view.errors.${response.error}`)
         this.resetInputFields()
-        return;
+        return
       }
       await router.push('/')
     }
-  },
+  }
 })
 </script>
 
@@ -162,8 +160,6 @@ input {
   display: flex;
   justify-content: center;
 }
-
-
 
 .content {
   display: grid;

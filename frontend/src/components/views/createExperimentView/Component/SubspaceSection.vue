@@ -20,24 +20,24 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import Card from "../../../basic/Card.vue";
+import { defineComponent } from 'vue'
+import Card from '../../../basic/Card.vue'
 
 export default defineComponent({
-  name: "SubspaceSection",
-  components: {Card},
-  data() {
+  name: 'SubspaceSection',
+  components: { Card },
+  data () {
     return {
-      value: "",
+      value: '',
       showTip: false
     }
   },
   watch: {
     value: function () {
-      this.$emit("onInputChange", this.value)
+      this.$emit('onInputChange', this.value)
     }
   },
-  emits: ["onInputChange"]
+  emits: ['onInputChange']
 })
 </script>
 
@@ -105,6 +105,5 @@ export default defineComponent({
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
 
 </style>

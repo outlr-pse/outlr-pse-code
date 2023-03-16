@@ -35,7 +35,7 @@ export default defineComponent({
       default: 'Select an option'
     },
     options: {
-      type: Array,
+      type: Array as () => string[],
       required: true
     },
     value: {

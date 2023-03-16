@@ -1,6 +1,14 @@
 <template>
   <div v-if="experiment" class="summary">
-    <ExperimentSummaryCard :experiment="experiment"/>
+    <div v-if="experiment.failed">
+      <Card>
+        <h1>Experiment failed</h1>
+        <p style="color: var(--color-close-button)">Reason: {{ experiment.error }}</p>
+      </Card>
+    </div>
+    <div v-else>
+       <ExperimentSummaryCard :experiment="experiment"/>
+    </div>
   </div>
 </template>
 
@@ -10,10 +18,11 @@ import { useRoute } from 'vue-router'
 import { requestExperimentResult } from '../../../api/APIRequests'
 import { Experiment } from '../../../models/experiment/Experiment'
 import { defineComponent } from 'vue'
+import Card from '../../basic/Card.vue'
 
 export default defineComponent({
   name: 'ExperimentResultView',
-  components: { ExperimentSummaryCard },
+  components: { Card, ExperimentSummaryCard },
   data () {
     return {
       experiment: null as Experiment | null,

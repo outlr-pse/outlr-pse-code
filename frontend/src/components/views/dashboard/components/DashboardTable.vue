@@ -10,16 +10,19 @@
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData" v-bind:key="row[0]">
-            <td v-for="cell in row[1]" v-bind:key="cell">
-              <div v-if="row[1][4][0] === Infinity " class="running">
-                {{ cell }}
+          <tr v-for="row in filteredData" class="tableData" v-bind:key="row[0]" @click="rowClick(row)">
+            <td v-for="cell in row[1]" v-bind:key="cell"
+                v-bind:class="[{'running': row[1][4][0] === Infinity},
+                {'failed': row[1][4][0] === -1},
+                {'notRunning': row[1][4][0] >= 0 && row[1][4][0] < Infinity }]">
+              <div v-if="row[1][4][0] === Infinity ">
+                {{ cell[1] }}
               </div>
-              <div v-else-if="row[1][4][0] === -1 " class="failed">
-                {{ cell }}
+              <div v-else-if="row[1][4][0] === -1" >
+                {{ cell[1] }}
               </div>
-              <div v-else class="notRunning" @click="rowClick(row)">
-                {{ cell }}
+              <div v-else>
+                {{ cell[1] }}
               </div>
             </td>
           </tr>
@@ -36,7 +39,7 @@ import { Experiment } from '../../../../models/experiment/Experiment'
 import { requestAllExperiments } from '../../../../api/APIRequests'
 import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
 import { DashboardSortColumn } from './DashboardSortColumn'
-import {dateCalculation} from "./DashboardUtil";
+import { dateCalculation } from './DashboardUtil'
 
 export default defineComponent({
   components: { BaseTable },
@@ -101,42 +104,51 @@ export default defineComponent({
       for (const experiment of response.data) {
         this.experiments.push(Experiment.fromJSON(experiment))
       }
-      for (let experiment of this.experiments) {
-        let id = experiment.id
+      for (const experiment of this.experiments) {
+        const id = experiment.id
         type TableCell = [any, string]; // [metaData for sorting, string representation]
-        type TableRow = [number, TableCell[]];
-        let row: TableRow = [id, []]
+        type TableRow = [number, TableCell[]]; // [id, [TableCell]]
+        const row: TableRow = [id, []]
 
-        for (let header of this.headers) { //6 headers
+        for (const header of this.headers) { // 6 headers
           let cell: TableCell = [undefined, '']
-          if (header[1] === DashboardSortColumn.NAME) {
-            cell = [experiment.name, experiment.name]
-          } else if (header[1] === DashboardSortColumn.DATASET) {
-            cell = [experiment.datasetName, experiment.datasetName]
-          } else if (header[1] === DashboardSortColumn.ODM) {
-            cell = [experiment.odm.name, experiment.odm.name]
-          } else if (header[1] === DashboardSortColumn.HYPERPARAMETER) {
-            let shownParams = experiment.odm.hyperParameters
-            let shownParamString = shownParams.map((param: { name: string; value: string; }) => {
-              return param.name + ': ' + param.value
-            }).join(', ')
-            cell = [shownParams, shownParamString]
-          } else if (header[1] === DashboardSortColumn.DATE) {
-            if (experiment.running) {
-              cell = [Infinity, 'Running . . .']
-            } else if (experiment.failed) {
-              cell = [-1, 'Failed :(']
-            } else {
-              let date = dateCalculation(experiment.experimentResult?.executionDate)
-              cell = [experiment.experimentResult?.executionDate, date]
-            }
-          } else if (header[1] === DashboardSortColumn.ACCURACY) {
-            if (experiment.running || experiment.failed) {
-              cell = [undefined, '']
-            } else {
-              let accuracy = experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy * 100 : -1
-              cell = [accuracy, accuracy != -1 ? accuracy.toFixed(1) + '%' : 'No GT']
-            }
+          const shownParams = experiment.odm.hyperParameters
+          const shownParamString = shownParams.map((param: { name: string; value: string; }) => {
+            return param.name + ': ' + param.value
+          }).join(', ')
+
+          switch (header[1]) {
+            case DashboardSortColumn.NAME:
+              cell = [experiment.name, experiment.name]
+              break
+            case DashboardSortColumn.DATASET:
+              cell = [experiment.datasetName, experiment.datasetName]
+              break
+            case DashboardSortColumn.ODM:
+              cell = [experiment.odm.name, experiment.odm.name]
+              break
+            case DashboardSortColumn.HYPERPARAMETER:
+              cell = [shownParams, shownParamString]
+              break
+            case DashboardSortColumn.DATE:
+              console.log(experiment)
+              if (experiment.failed) {
+                cell = [-1, 'Failed :(']
+              } else if (experiment.running) {
+                cell = [Infinity, 'Running ...']
+              } else {
+                const date = dateCalculation(experiment.experimentResult?.executionDate)
+                cell = [experiment.experimentResult?.executionDate, date]
+              }
+              break
+            case DashboardSortColumn.ACCURACY:
+              if (experiment.running || experiment.failed) {
+                cell = [undefined, '']
+              } else {
+                const accuracy = experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy * 100 : -1
+                cell = [accuracy, accuracy !== -1 ? accuracy.toFixed(1) + '%' : 'No GT']
+              }
+              break
           }
           row[1].push(cell)
         }
@@ -150,8 +162,11 @@ export default defineComponent({
       this.currentSorting = header
       this.tableSort()
     },
-    rowClick(row: [number, [any, string][]]) {
-      this.$router.push("/experiment/" + row[0])
+    rowClick (row: [number, [any, string][]]) {
+      if (row[1][4][0] === Infinity) {
+        return
+      }
+      this.$router.push('/experiment/' + row[0])
     },
     tableSearch () {
       this.filteredData = this.data.filter((row) => {
@@ -228,7 +243,7 @@ tr {
 }
 
 tr td {
-  padding: 0.5em;
+   padding: 0.5rem;
 }
 
 td {
@@ -289,6 +304,9 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .failed {
   color: var(--color-close-button);
 }
+.notRunning {
+  color: var(--color-text);
+}
 
 .running:hover {
   cursor: default;
@@ -297,5 +315,7 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .notRunning:hover {
   cursor: pointer;
 }
-
+.failed:hover {
+  cursor: pointer;
+}
 </style>

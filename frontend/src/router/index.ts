@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPageView from "../components/views/LandingPageView.vue"
-import store from "../store"
+import LandingPageView from '../components/views/LandingPageView.vue'
+import store from '../store'
+import { storage } from '../api/APIRequests'
+import { initialValidityCheck } from '../api/AuthServices'
 const routes = [
   {
     path: '/',
@@ -55,16 +57,18 @@ const router = createRouter({
   routes
 })
 
-
 router.beforeEach(async (to, from, next) => {
+  // eslint-disable-next-line
   if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
     await initialValidityCheck()
+    // eslint-disable-next-line
     if (store.getters['auth/isAuthenticated']) {
       next('/')
     }
     return
   }
 
+  // eslint-disable-next-line
   if (to.matched.some((record => record.meta.requiresAuth)) && (!storage.getItem("access_token") || !store.getters['auth/isAuthenticated'])) {
     next('/login')
     return
@@ -72,6 +76,5 @@ router.beforeEach(async (to, from, next) => {
 
   next()
 })
-
 
 export default router

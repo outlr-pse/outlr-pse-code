@@ -1,6 +1,6 @@
-import { requestTokenIdentity, storage } from './APIRequests'
-import { errorOther } from './ErrorOther'
+import { storage } from './APIRequests'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function authHeader () {
   /**
      * Generates the header used for sending the token provided with http requests to the backend. If

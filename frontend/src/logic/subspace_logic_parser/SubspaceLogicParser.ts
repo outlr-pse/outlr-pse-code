@@ -1,7 +1,7 @@
-import {SubspaceLogic} from "../../models/subspacelogic/SubspaceLogic";
-import {Subspace} from "../../models/results/Subspace";
-import {Literal} from "../../models/subspacelogic/Literal";
-import {Operation} from "../../models/subspacelogic/Operation";
+import { type SubspaceLogic } from '../../models/subspacelogic/SubspaceLogic'
+import { Subspace } from '../../models/results/Subspace'
+import { Literal } from '../../models/subspacelogic/Literal'
+import { Operation } from '../../models/subspacelogic/Operation'
 
 /**
  * Parse a simple version of the subspace logic syntax
@@ -14,33 +14,30 @@ import {Operation} from "../../models/subspacelogic/Operation";
  * @param input Subspace logic syntax
  * @param startIndex The start index of the input. Default value is 0
  */
-export function parseSubspaceLogic(input: string, startIndex: number = 0): SubspaceLogic | null {
-    // console.log("Parsing subspace logic: " + input.substring(startIndex))
-    let [subspace, restIndex] = readSubspace(input, startIndex)
-    if (subspace === null) {
-        return null
-    }
-    let restLogic = parseSubspaceLogic(input, restIndex)
-    if (restLogic === null) {
-        return new Literal(subspace)
-    }
-    else {
-        let operatorStr: any = input.substring(restIndex, input.indexOf("[", restIndex)).trim()
-        return new Operation(
-            operatorStr,
-            [new Literal(subspace), restLogic])
-    }
+export function parseSubspaceLogic (input: string, startIndex: number = 0): SubspaceLogic | null {
+  // console.log("Parsing subspace logic: " + input.substring(startIndex))
+  const [subspace, restIndex] = readSubspace(input, startIndex)
+  if (subspace === null) {
+    return null
+  }
+  const restLogic = parseSubspaceLogic(input, restIndex)
+  if (restLogic === null) {
+    return new Literal(subspace)
+  } else {
+    const operatorStr: any = input.substring(restIndex, input.indexOf('[', restIndex)).trim()
+    return new Operation(
+      operatorStr,
+      [new Literal(subspace), restLogic])
+  }
 }
 
-function readSubspace(input: string, startIndex: number): [Subspace | null, number] {
-    // console.log("Parsing subspace: " + input.substring(startIndex))
-    let startSubspace = input.indexOf("[", startIndex)
-    if (startSubspace == -1)
-        return [null, startIndex]
-    let endSubspace = input.indexOf("]", startIndex)
-    let columns: number[] = input.substring(startSubspace + 1, endSubspace)
-                                    .split(",")
-                                    .map((str) => parseInt(str.trim()))
-    return [new Subspace(null, null, columns), endSubspace + 1]
-
+function readSubspace (input: string, startIndex: number): [Subspace | null, number] {
+  // console.log("Parsing subspace: " + input.substring(startIndex))
+  const startSubspace = input.indexOf('[', startIndex)
+  if (startSubspace === -1) { return [null, startIndex] }
+  const endSubspace = input.indexOf(']', startIndex)
+  const columns: number[] = input.substring(startSubspace + 1, endSubspace)
+    .split(',')
+    .map((str) => parseInt(str.trim()))
+  return [new Subspace(null, null, columns), endSubspace + 1]
 }

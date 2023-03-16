@@ -4,21 +4,23 @@
       <BaseTable :style="{ width: '100%'}">
         <template #header>
           <tr class="firstRow">
-            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]">
+            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]" v-bind:key="index">
               {{ header[0] }}
             </td>
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" class="tableData">
-            <td v-if="row[1][4][0] === Infinity " v-for="cell in row[1]" class="running">
-              {{ cell[1] }}
-            </td>
-            <td v-else-if="row[1][4][0] === -1 " v-for="cell in row[1]" class="failed">
-              {{ cell[1] }}
-            </td>
-            <td v-for="cell in row[1]" v-else class="notRunning" @click="rowClick(row)">
-              {{ cell[1] }}
+          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData" v-bind:key="row[0]">
+            <td v-for="cell in row[1]" v-bind:key="cell">
+              <div v-if="row[1][4][0] === Infinity " class="running">
+                {{ cell }}
+              </div>
+              <div v-else-if="row[1][4][0] === -1 " class="failed">
+                {{ cell }}
+              </div>
+              <div v-else class="notRunning" @click="rowClick(row)">
+                {{ cell }}
+              </div>
             </td>
           </tr>
         </template>
@@ -28,18 +30,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import BaseTable from "../../../basic/BaseTable.vue";
-import {Experiment} from "../../../../models/experiment/Experiment";
-import {requestAllExperiments} from "../../../../api/APIRequests";
-import Card from "../../../basic/Card.vue";
-import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
-import {DashboardSortColumn} from "./DashboardSortColumn";
+import { defineComponent } from 'vue'
+import BaseTable from '../../../basic/BaseTable.vue'
+import { Experiment } from '../../../../models/experiment/Experiment'
+import { requestAllExperiments } from '../../../../api/APIRequests'
+import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
+import { DashboardSortColumn } from './DashboardSortColumn'
 import {dateCalculation} from "./DashboardUtil";
 
 export default defineComponent({
-  components: {Card, BaseTable},
-  data() {
+  components: { BaseTable },
+  data () {
     return {
       headers: [] as [string, DashboardSortColumn][],
       data: [] as [number, [any, string][]][],
@@ -49,25 +50,24 @@ export default defineComponent({
       headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
       intervalID: undefined as any,
       currentSearchTerm: '',
-      currentSorting: DashboardSortColumn.DATE,
+      currentSorting: DashboardSortColumn.DATE
     }
   },
   props: {
     searchTerm: {
       type: String,
       required: true
-    },
+    }
   },
 
   watch: {
     searchTerm: function (newSearchTerm: string) {
       this.currentSearchTerm = newSearchTerm
       this.tableSearch()
-    },
+    }
   },
-  async mounted() {
-
-    let headerShown = [
+  async mounted () {
+    const headerShown = [
       this.$t('message.dashboard.name'),
       this.$t('message.dashboard.dataset'),
       this.$t('message.dashboard.odm'),
@@ -85,21 +85,20 @@ export default defineComponent({
     ]
 
     await this.fetchExperiments()
-    this.intervalID = setInterval(this.fetchExperiments, 3000);
-
+    this.intervalID = setInterval(this.fetchExperiments, 3000)
   },
-  beforeUnmount() {
-    clearInterval(this.intervalID);
+  beforeUnmount () {
+    clearInterval(this.intervalID)
   },
   methods: {
-    async fetchExperiments() {
+    async fetchExperiments () {
       this.data = []
       this.experiments = []
-      let response = await requestAllExperiments();
+      const response = await requestAllExperiments()
       if (response.error) {
         return
       }
-      for (let experiment of response.data) {
+      for (const experiment of response.data) {
         this.experiments.push(Experiment.fromJSON(experiment))
       }
       for (let experiment of this.experiments) {
@@ -147,14 +146,14 @@ export default defineComponent({
       this.tableSort()
       this.tableSearch()
     },
-    headerClick(header: DashboardSortColumn) {
+    headerClick (header: DashboardSortColumn) {
       this.currentSorting = header
       this.tableSort()
     },
     rowClick(row: [number, [any, string][]]) {
       this.$router.push("/experiment/" + row[0])
     },
-    tableSearch() {
+    tableSearch () {
       this.filteredData = this.data.filter((row) => {
         for (let i = 0; i < row[1].length - 2; i++) {
           if (row[1][i][1].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
@@ -164,7 +163,7 @@ export default defineComponent({
         return false
       })
     },
-    tableSort() {
+    tableSort () {
       if (this.currentSorting === DashboardSortColumn.NAME) {
         this.filteredData.sort((a, b) => {
           return a[1][0][0].localeCompare(b[1][0][0])
@@ -190,8 +189,8 @@ export default defineComponent({
           return a[1][5][0] > b[1][5][0] ? -1 : 1
         })
       }
-    },
-  },
+    }
+  }
 })
 </script>
 
@@ -240,7 +239,6 @@ td {
   position: sticky;
   top: 0;
 }
-
 
 tr:nth-child(odd).tableData {
   background-color: var(--color-background);
@@ -299,6 +297,5 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .notRunning:hover {
   cursor: pointer;
 }
-
 
 </style>

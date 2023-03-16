@@ -4,9 +4,14 @@
       <h3 class="header">
         {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
       </h3>
-      <Button text="Download" :buttonType="ButtonType.CONTRAST" :size="[120,40]" @buttonClick="download"/>
+      <ButtonComponent
+        text="Download"
+        :button-type="ButtonType.CONTRAST"
+        :size="[120,40]"
+        @buttonClick="download"
+      />
     </div>
-    <div style="border: 1px solid var(--color-stroke);"></div>
+    <div style="border: 1px solid var(--color-stroke);" />
     <div class="content">
       <div class="row">
         <div class="textLeft">
@@ -50,59 +55,57 @@
       </div>
     </div>
   </Card>
-
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {Experiment} from "../../../../models/experiment/Experiment";
-import Card from "../../../basic/Card.vue";
-import Button from "../../../basic/button/Button.vue";
-import {ButtonType} from "../../../basic/button/ButtonType";
-import Dashboard from "../../dashboard/Dashboard.vue";
-import {downloadExperiment} from "../../../../api/APIRequests";
+import { defineComponent } from 'vue'
+import { Experiment } from '../../../../models/experiment/Experiment'
+import Card from '../../../basic/Card.vue'
+import ButtonComponent from '../../../basic/button/ButtonComponent.vue'
+import { ButtonType } from '../../../basic/button/ButtonType'
+import { downloadExperiment } from '../../../../api/APIRequests'
 
 export default defineComponent({
-  name: "ExperimentSummaryCard",
-  components: {Dashboard, Button, Card},
-  methods: {
-    download() {
-      if (this.experiment.id == null) {
-        return;
-      }
-      downloadExperiment(this.experiment);
-    },
-  },
-  computed: {
-    ButtonType() {
-      return ButtonType
-    },
-    time() {
-      let time = this.experiment.experimentResult?.executionTime;
-      if (time == null) {
-        return "0h 0m 0s 0ms 0µs";
-      }
-      let hours = Math.floor(time / 3600000000);
-      let minutes = Math.floor((time % 3600000000) / 60000000);
-      let seconds = Math.floor(((time % 3600000000) % 60000000) / 1000000);
-      let milliseconds = Math.floor(((time % 3600000000) % 60000000) % 1000000 / 1000);
-      let microseconds = Math.floor((((time % 3600000000) % 60000000) % 1000000) % 1000);
-      return  (hours != 0? hours + "h " : "")
-          + (minutes != 0? minutes + "m " : "")
-          + (seconds != 0? seconds + "s " : "")
-          + (milliseconds != 0? milliseconds + "ms " : "")
-          + (microseconds != 0? microseconds + "µs" : "");
-    },
-    date() {
-      return this.experiment.experimentResult?.executionDate.toLocaleString();
-    }
-  },
+  name: 'ExperimentSummaryCard',
+  components: { ButtonComponent, Card },
   props: {
     experiment: {
       type: Experiment,
-      required: true,
-    },
+      required: true
+    }
   },
+  computed: {
+    ButtonType () {
+      return ButtonType
+    },
+    time () {
+      const time = this.experiment.experimentResult?.executionTime
+      if (time == null) {
+        return '0h 0m 0s 0ms 0µs'
+      }
+      const hours = Math.floor(time / 3600000000)
+      const minutes = Math.floor((time % 3600000000) / 60000000)
+      const seconds = Math.floor(((time % 3600000000) % 60000000) / 1000000)
+      const milliseconds = Math.floor(((time % 3600000000) % 60000000) % 1000000 / 1000)
+      const microseconds = Math.floor((((time % 3600000000) % 60000000) % 1000000) % 1000)
+      return (hours !== 0 ? hours + 'h ' : '') +
+          (minutes !== 0 ? minutes + 'm ' : '') +
+          (seconds !== 0 ? seconds + 's ' : '') +
+          (milliseconds !== 0 ? milliseconds + 'ms ' : '') +
+          (microseconds !== 0 ? microseconds + 'µs' : '')
+    },
+    date () {
+      return this.experiment.experimentResult?.executionDate.toLocaleString()
+    }
+  },
+  methods: {
+    download () {
+      if (this.experiment.id == null) {
+        return
+      }
+      downloadExperiment(this.experiment)
+    }
+  }
 })
 </script>
 

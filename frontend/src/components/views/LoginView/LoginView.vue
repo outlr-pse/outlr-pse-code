@@ -1,32 +1,59 @@
 <template>
   <div class="container">
-    <Card class="container-card" @keyup.enter="tryLoginSubmit">
+    <Card
+      class="container-card"
+      @keyup.enter="tryLoginSubmit"
+    >
       <div class="content">
-
         <div class="header">
-          <div class="title">{{ $t('message.login-view.title') }}</div>
-          <div class="subtitle">{{ $t('message.login-view.subtitle') }}</div>
+          <div class="title">
+            {{ $t('message.login-view.title') }}
+          </div>
+          <div class="subtitle">
+            {{ $t('message.login-view.subtitle') }}
+          </div>
         </div>
 
         <div class="login-form">
-          <div class="error" v-show="error">{{ errorMessage }}</div>
+          <div
+            v-show="error"
+            class="error"
+          >
+            {{ errorMessage }}
+          </div>
           <div class="text-fields">
             <div>
-              <input v-bind:class="{'errorInput':error}" class="username"
-                     @click="() => error = false" v-model="username" placeholder="Username"/>
+              <input
+                v-model="username"
+                :class="{'errorInput':error}"
+                class="username"
+                placeholder="Username"
+                @click="() => error = false"
+              >
             </div>
             <div style="position:relative">
-              <input v-bind:class="{'errorInput':error}" class="password"
-                     @click="() => error = false" v-model="password" placeholder="Password"
-                     :type="inputTypePassword"/>
-              <span class="material-icons md-dark passwordIcon"
-                    @click="toggleVisibilityPassword">{{ visiblePassword }}</span>
+              <input
+                v-model="password"
+                :class="{'errorInput':error}"
+                class="password"
+                placeholder="Password"
+                :type="inputTypePassword"
+                @click="() => error = false"
+              >
+              <span
+                class="material-icons md-dark passwordIcon"
+                @click="toggleVisibilityPassword"
+              >{{ visiblePassword }}</span>
             </div>
-
           </div>
           <div class="submit-field">
-            <input v-bind:class="{'errorSubmit':error}" ref="submit" @click="tryLoginSubmit"
-                   type="button" value="Continue">
+            <input
+              ref="submit"
+              :class="{'errorSubmit':error}"
+              type="button"
+              value="Continue"
+              @click="tryLoginSubmit"
+            >
           </div>
         </div>
       </div>
@@ -34,48 +61,43 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import Card from "../../basic/Card.vue";
-import Button from "../../basic/button/Button.vue";
-import Tip from "../../basic/Tip.vue";
-import {login, validatePassword, validateUsername} from "../../../api/AuthServices";
-import {defineComponent} from "vue";
-import router from "../../../router";
-import store from "../../../store";
+import Card from '../../basic/Card.vue'
+import { login, validatePassword, validateUsername } from '../../../api/AuthServices'
+import { defineComponent } from 'vue'
+import router from '../../../router'
 
 export default defineComponent({
-  name: "Register",
-  components: {Tip, Button, Card},
+  name: 'Register',
+  components: { Card },
   data: () => {
     return {
       withValidInput: [false, false, false],
-      username: "",
-      password: "",
-      passwordRepeated: "",
+      username: '',
+      password: '',
+      passwordRepeated: '',
       error: false,
-      errorMessage: "Something went wrong!",
-      inputTypePassword: "password",
-      visiblePassword: "visibility"
-    };
+      errorMessage: 'Something went wrong!',
+      inputTypePassword: 'password',
+      visiblePassword: 'visibility'
+    }
   },
   methods: {
-    resetInputFields() {
-      this.username = ""
-      this.password = ""
+    resetInputFields () {
+      this.username = ''
+      this.password = ''
     },
-    toggleVisibilityPassword() {
-      this.inputTypePassword = this.inputTypePassword === "password" ? "text" : "password"
-      this.visiblePassword = this.visiblePassword === "visibility_off" ? "visibility" : "visibility_off"
-      this.error = false;
+    toggleVisibilityPassword () {
+      this.inputTypePassword = this.inputTypePassword === 'password' ? 'text' : 'password'
+      this.visiblePassword = this.visiblePassword === 'visibility_off' ? 'visibility' : 'visibility_off'
+      this.error = false
     },
-    async tryLoginSubmit() {
-
+    async tryLoginSubmit () {
       if (!validateUsername(this.username) || !validatePassword(this.password)) {
-        this.error = true;
+        this.error = true
         this.errorMessage = this.$t('message.login-view.errors.provided_credentials_wrong')
         this.resetInputFields()
-        return;
+        return
       }
 
       const response = await login(this.username, this.password)
@@ -83,11 +105,11 @@ export default defineComponent({
         this.error = true
         this.errorMessage = this.$t(`message.login-view.errors.${response.error}`)
         this.resetInputFields()
-        return;
+        return
       }
       await router.push('/')
     }
-  },
+  }
 })
 </script>
 
@@ -162,8 +184,6 @@ input {
   display: flex;
   justify-content: center;
 }
-
-
 
 .content {
   display: grid;

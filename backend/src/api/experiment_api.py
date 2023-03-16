@@ -10,29 +10,32 @@ Endpoints defined:
 """
 import os
 from os.path import exists as path_exists
-from concurrent.futures import ProcessPoolExecutor
+import concurrent.futures
 
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from models.experiment import Experiment
-from execution.experiment_scheduler.coroutine_experiment_scheduler import CoroutineExperimentScheduler
+from execution.experiment_scheduler.background_thread_event_loop_experiment_scheduler \
+    import BackgroundThreadEventLoopExperimentScheduler
 from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
+from models.experiment import Experiment
 import database.database_access as db
 import util.data as data_utils
 import api.error as error
-from models.odm import PyODM
+import models.odm
 
 experiment_api = Blueprint('experiment', __name__)
 
-_experiment_scheduler = CoroutineExperimentScheduler(ExecutorODMScheduler(ProcessPoolExecutor()))
+_experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(
+    ExecutorODMScheduler(
+        concurrent.futures.ProcessPoolExecutor()
+    )
+)
 
 _user_files = {
     "dataset": "dataset.csv",
     "ground_truth": "ground_truth.csv"
 }
-
-_background_tasks = set()
 
 
 @experiment_api.route('/validate-dataset', methods=['POST'])
@@ -127,7 +130,7 @@ def upload_files() -> (Response, int):
 
 @experiment_api.route('/create', methods=['POST'])
 @jwt_required()
-async def create() -> (Response, int):
+def create() -> (Response, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
@@ -144,20 +147,24 @@ async def create() -> (Response, int):
         exp = Experiment.from_json(request.json)
         exp.user_id = user_id  # User id is not in the json
         db.add_experiment(session, experiment=exp)
-        exp.odm.__class__ = PyODM  # TODO the ORM should do this automatically in the future
+        exp.odm.__class__ = models.odm.PyODM  # TODO the ORM should do this automatically in the future
 
     # Add dataset and optionally ground truth
-    exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
+    exp.dataset = data_utils.csv_to_dataset(data_path(user_id, "dataset"))
     if path_exists(data_path(user_id, "ground_truth")):
         exp.ground_truth = data_utils.csv_to_numpy_array(data_path(user_id, "ground_truth"))
 
     # Delete the csv files
     remove_user_data(user_id)
 
-    await _experiment_scheduler.schedule(exp)
-    with db.Session() as session:
-        session.add(exp)  # Subspace logic does not need to be updated so db.add_experiment is not needed
-        session.commit()
+    def write_result_to_db(future):
+        #  This closure captures exp
+        with db.Session() as session1:
+            session1.add(exp)  # Subspace logic does not need to be updated so db.add_experiment is not needed
+            session1.commit()
+
+    _experiment_scheduler.schedule(exp).add_done_callback(write_result_to_db)
+
     return 'OK', 200
 
 

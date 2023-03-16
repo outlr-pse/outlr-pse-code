@@ -1,25 +1,25 @@
 <template>
-    <table :style="style">
-      <thead>
-      <slot name="header"></slot>
-      </thead>
-      <tbody>
-      <slot name="body"></slot>
-      </tbody>
-    </table>
+  <table :style="style">
+    <thead>
+      <slot name="header" />
+    </thead>
+    <tbody>
+      <slot name="body" />
+    </tbody>
+  </table>
 </template>
 
 <script lang="ts">
-import {CSSProperties, defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
 
   props: {
     style: {
-      type: Object as () => CSSProperties,
-      required: false,
-    },
-  },
+      type: Object,
+      required: false
+    }
+  }
 })
 </script>
 

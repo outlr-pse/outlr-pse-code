@@ -21,46 +21,40 @@
 </template>
 
 <script lang="ts">
-import store from "../../store";
-import {defineComponent} from "vue";
-import { logout } from "../../api/AuthServices";
+import store from '../../store'
+import { defineComponent } from 'vue'
+import { logout } from '../../api/AuthServices'
 
 export default defineComponent({
-  name: "AppearingCard",
-  data() {
+  name: 'AppearingCard',
+  data () {
     return {
       rotation: 0,
       showCard: false
     }
   },
   methods: {
-    logout() {
-      logout();
+    logout () {
+      logout()
       this.$router.push('/')
     }
   },
   computed: {
-    store() {
+    store () {
       return store
     },
-    rotatedImage(): { transform: string } {
-      if (this.showCard) {
-        this.rotation = 0
-      } else {
-        this.rotation = 90
-      }
-      return {
-        transform: 'rotate(' + this.rotation + 'deg)' + 'translate(-50%, 50%)'
-      }
+    rotatedImage () {
+      const rotation = this.showCard ? 0 : 90
+      const transform = 'rotate(' + rotation + 'deg)' + 'translate(-50%, 50%)'
+      return { transform }
     },
 
-    firstCharName(): string {
-      return this.store.getters["auth/username"].charAt(0).toUpperCase();
+    firstCharName (): string {
+      return this.store.getters['auth/username'].charAt(0).toUpperCase()
     }
   }
 })
 </script>
-
 
 <style scoped>
 
@@ -104,7 +98,6 @@ a {
   font-size: 14px;
   transition: all 0.25s ease-in-out;
 }
-
 
 .arrow {
   position: absolute;

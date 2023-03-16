@@ -1,4 +1,4 @@
-from api.api import app
+from api import app
 from database.database_access import setup_db
 
 setup_db()

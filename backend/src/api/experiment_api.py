@@ -150,7 +150,7 @@ def create() -> (Response, int):
         exp.odm.__class__ = models.odm.PyODM  # TODO the ORM should do this automatically in the future
 
     # Add dataset and optionally ground truth
-    exp.dataset = data_utils.csv_to_dataset(data_path(user_id, "dataset"))
+    exp.dataset = data_utils.csv_to_dataset(exp.dataset_name, data_path(user_id, "dataset"))
     if path_exists(data_path(user_id, "ground_truth")):
         exp.ground_truth = data_utils.csv_to_numpy_array(data_path(user_id, "ground_truth"))
 

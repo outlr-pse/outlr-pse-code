@@ -2,11 +2,26 @@
  * @jest-environment jsdom
  */
 import { errorOther } from "../../../src/api/ErrorOther";
-import { sendLoginData } from "../../../src/api/APIRequests";
+import {
+    requestTokenIdentity,
+    sendExperiment,
+    sendLoginData,
+    sendLogout,
+    sendRegisterData
+} from "../../../src/api/APIRequests";
+import { authHeader } from "../../../src/api/DataRetrievalService";
+import { Experiment } from "../../../src/models/experiment/Experiment";
+import { ODM } from "../../../src/models/odm/ODM";
+
+jest.mock("../../../src/api/DataRetrievalService", () => ({
+  authHeader: jest.fn(() => {
+      return { Authorization: 'Bearer ' + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k" }
+  }),
+}));
 
 jest.mock("../../../src/api/AxiosClient", () => {
     return {
-        post: jest.fn().mockImplementation((url: string, data?: any) => {
+        post: jest.fn().mockImplementation((url: string, data?: any, config?:any) => {
             switch (url) {
                 case "/user/register":
                     return {
@@ -25,9 +40,14 @@ jest.mock("../../../src/api/AxiosClient", () => {
                         status: 200
                     };
                 case "/user/logout":
-                    return {
-                        status: 200
-                    };
+                    if (config.headers) {
+                        return {
+                            status: 200
+                        }
+                    }
+                    else {
+                        return errorOther
+                    }
                 case "/user/get-token-identity":
                     return {
                         username: data.username,
@@ -52,7 +72,7 @@ jest.mock("../../../src/api/AxiosClient", () => {
                 case "/user/get-token-identity":
                     return {
                         data: {
-                            username: config.headers,
+                            username: "Ud0",
                             access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
                         },
                         status: 200
@@ -513,4 +533,32 @@ describe("API Requests test", () => {
         expect(response.data.username).toBeDefined()
         expect(response.data.username).toEqual(username)
     });
+    test("sendRegisterData test", async () => {
+        const username = "Ud0"
+        const password = "Test01!"
+        const response = await sendRegisterData(username, password)
+        expect(response.data).toBeDefined()
+        expect(response.data.username).toBeDefined()
+        expect(response.data.username).toEqual(username)
+    });
+    test("sendLogout test", async () => {
+        const response = await sendLogout()
+        expect(response.status).toEqual(200)
+    });
+    test("authHeader now returns a header with access token no matter what since mocked", () => {
+        const response = authHeader()
+        expect(response.Authorization).toBeDefined()
+    });
+    test("requestTokenIdentity mock test", async () => {
+        const responseData = await requestTokenIdentity()
+        expect(responseData).toBeDefined()
+        expect(responseData.username).toBeDefined()
+        expect(responseData.access_token).toBeDefined()
+    })
+    test("sendExperiment mock test", async () => {
+        const response = await sendExperiment(new Experiment("","", null, null, new ODM(1, "", [])))
+        expect(response.data).toBeDefined()
+        expect(response.data).toEqual("OK")
+        expect(response.status).toEqual(200)
+    })
 });

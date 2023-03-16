@@ -2,12 +2,7 @@ import axios, { type AxiosError } from 'axios'
 import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
 import { type Experiment } from '../models/experiment/Experiment'
-import store from '../store'
-
-export const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:1337/api'
-})
-export const storage = localStorage
+import axiosClient from './AxiosClient'
 
 async function handleRequestError (error: any): Promise<any> {
   /**

@@ -3,6 +3,10 @@
         <Topbar />
         <RouterView class="routerView" />
     </div>
+  <div id="app">
+    <Topbar />
+    <RouterView class="routerView" />
+  </div>
 </template>
 
 <script lang="ts">

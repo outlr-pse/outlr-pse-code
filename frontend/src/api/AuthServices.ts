@@ -1,6 +1,7 @@
-import { requestTokenIdentity, sendLoginData, sendRegisterData, storage } from './APIRequests'
+import { requestTokenIdentity, sendLoginData, sendRegisterData } from './APIRequests'
 import store from '../store'
 import { errorOther } from './ErrorOther'
+import storage from './Storage'
 export async function initialValidityCheck (): Promise<void> {
   const responseJson = await requestTokenIdentity()
 

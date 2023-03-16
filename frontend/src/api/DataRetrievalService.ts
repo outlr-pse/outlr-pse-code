@@ -1,7 +1,6 @@
 import { storage } from './APIRequests'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function authHeader () {
+export function authHeader (): any {
   /**
      * Generates the header used for sending the token provided with http requests to the backend. If
      * no token is in the local storage it is a empty JSON.

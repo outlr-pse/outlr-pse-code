@@ -1,6 +1,4 @@
 import { getHyperparameterType, HyperparameterType } from './HyperparameterType'
-import { JSONDeserializable } from '../JSONDeserializable'
-import { JSONSerializable } from '../JSONSerializable'
 
 /**
  * This class represents a hyperparameter.
@@ -27,7 +25,7 @@ export class Hyperparameter {
      */
   public static fromJSON (json: any, valuesJson?: any): Hyperparameter {
     const hyperparameter = new Hyperparameter(0, '', '', HyperparameterType.STRING, false)
-    if (valuesJson) {
+    if (valuesJson !== undefined) {
       hyperparameter.deserialize(json, valuesJson)
     } else {
       hyperparameter.deserialize(json)
@@ -46,7 +44,7 @@ export class Hyperparameter {
     this.name = json.name
     this.paramType = getHyperparameterType(json.type)
     this.optional = json.optional
-    if (valuesJson) {
+    if (valuesJson !== undefined) {
       this.value = valuesJson[json.name]
     }
   }

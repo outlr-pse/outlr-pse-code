@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-floating-promises */
 import { createApp } from 'vue'
 import './assets/main.css'
 import App from './App.vue'
@@ -12,6 +13,6 @@ app.use(i18n)
 app.use(store)
 app.use(router)
 
-await initialValidityCheck().then()
+initialValidityCheck().then()
 
 app.mount('#app')

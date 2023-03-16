@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import Tip from '../../basic/Tip.vue'
 import { defineComponent } from 'vue'
 import DashboardTable from './components/DashboardTable.vue'
 import SearchBar from './components/SearchBar.vue'
@@ -17,7 +16,7 @@ import { DashboardSortColumn } from './components/DashboardSortColumn'
 
 export default defineComponent({
   name: 'Dashboard',
-  components: { SearchBar, DashboardTable, Tip },
+  components: { SearchBar, DashboardTable },
   data () {
     return {
       searchTerm: '',

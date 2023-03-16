@@ -6,7 +6,7 @@
     <div style="justify-self: end">
       <div v-if="isAuthenticated" style="display: flex; align-items: center">
         <div v-if="$route.path !== '/create'" style="display: inline-block">
-          <Button :text="$t('message.topbar.createExperiment')" :button-type="ButtonType.ACTIVE" :size="[200,40]"
+          <ButtonComponent :text="$t('message.topbar.createExperiment')" :button-type="ButtonType.ACTIVE" :size="[200,40]"
                   @buttonClick="() => $router.push('/create')" :text-size="[15,700]"/>
         </div>
         <AppearingCard/>
@@ -14,9 +14,9 @@
       </div>
 
       <div v-else>
-        <Button :text="$t('message.topbar.logIn')" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
+        <ButtonComponent :text="$t('message.topbar.logIn')" :button-type="ButtonType.TRANSPARENT" @buttonClick="$router.push('/login')"/>
         <div style="width:5px; height:auto; display:inline-block;"/>
-        <Button :text="$t('message.topbar.signUp')" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
+        <ButtonComponent :text="$t('message.topbar.signUp')" :button-type="ButtonType.OUTLINE" @buttonClick="$router.push('/register')"/>
         <div style="width:15px; height:auto; display:inline-block;"/>
       </div>
     </div>
@@ -24,9 +24,8 @@
 </template>
 
 <script lang="ts">
-import Button from '../basic/button/Button.vue'
+import ButtonComponent from '../basic/button/ButtonComponent.vue'
 import { ButtonType } from '../basic/button/ButtonType'
-import { RouterLink } from 'vue-router'
 import AppearingCard from './ProfileCollapsableCard.vue'
 import { defineComponent } from 'vue'
 import store from '../../store'
@@ -35,8 +34,7 @@ export default defineComponent({
   name: 'Topbar',
   components: {
     AppearingCard,
-    Button,
-    RouterLink
+    ButtonComponent
   },
   data () : {
 

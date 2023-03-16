@@ -4,21 +4,23 @@
       <BaseTable :style="{ width: '100%'}">
         <template #header>
           <tr class="firstRow">
-            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]">
+            <td v-for="(header, index) in headers" @click="headerClick(header[1])" :class="headerClasses[index]" v-bind:key="index">
               {{ header[0] }}
             </td>
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData">
-            <td v-if="row[1][4] === 'Running . . .' " v-for="cell in row[1]" class="running">
-              {{ cell }}
-            </td>
-            <td v-else-if="row[1][4] === 'Failed :(' " v-for="cell in row[1]" class="failed">
-              {{ cell }}
-            </td>
-            <td v-for="cell in row[1]" v-else class="notRunning">
-              {{ cell }}
+          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData" v-bind:key="row[0]">
+            <td v-for="cell in row[1]" v-bind:key="cell">
+              <div v-if="cell === 'Running . . .' " class="running">
+                {{ cell }}
+              </div>
+              <div v-else-if="cell === 'Failed :(' " class="failed">
+                {{ cell }}
+              </div>
+              <div v-else class="notRunning">
+                {{ cell }}
+              </div>
             </td>
           </tr>
         </template>
@@ -32,12 +34,11 @@ import { defineComponent } from 'vue'
 import BaseTable from '../../../basic/BaseTable.vue'
 import { Experiment } from '../../../../models/experiment/Experiment'
 import { requestAllExperiments } from '../../../../api/APIRequests'
-import Card from '../../../basic/Card.vue'
 import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
 import { DashboardSortColumn } from './DashboardSortColumn'
 
 export default defineComponent({
-  components: { Card, BaseTable },
+  components: { BaseTable },
   data () {
     return {
       headers: [] as [string, DashboardSortColumn][],

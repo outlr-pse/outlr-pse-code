@@ -22,21 +22,15 @@
 import Card from '../../../basic/Card.vue'
 import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
 import { defineComponent } from 'vue'
-import HyperParametersField from './HyperParametersSection.vue'
 import Dropdown from '../../../basic/Dropdown.vue'
 import { ODM } from '../../../../models/odm/ODM'
 import SubspaceSection from './SubspaceSection.vue'
 import HyperParametersSection from './HyperParametersSection.vue'
-import { SubspaceLogic } from '../../../../models/subspacelogic/SubspaceLogic'
-import { Subspace } from '../../../../models/results/Subspace'
-import { Literal } from '../../../../models/subspacelogic/Literal'
-import { Operation } from '../../../../models/subspacelogic/Operation'
-import { Operator } from '../../../../models/subspacelogic/Operator'
 import { parseSubspaceLogic } from '../../../../logic/subspace_logic_parser/SubspaceLogicParser'
 
 export default defineComponent({
   name: 'InputSection',
-  components: { HyperParametersSection, SubspaceSection, Dropdown, HyperParametersField, Card },
+  components: { HyperParametersSection, SubspaceSection, Dropdown, Card },
   data () {
     return {
       odmNames: [] as string[],

@@ -46,7 +46,7 @@ export class ODM implements JSONSerializable {
      */
   public static fromJSON (json: any, valuesJson?: any): ODM {
     const odm = new ODM(0, '', [])
-    if (valuesJson) {
+    if (valuesJson !== undefined) {
       odm.deserialize(json, valuesJson)
     } else {
       odm.deserialize(json)
@@ -63,7 +63,7 @@ export class ODM implements JSONSerializable {
   deserialize (json: any, valuesJson?: any): void {
     this.id = json.id
     this.name = json.name.split('.')[1]
-    if (valuesJson) {
+    if (valuesJson !== undefined) {
       for (const param of json.hyper_parameters) {
         if (valuesJson[param.name] !== undefined) {
           this.hyperParameters.push(Hyperparameter.fromJSON(param, valuesJson))

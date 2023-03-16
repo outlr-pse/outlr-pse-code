@@ -4,7 +4,7 @@
       <h3 class="header">
         {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
       </h3>
-      <Button
+      <ButtonComponent
         text="Download"
         :button-type="ButtonType.CONTRAST"
         :size="[120,40]"
@@ -61,13 +61,13 @@
 import { defineComponent } from 'vue'
 import { Experiment } from '../../../../models/experiment/Experiment'
 import Card from '../../../basic/Card.vue'
-import Button from '../../../basic/button/Button.vue'
+import ButtonComponent from '../../../basic/button/ButtonComponent.vue'
 import { ButtonType } from '../../../basic/button/ButtonType'
 import { downloadExperiment } from '../../../../api/APIRequests'
 
 export default defineComponent({
   name: 'ExperimentSummaryCard',
-  components: { Button, Card },
+  components: { ButtonComponent, Card },
   props: {
     experiment: {
       type: Experiment,

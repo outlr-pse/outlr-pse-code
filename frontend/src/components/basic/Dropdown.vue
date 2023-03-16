@@ -7,7 +7,7 @@
       </div>
     </button>
     <ul v-if="isOpen" class="custom-dropdown-options">
-      <li v-for="option in options" @click="selectOption(option)">{{ option }}</li>
+      <li v-for="option in options" @click="selectOption(option)" v-bind:key="option">{{ option }}</li>
     </ul>
   </div>
 

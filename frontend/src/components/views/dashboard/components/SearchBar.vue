@@ -6,7 +6,7 @@
       :placeholder=" $t('message.dashboard.search')"
       class="field"
     >
-    <Button
+    <ButtonComponent
       class="clear-button"
       :text=" $t('message.dashboard.clear')"
       :button-type="ButtonType.OUTLINE"
@@ -19,12 +19,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Button from '../../../basic/button/Button.vue'
+import ButtonComponent from '../../../basic/button/ButtonComponent.vue'
 import { ButtonType } from '../../../basic/button/ButtonType'
 
 export default defineComponent({
   name: 'SearchBar',
-  components: { Button },
+  components: { ButtonComponent },
   data () {
     return {
       searchTerm: ''

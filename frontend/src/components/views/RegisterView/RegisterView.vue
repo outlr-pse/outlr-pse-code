@@ -49,16 +49,13 @@
 
 <script lang="ts">
 import Card from '../../basic/Card.vue'
-import Button from '../../basic/button/Button.vue'
-import Tip from '../../basic/Tip.vue'
 import { register, validatePassword, validateUsername } from '../../../api/AuthServices'
 import { defineComponent } from 'vue'
 import router from '../../../router'
-import store from '../../../store'
 
 export default defineComponent({
   name: 'Register',
-  components: { Tip, Button, Card },
+  components: { Card },
   data: () => {
     return {
       withValidInput: [false, false, false],
@@ -100,7 +97,7 @@ export default defineComponent({
     },
     async tryRegisterSubmit () {
       if (!validateUsername(this.username) || !validatePassword(this.password) ||
-          this.password != this.passwordRepeated) {
+          this.password !== this.passwordRepeated) {
         this.error = true
         this.errorMessage = this.$t('message.register-view.errors.provided_credentials_wrong')
         this.resetInputFields()

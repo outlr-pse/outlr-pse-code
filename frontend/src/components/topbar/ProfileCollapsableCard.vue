@@ -44,14 +44,9 @@ export default defineComponent({
       return store
     },
     rotatedImage () {
-      if (this.showCard) {
-        this.rotation = 0
-      } else {
-        this.rotation = 90
-      }
-      return {
-        transform: 'rotate(' + this.rotation + 'deg)' + 'translate(-50%, 50%)'
-      }
+      const rotation = this.showCard ? 0 : 90
+      const transform = 'rotate(' + rotation + 'deg)' + 'translate(-50%, 50%)'
+      return { transform }
     },
 
     firstCharName (): string {

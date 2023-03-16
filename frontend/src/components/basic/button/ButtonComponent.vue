@@ -15,6 +15,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable  vue/require-valid-default-prop */
 import { CSSProperties, defineComponent } from 'vue'
 import { ButtonType } from './ButtonType'
 
@@ -36,7 +37,9 @@ export default defineComponent({
     size: {
       type: Object as () => [number, number],
       required: false,
-      default: [100, 50]
+      default () {
+        return [100, 50]
+      }
     },
     color: {
       type: String,
@@ -45,7 +48,9 @@ export default defineComponent({
     textSize: {
       type: Object as () => [number, CSSProperties['fontWeight']],
       required: false,
-      default: [16, 500]
+      default () {
+        return [16, 500]
+      }
     }
   },
   methods: {
@@ -60,12 +65,12 @@ export default defineComponent({
         width: this.size[0] + 'px',
         height: this.size[1] + 'px',
         backgroundColor: this.color,
-        fontSize: this.textSize[0] != -1 ? this.textSize[0] + 'px' : '20px',
-        fontWeight: this.textSize[1] != -1 ? this.textSize[1] : 500
+        fontSize: this.textSize[0] !== -1 ? this.textSize[0] + 'px' : '20px',
+        fontWeight: this.textSize[1] !== -1 ? this.textSize[1] : 500
       }
     },
     IconProvided () {
-      return this.startIcon != undefined
+      return this.startIcon !== undefined
     }
   }
 })

@@ -16,7 +16,7 @@
         <UploadFileField style="margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')"
                          @file-uploaded="setGroundtruth"/>
       </Card>
-      <Button :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
+      <ButtonComponent :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
               :size="[350,70]" :text-size="[22,600]" @buttonClick="createExperiment"/>
     </div>
     <div class="right-half">
@@ -30,23 +30,20 @@
 <script lang="ts">
 import Card from '../../basic/Card.vue'
 import { defineComponent } from 'vue'
-import Dropdown from '../../basic/Dropdown.vue'
 import UploadFileField from './Component/UploadFileField.vue'
-import HyperParametersField from './Component/HyperParametersSection.vue'
 import { Hyperparameter } from '../../../models/odm/Hyperparameter'
 import { validateHyperparameterType } from '../../../models/odm/HyperparameterType'
-import ODMSection from './Component/InputSection.vue'
 import { ODM } from '../../../models/odm/ODM'
 import { requestODM, requestODMNames, sendExperiment } from '../../../api/APIRequests'
-import Button from '../../basic/button/Button.vue'
-import InputSection from './Component/InputSection.vue'
+import ButtonComponent from '../../basic/button/ButtonComponent.vue'
 import { ButtonType } from '../../basic/button/ButtonType'
 import { SubspaceLogic } from '../../../models/subspacelogic/SubspaceLogic'
 import { Experiment } from '../../../models/experiment/Experiment'
+import InputSection from './Component/InputSection.vue'
 
 export default defineComponent({
   name: 'CreateExperimentView',
-  components: { InputSection, Button, ODMSection, HyperParametersField, UploadFileField, Dropdown, Card },
+  components: { InputSection, ButtonComponent, UploadFileField, Card },
   data () {
     return {
       editableName: 'new Experiment',

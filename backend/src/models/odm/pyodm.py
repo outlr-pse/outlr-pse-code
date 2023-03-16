@@ -16,7 +16,7 @@ from models.odm import ODM
 
 
 class PyODM(ODM):
-    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
+    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> (NDArray, NDArray):
         """Runs the ODM on the given subspace
         Args:
             subspace (DataFrame): The subspace to run the ODM on
@@ -39,7 +39,7 @@ class PyODM(ODM):
             pyodm_cls = getattr(module, cls_name)
             pyodm = pyodm_cls(**hyper_params)
             pyodm.fit(subspace)
-            return pyodm.labels_
+            return pyodm.labels_, pyodm.decision_scores_
 
         except Exception as e:
             raise ODMFailureError(str(e)) from e

@@ -3,7 +3,7 @@ from concurrent.futures import Future
 
 import pandas as pd
 import numpy as np
-from numpy.typing import NDArray
+from sklearn import metrics
 
 from execution.execution_error import ExecutionError
 from execution.execution_error.subspace_error import SubspaceError
@@ -90,17 +90,31 @@ class ExperimentScheduler(ABC):
         and adds it to the experiment
         """
         experiment_result.result_space = Subspace(name="result")
-        experiment_result.result_space.outlier_array = subspace_logic.evaluate()
+        experiment_result.result_space.outlier_array = subspace_logic.evaluate_labels()
+        experiment_result.result_space.scores_array = subspace_logic.evaluate_scores()
 
     @staticmethod
-    def write_accuracy(experiment_result: ExperimentResult, ground_truth: NDArray):
+    def write_metrics(experiment: Experiment):
         """
         Calculates the accuracy of the experiment and writes it to the experiment
         """
+        ground_truth = experiment.ground_truth
+        experiment_result = experiment.experiment_result
+        outlier_array = experiment_result.result_space.outlier_array
+        scores_array = experiment_result.result_space.scores_array
+
         if ground_truth is None:
             return
-        correct_predictions = np.sum(ground_truth.astype(int) == experiment_result.result_space.outlier_array.astype(int))
-        experiment_result.accuracy = correct_predictions / ground_truth.size
+
+        experiment_result.accuracy = metrics.accuracy_score(ground_truth, outlier_array)
+
+        if scores_array is not None:
+            fpr, tpr, thresholds = metrics.roc_curve(ground_truth, scores_array)
+            auc = metrics.auc(fpr, tpr)
+            experiment_result.fpr = fpr.tolist()
+            experiment_result.tpr = tpr.tolist()
+            experiment_result.thresholds = thresholds.tolist()
+            experiment_result.auc = auc
 
     @staticmethod
     def get_subspace(dataset: pd.DataFrame, columns: list[int]):

@@ -39,11 +39,13 @@ class EventLoopExperimentScheduler(ExperimentScheduler):
                 ) for subspace in experiment.subspaces
             ])
             for index, result in enumerate(subspace_results):
-                experiment.subspaces[index].outlier_array = result
+                labels, scores = result
+                experiment.subspaces[index].outlier_array = labels
+                experiment.subspaces[index].score_array = scores
 
             ExperimentScheduler.write_result_space(experiment.experiment_result, experiment.subspace_logic)
             ExperimentScheduler.create_outlier_objects(experiment.experiment_result, experiment.subspaces)
-            ExperimentScheduler.write_accuracy(experiment.experiment_result, experiment.ground_truth)
+            ExperimentScheduler.write_metrics(experiment)
             experiment.experiment_result.execution_time = datetime.now() - experiment.experiment_result.execution_date
 
         except ExecutionError as e:

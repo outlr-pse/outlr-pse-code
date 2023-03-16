@@ -1,5 +1,5 @@
 from itertools import chain
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 
 from models.subspacelogic.operator import Operator
 from models.subspacelogic import SubspaceLogic, Subspace
@@ -36,8 +36,11 @@ class Operation(SubspaceLogic):
     def get_subspaces(self) -> set[Subspace]:
         return set(chain(*map(lambda operand: operand.get_subspaces(), self.operands)))
 
-    def evaluate(self) -> ArrayLike:
-        return self.operator.function([operand.evaluate() for operand in self.operands])
+    def evaluate_labels(self) -> NDArray:
+        return self.operator.function_labels([operand.evaluate_labels() for operand in self.operands])
+
+    def evaluate_scores(self) -> NDArray:
+        return self.operator.function_scores([operand.evaluate_scores() for operand in self.operands])
 
     def to_client_json(self) -> dict:
         return {

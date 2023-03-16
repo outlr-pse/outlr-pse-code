@@ -14,7 +14,8 @@ class ODMScheduler(ABC):
     """
 
     @abstractmethod
-    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> futures.Future[NDArray]:
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any],
+                 dataset: pd.DataFrame) -> futures.Future[(NDArray, NDArray)]:
         """
         Schedule the execution of an individual outlier detection method
         Args:

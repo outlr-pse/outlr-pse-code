@@ -1,5 +1,4 @@
-import numpy as np
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 
 from models.json_error import JSONError
 from models.subspacelogic import SubspaceLogic, Subspace
@@ -30,8 +29,11 @@ class Literal(SubspaceLogic):
     def get_subspaces(self) -> set[Subspace]:
         return {self.subspace}
 
-    def evaluate(self) -> ArrayLike:
+    def evaluate_labels(self) -> NDArray:
         return self.subspace.outlier_array
+
+    def evaluate_scores(self) -> NDArray:
+        return self.subspace.score_array
 
     def to_client_json(self) -> dict:
         return {

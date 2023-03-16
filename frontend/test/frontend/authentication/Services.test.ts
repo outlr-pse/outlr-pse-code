@@ -3,11 +3,12 @@
  */
 import {errorOther} from "../../../src/api/ErrorOther";
 import storage from "../../../src/api/Storage";
-import {login, register} from "../../../src/api/AuthServices";
+import {initialValidityCheck, login, logout, register} from "../../../src/api/AuthServices";
 import store from "../../../src/store";
+import {defaultUsername} from "../../../src/store/modules/auth";
 
 let mockError = false
-let currentUsername = "Ud0"
+let currentUsername = defaultUsername
 jest.mock("../../../src/api/AxiosClient", () => {
     return {
         post: jest.fn().mockImplementation((url: string, data?: any, config?: any) => {
@@ -43,7 +44,7 @@ jest.mock("../../../src/api/AxiosClient", () => {
             }
         case "/user/get-token-identity":
             return {
-                username: data.username,
+                username: currentUsername,
                 access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
             };
         case "/experiment/upload-files":
@@ -543,8 +544,9 @@ describe("Tests DataRetrievalService", () => {
 
         await store.dispatch("auth/unsetAuthenticated")
         storage.clear()
-        expect(store.getters["auth/username"]).not.toEqual(username)
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
         expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        currentUsername = defaultUsername
     })
     test("Registering with valid data passed is mocked", async () => {
         const username = "Ud1"
@@ -555,6 +557,33 @@ describe("Tests DataRetrievalService", () => {
         const authState = store.getters["auth/isAuthenticated"]
         expect(usernameInStore).toEqual(username)
         expect(authState).toEqual(true)
+        currentUsername = defaultUsername
+    })
+    test("Logging in and then logging out", async () => {
+        const username = "Ud0"
+        const password = "Test01!"
+        await login(username, password)
+        expect(storage.getItem("access_token")).toBeDefined()
+        expect(store.getters["auth/username"]).toEqual(username)
+        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+
+        const response = await logout()
+        expect(response.status).toBeDefined()
+        expect(response.status).toEqual(200)
+        expect(response.message).toBeDefined()
+        expect(storage.getItem("access_token")).toBeNull()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        currentUsername = defaultUsername
+    })
+    test("Initial validity check", async () => {
+        await initialValidityCheck()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+
+        await store.dispatch("auth/unsetAuthenticated")
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
     })
 
 })

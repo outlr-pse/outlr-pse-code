@@ -1,4 +1,4 @@
-import storage from "./Storage";
+import storage from "./Storage"
 
 export function authHeader (): any {
   /**

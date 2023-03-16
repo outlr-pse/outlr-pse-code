@@ -31,7 +31,7 @@ export function validateUsername (username: string): boolean {
   return usernameRegex.test(username)
 }
 
-export function validatePassword (password: string) {
+export function validatePassword (password: string): boolean {
   /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
@@ -53,7 +53,7 @@ export function validatePassword (password: string) {
   return passwordRegex.test(password)
 }
 
-export async function login (username: string, password: string) {
+export async function login (username: string, password: string): Promise<any> {
   /**
      * This method tries to log in using {@link sendLoginData}
      * the provided credentials to send a request to the API. It returns
@@ -84,7 +84,7 @@ export async function login (username: string, password: string) {
   }
 }
 
-export async function register (username: string, password: string) {
+export async function register (username: string, password: string): Promise<any> {
   /**
      * This method tries to register a user in using {@link sendRegisterData}
      * the provided credentials to send a request to the API. It returns
@@ -115,7 +115,7 @@ export async function register (username: string, password: string) {
   }
 }
 
-export async function logout () {
+export async function logout (): Promise<any> {
   /**
      * This method logs out a user using {@link sendLogout}
      * to request the deletion of the token on API side - it also removes

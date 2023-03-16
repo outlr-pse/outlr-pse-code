@@ -36,16 +36,13 @@
 
 <script lang="ts">
 import Card from '../../basic/Card.vue'
-import Button from '../../basic/button/Button.vue'
-import Tip from '../../basic/Tip.vue'
 import { login, validatePassword, validateUsername } from '../../../api/AuthServices'
 import { defineComponent } from 'vue'
 import router from '../../../router'
-import store from '../../../store'
 
 export default defineComponent({
   name: 'Register',
-  components: { Tip, Button, Card },
+  components: { Card },
   data: () => {
     return {
       withValidInput: [false, false, false],

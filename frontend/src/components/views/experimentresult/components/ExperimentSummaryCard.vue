@@ -59,12 +59,11 @@ import { Experiment } from '../../../../models/experiment/Experiment'
 import Card from '../../../basic/Card.vue'
 import Button from '../../../basic/button/Button.vue'
 import { ButtonType } from '../../../basic/button/ButtonType'
-import Dashboard from '../../dashboard/Dashboard.vue'
 import { downloadExperiment } from '../../../../api/APIRequests'
 
 export default defineComponent({
   name: 'ExperimentSummaryCard',
-  components: { Dashboard, Button, Card },
+  components: { Button, Card },
   methods: {
     download () {
       if (this.experiment.id == null) {
@@ -87,11 +86,11 @@ export default defineComponent({
       const seconds = Math.floor(((time % 3600000000) % 60000000) / 1000000)
       const milliseconds = Math.floor(((time % 3600000000) % 60000000) % 1000000 / 1000)
       const microseconds = Math.floor((((time % 3600000000) % 60000000) % 1000000) % 1000)
-      return (hours != 0 ? hours + 'h ' : '') +
-          (minutes != 0 ? minutes + 'm ' : '') +
-          (seconds != 0 ? seconds + 's ' : '') +
-          (milliseconds != 0 ? milliseconds + 'ms ' : '') +
-          (microseconds != 0 ? microseconds + 'µs' : '')
+      return (hours !== 0 ? hours + 'h ' : '') +
+          (minutes !== 0 ? minutes + 'm ' : '') +
+          (seconds !== 0 ? seconds + 's ' : '') +
+          (milliseconds !== 0 ? milliseconds + 'ms ' : '') +
+          (microseconds !== 0 ? microseconds + 'µs' : '')
     },
     date () {
       return this.experiment.experimentResult?.executionDate.toLocaleString()

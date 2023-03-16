@@ -24,7 +24,7 @@ export class Subspace implements JSONSerializable {
      * This method returns the subspace as a JSON object.
      * It is called by the JSON.stringify() method.
      */
-  toJSON () {
+  toJSON (): any {
     const outlierIndices = []
     if (this.outliers != null) {
       for (const outlier of this.outliers) {

@@ -25,7 +25,7 @@ export default defineComponent({
         required: false
       },
       buttonType:{
-        type: String as () => ButtonType,
+        type: String,
         default: ButtonType.DEFAULT,
         required: false
       },

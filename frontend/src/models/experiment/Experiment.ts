@@ -10,7 +10,7 @@ import { type Outlier } from '../results/Outlier'
  * This class represents an experiment.
  */
 export class Experiment implements JSONSerializable, JSONDeserializable {
-  id: number | null
+  id: number
   name: string
   datasetName: string
   dataset: File | null
@@ -27,13 +27,13 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     groundTruth: File | null,
     odm: ODM,
     subspaceLogic?: SubspaceLogic) {
-    this.id = null
+    this.id = -1
     this.name = name
     this.datasetName = datasetName
     this.dataset = dataset
     this.groundTruth = groundTruth
     this.odm = odm
-    this.subspaceLogic = subspaceLogic != undefined ? subspaceLogic : null
+    this.subspaceLogic = subspaceLogic !== undefined ? subspaceLogic : null
     this.experimentResult = null
     this.running = false
   }
@@ -42,7 +42,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
      * This method returns the experiment as a JSON object.
      * It is called by the JSON.stringify() method.
      */
-  toJSON () {
+  toJSON (): any {
     return {
       name: this.name,
       dataset: this.dataset,
@@ -77,7 +77,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     const subspaceMap = new Map<number, Subspace>()
     const outlierMap = new Map<number, Outlier>()
 
-    if (json.error_json) {
+    if (json.error_json === undefined) {
       this.failed = true
     }
     if (json.subspace_logic != null) {
@@ -85,7 +85,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     } else {
       this.subspaceLogic = null
     }
-    if (json.experiment_result != undefined) {
+    if (json.experiment_result !== undefined) {
       this.experimentResult = ExperimentResult.fromJSONObject(json.experiment_result, subspaceMap, outlierMap)
       this.running = false
     } else {

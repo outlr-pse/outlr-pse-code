@@ -43,7 +43,7 @@ export default defineComponent({
     store() {
       return store
     },
-    rotatedImage(): { transform: string } {
+    rotatedImage() {
       if (this.showCard) {
         this.rotation = 0
       } else {

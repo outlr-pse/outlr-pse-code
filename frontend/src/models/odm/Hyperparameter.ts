@@ -1,6 +1,4 @@
 import { getHyperparameterType, HyperparameterType } from './HyperparameterType'
-import { JSONDeserializable } from '../JSONDeserializable'
-import { JSONSerializable } from '../JSONSerializable'
 
 /**
  * This class represents a hyperparameter.

@@ -2,8 +2,7 @@ import axios, { type AxiosError } from 'axios'
 import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
 import { type Experiment } from '../models/experiment/Experiment'
-import axiosClient from "./AxiosClient";
-
+import axiosClient from './AxiosClient'
 
 export async function sendLogout (): Promise<any> {
   /**
@@ -135,8 +134,8 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
   /**
      * Sends request to back-end to respond with the result of the experiment with id = experimentId.
      */
-  axiosClient.get(
-    '/experiment/download-result/' + experiment.id,
+  await axiosClient.get(
+    `/experiment/download-result/${experiment.id}`,
     {
       responseType: 'blob', // important
       headers: authHeader()

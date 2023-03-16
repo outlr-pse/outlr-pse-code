@@ -10,16 +10,16 @@
 </template>
 
 <script lang="ts">
-import {CSSProperties, defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
 
   props: {
     style: {
-      type: Object as () => CSSProperties,
-      required: false,
-    },
-  },
+      type: Object,
+      required: false
+    }
+  }
 })
 </script>
 

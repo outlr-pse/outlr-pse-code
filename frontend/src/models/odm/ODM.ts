@@ -20,7 +20,7 @@ export class ODM implements JSONSerializable {
      * This method returns the ODM as a JSON object.
      * It is called by the JSON.stringify() method.
      */
-  toJSON () {
+  toJSON (): any {
     const hyperParametersJSON: Record<string, any> = {}
     for (const param of this.hyperParameters) {
       if (param.value !== '') {

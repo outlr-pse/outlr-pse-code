@@ -12,6 +12,6 @@ app.use(i18n)
 app.use(store)
 app.use(router)
 
-initialValidityCheck().then()
+await initialValidityCheck().then()
 
 app.mount('#app')

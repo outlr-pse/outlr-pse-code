@@ -34,7 +34,7 @@ export function parseSubspaceLogic (input: string, startIndex: number = 0): Subs
 function readSubspace (input: string, startIndex: number): [Subspace | null, number] {
   // console.log("Parsing subspace: " + input.substring(startIndex))
   const startSubspace = input.indexOf('[', startIndex)
-  if (startSubspace == -1) { return [null, startIndex] }
+  if (startSubspace === -1) { return [null, startIndex] }
   const endSubspace = input.indexOf(']', startIndex)
   const columns: number[] = input.substring(startSubspace + 1, endSubspace)
     .split(',')

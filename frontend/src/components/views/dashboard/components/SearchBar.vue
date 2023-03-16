@@ -9,7 +9,6 @@
 import { defineComponent } from 'vue'
 import Button from '../../../basic/button/Button.vue'
 import { ButtonType } from '../../../basic/button/ButtonType'
-import { Languages } from '../../../../language/Languages'
 
 export default defineComponent({
   name: 'SearchBar',

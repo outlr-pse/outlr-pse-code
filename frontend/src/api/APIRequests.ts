@@ -23,6 +23,7 @@ async function handleRequestError (error: any): Promise<any> {
       return serverError.response.data
     }
   }
+  await store.dispatch('auth/unsetAuthenticated')
   return errorOther
 }
 
@@ -83,9 +84,7 @@ export async function requestTokenIdentity (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
+      if (serverError?.response != null) return serverError.response.data
     }
     return errorOther
   }
@@ -135,7 +134,6 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
     {
       responseType: 'blob', // important
       headers: authHeader()
-      // @ts-expect-error
     }).then((response) => {
     // create file link in browser's memory
     const href = URL.createObjectURL(response.data)
@@ -153,7 +151,6 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
     document.body.removeChild(link)
     URL.revokeObjectURL(href)
   },
-  // @ts-expect-error
   async (error) => {
     await handleRequestError(error)
   }

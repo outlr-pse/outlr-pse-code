@@ -16,8 +16,6 @@ import {
 import { authHeader } from "../../../src/api/DataRetrievalService";
 import { Experiment } from "../../../src/models/experiment/Experiment";
 import { ODM } from "../../../src/models/odm/ODM";
-import { AxiosError, AxiosResponse } from "axios";
-import { validateUsername } from "../../../src/api/AuthServices";
 
 jest.mock("../../../src/api/DataRetrievalService", () => ({
     authHeader: jest.fn(() => {

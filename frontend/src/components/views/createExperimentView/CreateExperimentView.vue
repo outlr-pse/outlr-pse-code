@@ -37,7 +37,7 @@ import {Hyperparameter} from "../../../models/odm/Hyperparameter";
 import {validateHyperparameterType} from "../../../models/odm/HyperparameterType";
 import ODMSection from "./Component/InputSection.vue";
 import {ODM} from "../../../models/odm/ODM";
-import {requestODM, requestODMNames, sendExperiment} from "../../../api/APIRequests";
+import {requestExperimentCount, requestODM, requestODMNames, sendExperiment} from "../../../api/APIRequests";
 import Button from "../../basic/button/Button.vue";
 import InputSection from "./Component/InputSection.vue";
 import {ButtonType} from "../../basic/button/ButtonType";
@@ -49,8 +49,8 @@ export default defineComponent({
   components: {InputSection, Button, ODMSection, HyperParametersField, UploadFileField, Dropdown, Card},
   data() {
     return {
-      editableName: 'new Experiment',
-      experimentName: 'new Experiment',
+      editableName: 'Experiment',
+      experimentName: 'Experiment',
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
       buttonType: ButtonType.DISABLED,
@@ -142,6 +142,9 @@ export default defineComponent({
       odms.push(ODM.fromJSON(odm))
     }
     this.odms = odms
+    let experimentCount = await requestExperimentCount()
+    this.experimentName = "Experiment #" + (experimentCount.data.amount + 1)
+    this.editableName = this.experimentName
   }
 })
 </script>

@@ -1,10 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-
-import { getUrl, postUrl } from "../../../src/api/APIRequests";
-import axios from "axios";
 import { errorOther } from "../../../src/api/ErrorOther";
+import { sendLoginData } from "../../../src/api/APIRequests";
 
 jest.mock("../../../src/api/AxiosClient", () => {
     return {
@@ -60,9 +58,205 @@ jest.mock("../../../src/api/AxiosClient", () => {
                         status: 200
                     };
                 case "/odm/get-all":
-                    return {};
+                    return [
+                        {
+                            "id": 2,
+                            "name": "alad.ALAD"
+                        },
+                        {
+                            "id": 3,
+                            "name": "anogan.AnoGAN"
+                        },
+                        {
+                            "id": 4,
+                            "name": "cblof.CBLOF"
+                        },
+                        {
+                            "id": 5,
+                            "name": "cd.CD"
+                        },
+                        {
+                            "id": 6,
+                            "name": "cof.COF"
+                        },
+                        {
+                            "id": 7,
+                            "name": "copod.COPOD"
+                        },
+                        {
+                            "id": 8,
+                            "name": "ecod.ECOD"
+                        },
+                        {
+                            "id": 9,
+                            "name": "gmm.GMM"
+                        },
+                        {
+                            "id": 10,
+                            "name": "hbos.HBOS"
+                        },
+                        {
+                            "id": 11,
+                            "name": "iforest.IForest"
+                        },
+                        {
+                            "id": 12,
+                            "name": "inne.INNE"
+                        },
+                        {
+                            "id": 13,
+                            "name": "kde.KDE"
+                        },
+                        {
+                            "id": 14,
+                            "name": "knn.KNN"
+                        },
+                        {
+                            "id": 15,
+                            "name": "kpca.KPCA"
+                        },
+                        {
+                            "id": 16,
+                            "name": "lmdd.LMDD"
+                        },
+                        {
+                            "id": 17,
+                            "name": "loci.LOCI"
+                        },
+                        {
+                            "id": 18,
+                            "name": "loda.LODA"
+                        },
+                        {
+                            "id": 19,
+                            "name": "lof.LOF"
+                        },
+                        {
+                            "id": 20,
+                            "name": "lscp.LSCP"
+                        },
+                        {
+                            "id": 21,
+                            "name": "mad.MAD"
+                        },
+                        {
+                            "id": 22,
+                            "name": "mcd.MCD"
+                        },
+                        {
+                            "id": 23,
+                            "name": "mo_gaal.MO_GAAL"
+                        },
+                        {
+                            "id": 24,
+                            "name": "ocsvm.OCSVM"
+                        },
+                        {
+                            "id": 25,
+                            "name": "pca.PCA"
+                        },
+                        {
+                            "id": 26,
+                            "name": "rgraph.RGraph"
+                        },
+                        {
+                            "id": 27,
+                            "name": "rod.ROD"
+                        },
+                        {
+                            "id": 28,
+                            "name": "sampling.Sampling"
+                        },
+                        {
+                            "id": 29,
+                            "name": "so_gaal.SO_GAAL"
+                        },
+                        {
+                            "id": 30,
+                            "name": "sod.SOD"
+                        },
+                        {
+                            "id": 31,
+                            "name": "sos.SOS"
+                        },
+                        {
+                            "id": 32,
+                            "name": "suod.SUOD"
+                        },
+                        {
+                            "id": 33,
+                            "name": "vae.VAE"
+                        },
+                        {
+                            "id": 34,
+                            "name": "xgbod.XGBOD"
+                        },
+                        {
+                            "id": 1,
+                            "name": "abod.ABOD"
+                        }
+                    ];
                 case "/experiment/get-all":
-                    return {};
+                    return [
+                        {
+                            "dataset_name": "dataset.csv",
+                            "error_json": null,
+                            "experiment_result": {
+                                "accuracy": 0.965,
+                                "execution_date": "2023-03-16T10:59:25.332699",
+                                "execution_time": 1577822,
+                                "id": 5
+                            },
+                            "id": 5,
+                            "name": "new Experiment",
+                            "odm": {
+                                "deprecated": false,
+                                "hyper_parameters": [
+                                    {
+                                        "id": 826,
+                                        "name": "contamination",
+                                        "optional": true,
+                                        "type": "<class 'float'>"
+                                    },
+                                    {
+                                        "id": 827,
+                                        "name": "n_neighbors",
+                                        "optional": true,
+                                        "type": "<class 'int'>"
+                                    },
+                                    {
+                                        "id": 828,
+                                        "name": "method",
+                                        "optional": true,
+                                        "type": "<class 'str'>"
+                                    },
+                                    {
+                                        "id": 1101,
+                                        "name": "contamination",
+                                        "optional": true,
+                                        "type": "<class 'float'>"
+                                    },
+                                    {
+                                        "id": 1102,
+                                        "name": "n_neighbors",
+                                        "optional": true,
+                                        "type": "<class 'int'>"
+                                    },
+                                    {
+                                        "id": 1103,
+                                        "name": "method",
+                                        "optional": true,
+                                        "type": "<class 'str'>"
+                                    }
+                                ],
+                                "id": 1,
+                                "name": "abod.ABOD"
+                            },
+                            "odm_params": {
+                                "method": "fast"
+                            }
+                        }
+                    ];
                 default:
                     if (url.includes("/experiment/get-result/")) {
                         return {
@@ -311,9 +505,12 @@ jest.mock("../../../src/api/AxiosClient", () => {
 });
 
 describe("API Requests test", () => {
-    test("Logout when not logged in", async () => {
-        const response_test = await axios.get("http://127.0.0.1:1337/api/status");
-        const response = await postUrl();
-        expect(response).toBe("/testing");
+    test("sendLoginData test", async () => {
+        const username = "Ud0"
+        const password = "Test01!"
+        const response = await sendLoginData(username, password)
+        expect(response.data).toBeDefined()
+        expect(response.data.username).toBeDefined()
+        expect(response.data.username).toEqual(username)
     });
 });

@@ -1,21 +1,8 @@
 import axios, { type AxiosError } from 'axios'
 import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
-import { type ODM } from '../models/odm/ODM'
 import { type Experiment } from '../models/experiment/Experiment'
 import axiosClient from "./AxiosClient";
-
-
-export async function getUrl() {
-  return await axiosClient.get("/user/get-token-identity", { headers: authHeader() })
-}
-
-export async function postUrl() {
-  return await axiosClient.post('/register', {
-      username : "Ud0",
-      password : "hallo123"
-  })
-}
 
 
 export async function sendLogout (): Promise<any> {
@@ -30,7 +17,7 @@ export async function sendLogout (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -52,7 +39,7 @@ export async function sendLoginData (username: string, password: string): Promis
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -74,7 +61,7 @@ export async function sendRegisterData (username: string, password: string): Pro
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -93,7 +80,7 @@ export async function requestTokenIdentity (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -119,7 +106,7 @@ export async function sendExperiment (experiment: Experiment): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -136,7 +123,7 @@ export async function requestExperimentResult (experimentId: number): Promise<an
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -181,7 +168,7 @@ export async function requestODMNames (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -198,7 +185,7 @@ export async function requestODM (odmId: number): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -215,7 +202,7 @@ export async function requestAllExperiments (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }

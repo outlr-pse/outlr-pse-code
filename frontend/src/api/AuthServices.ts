@@ -1,8 +1,8 @@
-import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData} from './APIRequests'
+import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData } from './APIRequests'
 import store from '../store'
 import { errorOther } from './ErrorOther'
 
-export let storage = localStorage
+export const storage = localStorage
 
 export async function initialValidityCheck (): Promise<void> {
   const responseJson = await requestTokenIdentity()
@@ -28,7 +28,7 @@ export function validateUsername (username: string): boolean {
   if (username == null) {
     return false
   }
-  const usernameRegex = new RegExp('^[A-Za-z][A-Za-z0-9_]{2,29}$')
+  const usernameRegex = /^[A-Za-z][A-Za-z0-9_]{2,29}$/
   return usernameRegex.test(username)
 }
 
@@ -50,7 +50,7 @@ export function validatePassword (password: string) {
     return false
   }
 
-  const passwordRegex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})')
+  const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})/
   return passwordRegex.test(password)
 }
 

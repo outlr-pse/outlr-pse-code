@@ -53,6 +53,5 @@ export default defineComponent({
 .roc {
   padding-left: 7vw;
   justify-self: left;
-  height: 45%;
 }
 </style>

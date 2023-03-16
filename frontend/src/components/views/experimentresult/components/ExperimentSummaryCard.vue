@@ -4,9 +4,14 @@
       <h3 class="header">
         {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
       </h3>
-      <Button text="Download" :buttonType="ButtonType.CONTRAST" :size="[120,40]" @buttonClick="download"/>
+      <Button
+        text="Download"
+        :button-type="ButtonType.CONTRAST"
+        :size="[120,40]"
+        @buttonClick="download"
+      />
     </div>
-    <div style="border: 1px solid var(--color-stroke);"></div>
+    <div style="border: 1px solid var(--color-stroke);" />
     <div class="content">
       <div class="row">
         <div class="textLeft">
@@ -50,7 +55,6 @@
       </div>
     </div>
   </Card>
-
 </template>
 
 <script lang="ts">
@@ -64,12 +68,10 @@ import { downloadExperiment } from '../../../../api/APIRequests'
 export default defineComponent({
   name: 'ExperimentSummaryCard',
   components: { Button, Card },
-  methods: {
-    download () {
-      if (this.experiment.id == null) {
-        return
-      }
-      downloadExperiment(this.experiment)
+  props: {
+    experiment: {
+      type: Experiment,
+      required: true
     }
   },
   computed: {
@@ -96,10 +98,12 @@ export default defineComponent({
       return this.experiment.experimentResult?.executionDate.toLocaleString()
     }
   },
-  props: {
-    experiment: {
-      type: Experiment,
-      required: true
+  methods: {
+    download () {
+      if (this.experiment.id == null) {
+        return
+      }
+      downloadExperiment(this.experiment)
     }
   }
 })

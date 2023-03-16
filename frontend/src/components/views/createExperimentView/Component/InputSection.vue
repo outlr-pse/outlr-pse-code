@@ -19,25 +19,25 @@
 </template>
 
 <script lang="ts">
-import Card from "../../../basic/Card.vue";
-import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
-import {defineComponent} from "vue";
-import HyperParametersField from "./HyperParametersSection.vue";
-import Dropdown from "../../../basic/Dropdown.vue";
-import {ODM} from "../../../../models/odm/ODM";
-import SubspaceSection from "./SubspaceSection.vue";
-import HyperParametersSection from "./HyperParametersSection.vue";
-import {SubspaceLogic} from "../../../../models/subspacelogic/SubspaceLogic";
-import {Subspace} from "../../../../models/results/Subspace";
-import {Literal} from "../../../../models/subspacelogic/Literal";
-import {Operation} from "../../../../models/subspacelogic/Operation";
-import {Operator} from "../../../../models/subspacelogic/Operator";
-import {parseSubspaceLogic} from "../../../../logic/subspace_logic_parser/SubspaceLogicParser";
+import Card from '../../../basic/Card.vue'
+import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
+import { defineComponent } from 'vue'
+import HyperParametersField from './HyperParametersSection.vue'
+import Dropdown from '../../../basic/Dropdown.vue'
+import { ODM } from '../../../../models/odm/ODM'
+import SubspaceSection from './SubspaceSection.vue'
+import HyperParametersSection from './HyperParametersSection.vue'
+import { SubspaceLogic } from '../../../../models/subspacelogic/SubspaceLogic'
+import { Subspace } from '../../../../models/results/Subspace'
+import { Literal } from '../../../../models/subspacelogic/Literal'
+import { Operation } from '../../../../models/subspacelogic/Operation'
+import { Operator } from '../../../../models/subspacelogic/Operator'
+import { parseSubspaceLogic } from '../../../../logic/subspace_logic_parser/SubspaceLogicParser'
 
 export default defineComponent({
-  name: "InputSection",
-  components: {HyperParametersSection, SubspaceSection, Dropdown, HyperParametersField, Card},
-  data() {
+  name: 'InputSection',
+  components: { HyperParametersSection, SubspaceSection, Dropdown, HyperParametersField, Card },
+  data () {
     return {
       odmNames: [] as string[],
       odmMap: new Map<string, ODM>()
@@ -57,7 +57,7 @@ export default defineComponent({
     odms: function (odms: ODM[]) {
       this.odmNames = []
       this.odmMap = new Map<string, ODM>()
-      for (let odm of odms) {
+      for (const odm of odms) {
         this.odmMap.set(odm.name, odm)
         this.odmNames.push(odm.name)
       }
@@ -65,20 +65,18 @@ export default defineComponent({
     }
   },
   methods: {
-    onODMSelection(odmName: string) {
-      this.$emit("onODMSelection", this.odmMap.get(odmName))
+    onODMSelection (odmName: string) {
+      this.$emit('onODMSelection', this.odmMap.get(odmName))
     },
-    parseSubspaceLogic(logic: string) {
+    parseSubspaceLogic (logic: string) {
       try {
-        let subspaceLogic = parseSubspaceLogic(logic)
+        const subspaceLogic = parseSubspaceLogic(logic)
         console.log(subspaceLogic)
-        this.$emit("onSubspaceInput", subspaceLogic)
+        this.$emit('onSubspaceInput', subspaceLogic)
       } catch (e) {
-        this.$emit("onSubspaceInput", null)
+        this.$emit('onSubspaceInput', null)
         console.log(e)
       }
-
-
     }
   }
 })
@@ -114,6 +112,5 @@ export default defineComponent({
 .subspace {
   height: 30%;
 }
-
 
 </style>

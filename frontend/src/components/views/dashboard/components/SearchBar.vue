@@ -1,7 +1,19 @@
 <template>
-  <div >
-    <input type="text" v-model="searchTerm" :placeholder=" $t('message.dashboard.search')" class="field" />
-    <Button @click="clear" class="clear-button" :text=" $t('message.dashboard.clear')" :button-type="ButtonType.OUTLINE" :size="[100,47]" :text-size="[20,400]"></Button>
+  <div>
+    <input
+      v-model="searchTerm"
+      type="text"
+      :placeholder=" $t('message.dashboard.search')"
+      class="field"
+    >
+    <Button
+      class="clear-button"
+      :text=" $t('message.dashboard.clear')"
+      :button-type="ButtonType.OUTLINE"
+      :size="[100,47]"
+      :text-size="[20,400]"
+      @click="clear"
+    />
   </div>
 </template>
 
@@ -12,15 +24,15 @@ import { ButtonType } from '../../../basic/button/ButtonType'
 
 export default defineComponent({
   name: 'SearchBar',
-  computed: {
-    ButtonType () {
-      return ButtonType
-    }
-  },
   components: { Button },
   data () {
     return {
       searchTerm: ''
+    }
+  },
+  computed: {
+    ButtonType () {
+      return ButtonType
     }
   },
   watch: {

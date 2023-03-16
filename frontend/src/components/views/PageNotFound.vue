@@ -1,5 +1,5 @@
 <template>
-Page not found!
+  Page not found!
 </template>
 
 <script lang="ts">

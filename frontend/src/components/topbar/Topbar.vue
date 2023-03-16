@@ -24,60 +24,56 @@
 </template>
 
 <script lang="ts">
-import Button from "../basic/button/Button.vue";
-import {ButtonType} from "../basic/button/ButtonType";
-import {RouterLink} from "vue-router";
-import AppearingCard from "./ProfileCollapsableCard.vue";
-import {defineComponent} from "vue";
-import store from "../../store";
-
+import Button from '../basic/button/Button.vue'
+import { ButtonType } from '../basic/button/ButtonType'
+import { RouterLink } from 'vue-router'
+import AppearingCard from './ProfileCollapsableCard.vue'
+import { defineComponent } from 'vue'
+import store from '../../store'
 
 export default defineComponent({
-  name: "Topbar",
+  name: 'Topbar',
   components: {
     AppearingCard,
     Button,
     RouterLink
   },
-  data() : {
+  data () : {
 
-  }
-  {
+  } {
     return {
 
     }
   },
   computed: {
-    ButtonType() {
+    ButtonType () {
       return ButtonType
     },
-    store(): any {
+    store (): any {
       return store
     },
-    isAuthenticated(): boolean {
-      return store.getters['auth/isAuthenticated'];
+    isAuthenticated (): boolean {
+      return store.getters['auth/isAuthenticated']
     },
-    topbarMessage(): string {
-      let msg:string = "";
-      const path = this.$route.path;
-      if (path === "/") {
-        msg = "";
-      } else if (path === "/create") {
-        msg = this.$t('message.topbar.createAnExperiment');
-      } else if (path === "/login") {
-        msg = this.$t('message.topbar.logIn');
-      } else if (path === "/register") {
-        msg = this.$t('message.topbar.signUp');
-      } else if (path === "/dashboard") {
-        msg = this.$t('message.topbar.dashboard');
+    topbarMessage (): string {
+      let msg:string = ''
+      const path = this.$route.path
+      if (path === '/') {
+        msg = ''
+      } else if (path === '/create') {
+        msg = this.$t('message.topbar.createAnExperiment')
+      } else if (path === '/login') {
+        msg = this.$t('message.topbar.logIn')
+      } else if (path === '/register') {
+        msg = this.$t('message.topbar.signUp')
+      } else if (path === '/dashboard') {
+        msg = this.$t('message.topbar.dashboard')
+      } else if (path.startsWith('/experiment/')) {
+        msg = 'Experiment Result'
+      } else {
+        msg = '. __ .'
       }
-      else if (path.startsWith("/experiment/")) {
-        msg = "Experiment Result";
-      }
-      else {
-        msg = ". __ .";
-      }
-      return msg;
+      return msg
     }
   }
 })
@@ -105,6 +101,5 @@ export default defineComponent({
   width: 100%;
   z-index: 1000;
 }
-
 
 </style>

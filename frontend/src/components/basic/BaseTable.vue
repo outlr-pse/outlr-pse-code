@@ -1,12 +1,12 @@
 <template>
-    <table :style="style">
-      <thead>
-      <slot name="header"></slot>
-      </thead>
-      <tbody>
-      <slot name="body"></slot>
-      </tbody>
-    </table>
+  <table :style="style">
+    <thead>
+      <slot name="header" />
+    </thead>
+    <tbody>
+      <slot name="body" />
+    </tbody>
+  </table>
 </template>
 
 <script lang="ts">

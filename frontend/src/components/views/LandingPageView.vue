@@ -10,7 +10,6 @@
                  :text="$t('message.landingPage.navigateDashboard')" :size="[543,90]" :text-size="[25, 400]" start-icon="expand_more"/>
     </div>
 
-
     <div v-else class="signUp">
       <Button style="display: inline-block; margin-top: 30px" @buttonClick="redirect('register')"
               :button-type="ButtonType.DARKPURPLESIGNUP" :text="$t('message.landingPage.signUp')" :size="[140,70] " />
@@ -55,31 +54,31 @@
 </style>
 
 <script lang="ts">
-import Button from "../../components/basic/button/Button.vue";
-import router from "../../router";
-import store from "../../store";
-import {defineComponent} from "vue";
-import {ButtonType} from "../basic/button/ButtonType";
+import Button from '../../components/basic/button/Button.vue'
+import router from '../../router'
+import store from '../../store'
+import { defineComponent } from 'vue'
+import { ButtonType } from '../basic/button/ButtonType'
 
-export default defineComponent( {
-  name: "LandingPageView",
-  components: {Button},
-  data(){
-    return{
-      buttonStyle: "",
+export default defineComponent({
+  name: 'LandingPageView',
+  components: { Button },
+  data () {
+    return {
+      buttonStyle: ''
     }
   },
   methods: {
-    redirect(path: string) {
+    redirect (path: string) {
       router.push('/' + path)
     }
   },
-  computed : {
-    ButtonType() {
+  computed: {
+    ButtonType () {
       return ButtonType
     },
-    isAuthenticated() : boolean {
-      return store.getters['auth/isAuthenticated'];
+    isAuthenticated () : boolean {
+      return store.getters['auth/isAuthenticated']
     }
   }
 })

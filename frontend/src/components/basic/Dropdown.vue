@@ -14,17 +14,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "Dropdown",
-  data() {
+  name: 'Dropdown',
+  data () {
     return {
       isOpen: false,
-      selectedOption: "",
-      arrowDirection: "chevron_right",
+      selectedOption: '',
+      arrowDirection: 'chevron_right',
       buttonStyle: {
-        color: "var(--color-stroke)"
+        color: 'var(--color-stroke)'
       }
     }
   },
@@ -32,70 +32,69 @@ export default defineComponent({
     hint: {
       type: String,
       required: false,
-      default: "Select an option",
+      default: 'Select an option'
     },
     options: {
       type: Array,
-      required: true,
+      required: true
     },
     value: {
       type: String,
       required: false,
-      default: null,
-    },
+      default: null
+    }
   },
   methods: {
-    openDropdown() {
-      this.isOpen = !this.isOpen;
-      this.arrowDirection = this.isOpen ? "expand_more" : "chevron_right"
+    openDropdown () {
+      this.isOpen = !this.isOpen
+      this.arrowDirection = this.isOpen ? 'expand_more' : 'chevron_right'
     },
-    selectOption(option: string) {
-      this.selectedOption = option;
-      this.$emit("onValueSelected", option);
-      this.isOpen = false;
-      this.arrowDirection = "chevron_right";
+    selectOption (option: string) {
+      this.selectedOption = option
+      this.$emit('onValueSelected', option)
+      this.isOpen = false
+      this.arrowDirection = 'chevron_right'
     }
   },
-  mounted() {
-    if(this.value != null){
-      this.selectedOption = this.value;
+  mounted () {
+    if (this.value != null) {
+      this.selectedOption = this.value
       this.buttonStyle = {
-        color: "var(--color-text)"
+        color: 'var(--color-text)'
       }
     } else {
-      this.selectedOption = this.hint;
+      this.selectedOption = this.hint
     }
 
-
-    document.addEventListener("click", (event) => {
+    document.addEventListener('click', (event) => {
       if (!this.$el.contains(event.target)) {
-        this.isOpen = false;
-        this.arrowDirection = "chevron_right";
+        this.isOpen = false
+        this.arrowDirection = 'chevron_right'
       }
-    });
+    })
   },
-  beforeUnmount() {
-    document.removeEventListener("click", (event) => {
+  beforeUnmount () {
+    document.removeEventListener('click', (event) => {
       if (!this.$el.contains(event.target)) {
-        this.isOpen = false;
-        this.arrowDirection = "chevron_right";
+        this.isOpen = false
+        this.arrowDirection = 'chevron_right'
       }
-    });
+    })
   },
-  watch:{
+  watch: {
     selectedOption: function (oldVal: string) {
       if (oldVal === this.hint) {
         this.buttonStyle = {
-          color: "var(--color-stroke)"
+          color: 'var(--color-stroke)'
         }
       } else {
         this.buttonStyle = {
-          color: "var(--color-text)"
+          color: 'var(--color-text)'
         }
       }
     }
   }
-});
+})
 </script>
 
 <style scoped>

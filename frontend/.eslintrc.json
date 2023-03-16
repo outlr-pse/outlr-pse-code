@@ -12,11 +12,15 @@
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": ["./tsconfig.json"]
+        "project": ["./tsconfig.json"],
+        "extraFileExtensions": [".vue"],
+        "parser": "@typescript-eslint/parser"
     },
     "plugins": [
         "vue"
     ],
     "rules": {
-    }
+    },
+    "parser": "vue-eslint-parser"
+
 }

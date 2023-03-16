@@ -13,7 +13,6 @@
             </transition>
           </div>
 
-
           <div class="subtitle">{{ $t('message.register-view.subtitle') }}</div>
         </div>
 
@@ -48,66 +47,61 @@
   </div>
 </template>
 
-
 <script lang="ts">
-import Card from "../../basic/Card.vue";
-import Button from "../../basic/button/Button.vue";
-import Tip from "../../basic/Tip.vue";
-import {register, validatePassword, validateUsername} from "../../../api/AuthServices";
-import {defineComponent} from "vue";
-import router from "../../../router";
-import store from "../../../store";
+import Card from '../../basic/Card.vue'
+import { register, validatePassword, validateUsername } from '../../../api/AuthServices'
+import { defineComponent } from 'vue'
+import router from '../../../router'
 
 export default defineComponent({
-  name: "Register",
-  components: {Tip, Button, Card},
+  name: 'Register',
+  components: { Card },
   data: () => {
     return {
       withValidInput: [false, false, false],
-      username: "",
-      password: "",
-      passwordRepeated: "",
+      username: '',
+      password: '',
+      passwordRepeated: '',
       error: false,
-      errorMessage: "Something went wrong!",
+      errorMessage: 'Something went wrong!',
       showTip: false,
-      visiblePassword: "visibility",
-      inputTypePassword: "password",
-      visiblePasswordRepeated: "visibility",
-      inputTypePasswordRepeated: "password",
-    };
+      visiblePassword: 'visibility',
+      inputTypePassword: 'password',
+      visiblePasswordRepeated: 'visibility',
+      inputTypePasswordRepeated: 'password'
+    }
   },
   methods: {
-    usernameInput(event: any) {
-      let isValid = validateUsername(this.username)
-      this.withValidInput[0] = isValid;
+    usernameInput (event: any) {
+      const isValid = validateUsername(this.username)
+      this.withValidInput[0] = isValid
       return isValid
     },
-    passwordInput(event: any) {
-      let isValid = validatePassword(this.password);
-      this.withValidInput[1] = isValid;
-      return isValid;
+    passwordInput (event: any) {
+      const isValid = validatePassword(this.password)
+      this.withValidInput[1] = isValid
+      return isValid
     },
-    passwordRepeatedInput(event: any) {
-      let isValid = this.passwordRepeated === this.password && this.withValidInput[1];
-      this.withValidInput[2] = isValid;
-      return isValid;
+    passwordRepeatedInput (event: any) {
+      const isValid = this.passwordRepeated === this.password && this.withValidInput[1]
+      this.withValidInput[2] = isValid
+      return isValid
     },
-    resetInputFields() {
-      this.username = ""
-      this.password = ""
-      this.passwordRepeated = ""
+    resetInputFields () {
+      this.username = ''
+      this.password = ''
+      this.passwordRepeated = ''
       for (let i = 0; i < this.withValidInput.length; i++) {
         this.withValidInput[i] = false
       }
     },
-    async tryRegisterSubmit() {
-
-      if (!validateUsername(this.username) || !validatePassword(this.password)
-          || this.password != this.passwordRepeated) {
-        this.error = true;
+    async tryRegisterSubmit () {
+      if (!validateUsername(this.username) || !validatePassword(this.password) ||
+          this.password !== this.passwordRepeated) {
+        this.error = true
         this.errorMessage = this.$t('message.register-view.errors.provided_credentials_wrong')
         this.resetInputFields()
-        return;
+        return
       }
 
       const response = await register(this.username, this.password)
@@ -115,28 +109,28 @@ export default defineComponent({
         this.error = true
         this.errorMessage = this.$t(`message.register-view.errors.${response.error}`)
         this.resetInputFields()
-        return;
+        return
       }
       await router.push('/')
     },
-    toggleVisibilityPassword() {
-      this.inputTypePassword = this.inputTypePassword === "password" ? "text" : "password"
-      this.visiblePassword = this.visiblePassword === "visibility_off" ? "visibility" : "visibility_off"
+    toggleVisibilityPassword () {
+      this.inputTypePassword = this.inputTypePassword === 'password' ? 'text' : 'password'
+      this.visiblePassword = this.visiblePassword === 'visibility_off' ? 'visibility' : 'visibility_off'
     },
-    toggleVisibilityPasswordRepeated() {
-      this.inputTypePasswordRepeated = this.inputTypePasswordRepeated === "password" ? "text" : "password"
-      this.visiblePasswordRepeated = this.visiblePasswordRepeated === "visibility_off" ? "visibility" : "visibility_off"
+    toggleVisibilityPasswordRepeated () {
+      this.inputTypePasswordRepeated = this.inputTypePasswordRepeated === 'password' ? 'text' : 'password'
+      this.visiblePasswordRepeated = this.visiblePasswordRepeated === 'visibility_off' ? 'visibility' : 'visibility_off'
       this.error = false
     }
   },
   computed: {
-    validInput() {
+    validInput () {
       for (let i = 0; i < this.withValidInput.length; i++) {
         if (!this.withValidInput[i]) {
           return false
         }
       }
-      return true;
+      return true
     }
   }
 })
@@ -312,6 +306,5 @@ input {
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
 
 </style>

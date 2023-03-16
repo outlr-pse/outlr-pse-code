@@ -23,21 +23,21 @@
 </template>
 
 <script lang="ts">
-import ParameterInputField from "./ParameterInputField.vue";
-import {defineComponent} from "vue";
-import {Hyperparameter} from "../../../../models/odm/Hyperparameter";
-import {validateHyperparameterType} from "../../../../models/odm/HyperparameterType";
-import Card from "../../../basic/Card.vue";
+import ParameterInputField from './ParameterInputField.vue'
+import { defineComponent } from 'vue'
+import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
+import { validateHyperparameterType } from '../../../../models/odm/HyperparameterType'
+import Card from '../../../basic/Card.vue'
 
 export default defineComponent({
-  name: "HyperParametersSection",
-  components: {Card, ParameterInputField},
-  data() {
+  name: 'HyperParametersSection',
+  components: { Card, ParameterInputField },
+  data () {
     return {
       visible: true,
       parametersMap: new Map<number, Hyperparameter>(),
       showTip: false
-    };
+    }
   },
   props: {
     parameters: {
@@ -48,22 +48,22 @@ export default defineComponent({
   watch: {
     parameters: function () {
       this.parameters.forEach(param => {
-        this.parametersMap.set(param.id, param);
+        this.parametersMap.set(param.id, param)
       })
     }
   },
   methods: {
-    inputChange(value: string, parameterId: number) {
-      (this.parametersMap.get(parameterId) as Hyperparameter).value = value;
-      let param = this.parametersMap.get(parameterId) as Hyperparameter;
-      if (!validateHyperparameterType(param)&& param.value !== "") {
-        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].wrongInput();
+    inputChange (value: string, parameterId: number) {
+      (this.parametersMap.get(parameterId) as Hyperparameter).value = value
+      const param = this.parametersMap.get(parameterId) as Hyperparameter
+      if (!validateHyperparameterType(param) && param.value !== '') {
+        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].wrongInput()
       } else if (!param.optional) {
-        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].optionalInput();
+        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].optionalInput()
       } else {
-        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].correctInput();
+        (this.$refs[`inputRef${parameterId}`] as typeof ParameterInputField)[0].correctInput()
       }
-      this.$emit("checkData");
+      this.$emit('checkData')
     }
 
   }
@@ -128,6 +128,5 @@ export default defineComponent({
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
 
 </style>

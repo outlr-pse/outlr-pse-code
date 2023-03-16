@@ -1,5 +1,10 @@
 <template>
-      <input type="text" :placeholder="placeholder" v-model="value" class="field">
+  <input
+    v-model="value"
+    type="text"
+    :placeholder="placeholder"
+    class="field"
+  >
 </template>
 
 <script lang="ts">
@@ -7,11 +12,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ParameterInputField',
-  data () {
-    return {
-      value: ''
-    }
-  },
   props: {
     placeholder: {
       type: String,
@@ -26,6 +26,21 @@ export default defineComponent({
       default: false
     }
   },
+  data () {
+    return {
+      value: ''
+    }
+  },
+  watch: {
+    value: function () {
+      this.$emit('input-change', this.value, this.parameterId)
+    }
+  },
+  mounted () {
+    if (!this.optional) {
+      this.optionalInput()
+    }
+  },
   methods: {
     wrongInput () {
       this.$el.style.border = '1px solid var(--color-close-button)'
@@ -38,16 +53,6 @@ export default defineComponent({
     },
     checkData () {
       this.$emit('check-data')
-    }
-  },
-  watch: {
-    value: function () {
-      this.$emit('input-change', this.value, this.parameterId)
-    }
-  },
-  mounted () {
-    if (!this.optional) {
-      this.optionalInput()
     }
   }
 })

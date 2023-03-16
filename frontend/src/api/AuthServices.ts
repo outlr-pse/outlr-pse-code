@@ -1,6 +1,8 @@
-import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData, storage } from './APIRequests'
+import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData } from './APIRequests'
 import store from '../store'
 import { errorOther } from './ErrorOther'
+import storage from './Storage'
+
 export async function initialValidityCheck (): Promise<void> {
   const responseJson = await requestTokenIdentity()
 
@@ -25,11 +27,11 @@ export function validateUsername (username: string): boolean {
   if (username == null) {
     return false
   }
-  const usernameRegex = new RegExp('^[A-Za-z][A-Za-z0-9_]{2,29}$')
+  const usernameRegex = /^[A-Za-z][A-Za-z0-9_]{2,29}$/
   return usernameRegex.test(username)
 }
 
-export function validatePassword (password: string) {
+export function validatePassword (password: string): boolean {
   /**
      * validate the password and return either true, when password is valid, or false, when password is not valid - only
      * if password equals passwordRepeated
@@ -47,11 +49,11 @@ export function validatePassword (password: string) {
     return false
   }
 
-  const passwordRegex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})')
+  const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})/
   return passwordRegex.test(password)
 }
 
-export async function login (username: string, password: string) {
+export async function login (username: string, password: string): Promise<any> {
   /**
      * This method tries to log in using {@link sendLoginData}
      * the provided credentials to send a request to the API. It returns
@@ -82,7 +84,7 @@ export async function login (username: string, password: string) {
   }
 }
 
-export async function register (username: string, password: string) {
+export async function register (username: string, password: string): Promise<any> {
   /**
      * This method tries to register a user in using {@link sendRegisterData}
      * the provided credentials to send a request to the API. It returns
@@ -113,7 +115,7 @@ export async function register (username: string, password: string) {
   }
 }
 
-export async function logout () {
+export async function logout (): Promise<any> {
   /**
      * This method logs out a user using {@link sendLogout}
      * to request the deletion of the token on API side - it also removes

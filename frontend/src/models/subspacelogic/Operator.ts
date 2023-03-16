@@ -1,5 +1,3 @@
-import { Operation } from './Operation'
-
 /**
  * This enum represents an operator of an {@link Operation} in the {@link SubspaceLogic}
  * The string that is mapped to each enum entry is used for json

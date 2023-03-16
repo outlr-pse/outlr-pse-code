@@ -41,9 +41,6 @@ export function validateUsername (username: string): boolean {
      *
      * @param username the username, the user provided
      */
-  if (username == null) {
-    return false
-  }
   const usernameRegex = /^[A-Za-z][A-Za-z0-9_]{2,29}$/
   return usernameRegex.test(username)
 }
@@ -62,10 +59,6 @@ export function validatePassword (password: string): boolean {
      *
      * @param password the password, the user provided
      */
-  if (password == null) {
-    return false
-  }
-
   const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})/
   return passwordRegex.test(password)
 }
@@ -118,13 +111,7 @@ export async function logout (): Promise<any> {
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-  try {
-    storage.removeItem('access_token')
-    await store.dispatch('auth/unsetAuthenticated')
-    return { message: 'success', status: 200 }
-  } catch (error) {
-    storage.removeItem('access_token')
-    await store.dispatch('auth/unsetAuthenticated')
-    return errorOther
-  }
+  storage.removeItem('access_token')
+  await store.dispatch('auth/unsetAuthenticated')
+  return { message: 'success', status: 200 }
 }

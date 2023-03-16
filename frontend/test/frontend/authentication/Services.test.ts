@@ -6,6 +6,8 @@ import storage from "../../../src/api/Storage";
 import {initialValidityCheck, login, logout, register} from "../../../src/api/AuthServices";
 import store from "../../../src/store";
 import {defaultUsername} from "../../../src/store/modules/auth";
+import axios from "axios";
+import {sendRegisterData} from "../../../src/api/APIRequests";
 
 let mockError = false
 let currentUsername = defaultUsername
@@ -42,11 +44,6 @@ jest.mock("../../../src/api/AxiosClient", () => {
             } else {
                 return errorOther;
             }
-        case "/user/get-token-identity":
-            return {
-                username: currentUsername,
-                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
-            };
         case "/experiment/upload-files":
             return {
                 status: 200,
@@ -65,12 +62,23 @@ jest.mock("../../../src/api/AxiosClient", () => {
     get: jest.fn().mockImplementation((url: string, config?: any) => {
         switch (url) {
             case "/user/get-token-identity":
+                if (mockError) {
+                    return {
+                        message: "Request failed with status code 401",
+                        data: {
+                            error: "token_not_valid",
+                            message: "The provided token is not valid or no token provided",
+                            status: 401
+                        },
+                        status: 401
+                    }
+                }
                 return {
                     data: {
                         username: currentUsername,
                         access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
                     },
-                    status: 200
+                    status: 202
                 };
             case "/odm/get-all":
                 return {
@@ -559,6 +567,24 @@ describe("Tests DataRetrievalService", () => {
         expect(authState).toEqual(true)
         currentUsername = defaultUsername
     })
+    test("Register fails as mocked to do that", async () => {
+        mockError = true;
+        const username = "Ud0";
+        const password = "Test01!";
+        let response
+        try {
+            response = await register(username, password);
+        }
+        catch(error) {
+            response = error
+        }
+        expect(response.status).not.toEqual(200)
+        expect(response.error).toBeDefined()
+        expect(response.message).toBeDefined()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        mockError = false;
+    })
     test("Logging in and then logging out", async () => {
         const username = "Ud0"
         const password = "Test01!"
@@ -584,6 +610,14 @@ describe("Tests DataRetrievalService", () => {
         await store.dispatch("auth/unsetAuthenticated")
         expect(store.getters["auth/username"]).toEqual(defaultUsername)
         expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+    })
+    test("Initial validity check but no valid token in storage", async () => {
+        mockError = true
+        await initialValidityCheck()
+        expect(storage.getItem("access_token")).toBeNull()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        mockError =false
     })
 
 })

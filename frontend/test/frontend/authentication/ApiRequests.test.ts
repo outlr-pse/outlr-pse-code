@@ -16,6 +16,8 @@ import {
 import { authHeader } from "../../../src/api/DataRetrievalService";
 import { Experiment } from "../../../src/models/experiment/Experiment";
 import { ODM } from "../../../src/models/odm/ODM";
+import {validateUsername} from "../../../src/api/AuthServices";
+import axios from "axios";
 
 jest.mock("../../../src/api/DataRetrievalService", () => ({
     authHeader: jest.fn(() => {
@@ -32,6 +34,9 @@ jest.mock("../../../src/api/AxiosClient", () => {
                 case "/user/register":
                     if (data.username == null || data.password == null || mockError) {
                         throw new Error()
+                    }
+                    if (!validateUsername(data.username)) {
+                        throw new axios.AxiosError('Request failed')
                     }
                     return {
                         data: {
@@ -579,6 +584,19 @@ describe("API Requests test", () => {
         expect(response.message).toBeDefined()
         mockError = false;
     });
+    test("sendRegisterData but no valid username provided", async () => {
+        const username = "Ud";
+        const password = "Test01&"
+        let response
+        try {
+            response = await sendRegisterData(username, password);
+        } catch (error) {
+            response = error
+        }
+        expect(response.status).not.toEqual(200)
+        expect(response.error).toBeDefined()
+        expect(response.message).toBeDefined()
+    })
     test("sendLogout test", async () => {
         const response = await sendLogout();
         expect(response.status).toEqual(200);

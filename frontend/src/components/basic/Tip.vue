@@ -8,13 +8,13 @@
 </template>
 
 <script lang="ts">
-import Card from "./Card.vue";
-import {defineComponent} from "vue";
+import Card from './Card.vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "Tip",
-  components: {Card},
-  data() {
+  name: 'Tip',
+  components: { Card },
+  data () {
     return {
       show: true
     }
@@ -24,7 +24,7 @@ export default defineComponent({
       type: String,
       required: true
     }
-  },
+  }
 })
 </script>
 

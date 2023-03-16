@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="homeLogo">
-      <img alt="Outlr logo" style="width: 100%" src="../../assets/OutlrLogo.svg"/>
+      <img alt="Outlr logo" style="width: 40em" src="../../assets/OutlrLogo.png"/>
       <h1>{{ $t('message.landingPage.slogan') }}</h1>
     </div>
 

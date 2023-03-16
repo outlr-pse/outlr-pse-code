@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPageView from "../components/views/LandingPageView.vue";
-import store from "../store";
-import { initialValidityCheck } from "../api/AuthServices";
-import { storage } from "../api/APIRequests";
+import LandingPageView from "../components/views/LandingPageView.vue"
+import store from "../store"
 const routes = [
   {
     path: '/',
@@ -13,44 +11,44 @@ const routes = [
   {
     path: '/login',
     name: 'login-page',
-    component: () => import("../components/views/LoginView/LoginView.vue"),
+    component: async () => await import('../components/views/LoginView/LoginView.vue'),
     meta: { requiresAuth: false }
   },
   {
     path: '/register',
     name: 'register-page',
-    component: () => import("../components/views/RegisterView/RegisterView.vue"),
+    component: async () => await import('../components/views/RegisterView/RegisterView.vue'),
     meta: { requiresAuth: false }
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: () => import("../components/views/dashboard/Dashboard.vue"),
+    component: async () => await import('../components/views/dashboard/Dashboard.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/experiment/:expId',
-    name: "experiment-result",
-    component: () => import('../components/views/experimentresult/ExperimentResultView.vue'),
+    name: 'experiment-result',
+    component: async () => await import('../components/views/experimentresult/ExperimentResultView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/experiment',
-    name: "create-experiment-fallback",
-    component: () => import('../components/views/createExperimentView/CreateExperimentView.vue'),
+    name: 'create-experiment-fallback',
+    component: async () => await import('../components/views/createExperimentView/CreateExperimentView.vue'),
     meta: { requiresAuth: true }
   },
   {
     path: '/create',
-    name: "create-experiment",
-    component: () => import('../components/views/createExperimentView/CreateExperimentView.vue'),
+    name: 'create-experiment',
+    component: async () => await import('../components/views/createExperimentView/CreateExperimentView.vue'),
     meta: { requiresAuth: true }
   },
   {
-    path:'/:pathMatch(.*)*',
+    path: '/:pathMatch(.*)*',
     name: 'not-found',
-    component: () => import('../components/views/PageNotFound.vue'),
-  },
+    component: async () => await import('../components/views/PageNotFound.vue')
+  }
 ]
 const router = createRouter({
   history: createWebHistory(),
@@ -64,15 +62,15 @@ router.beforeEach(async (to, from, next) => {
     if (store.getters['auth/isAuthenticated']) {
       next('/')
     }
-    return;
+    return
   }
 
   if (to.matched.some((record => record.meta.requiresAuth)) && (!storage.getItem("access_token") || !store.getters['auth/isAuthenticated'])) {
     next('/login')
-    return;
+    return
   }
 
-  next();
+  next()
 })
 
 

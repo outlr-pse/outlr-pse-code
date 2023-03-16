@@ -8,12 +8,13 @@ The api can be run with the start() method.
 
 from flask import Flask, jsonify
 from flask.wrappers import Response
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+
+import config
 from api.experiment_api import experiment_api
 from api.user_management_api import user_management_api
 from api.odm_api import odm_api
-from flask_cors import CORS
-import config
-from flask_jwt_extended import JWTManager
 from api import error
 
 app = Flask(__name__)

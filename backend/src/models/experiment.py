@@ -104,6 +104,7 @@ class Subspace(Base):
             id=json.get("id"),  # Can be None
             columns=list(set(json["columns"])),
             name=json.get("name"),  # Can be None
+            outliers=[]  # Important, so that the relationship does not need to be lazy loaded
         )
 
 
@@ -225,7 +226,7 @@ class Experiment(Base):
         subspaces (list[Subspace]): Subspaces that belong to this experiment. Does not contain the result_space
         experiment_result (Optional[ExperimentResult]): Result of the experiment.
             Is None if the experiment has not yet been run
-        dataset (Dataset): Dataset. This attribute is not stored in the database
+        dataset (pandas.DataFrame): Dataset. This attribute is not stored in the database
         ground_truth (np.NDArray): A numpy array containing 0 and 1 to indicate which datapoint is an outlier
     """
 
@@ -313,7 +314,7 @@ class Experiment(Base):
     def from_json(cls, json: dict):
         subspaces = {}
         exp = cls(
-            user_id=json['user_id'],
+            user_id=json.get('user_id'),  # Optional in JSON, if not present it must be set manually later
             name=json['name'],
             subspace_logic=models.subspacelogic.SubspaceLogic.from_client_json(json['subspace_logic'], subspaces),
             odm_id=json['odm']['id'],

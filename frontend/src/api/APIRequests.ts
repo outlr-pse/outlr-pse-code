@@ -101,67 +101,6 @@ export async function requestTokenIdentity (): Promise<any> {
   }
 }
 
-export async function sendDataset (dataset: File): Promise<any> {
-  /**
-     * Sends request to back-end to validate the dataset passed in form data of the http request.
-     * In case of an error, the error JSON, as defined in backend, is returned.
-     */
-  try {
-    const formData = new FormData()
-    formData.append('file', dataset, dataset.name)
-    return await axiosClient.post('/experiment/validate-dataset', formData,
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
-export async function sendGroundTruth (groundTruth: File): Promise<any> {
-  /**
-     * Sends request to back-end to validate the ground truth passed in form data of the http request.
-     * In case of an error, the error JSON, as defined in backend, is returned.
-     */
-  try {
-    const formData = new FormData()
-    formData.append('file', groundTruth, groundTruth.name)
-    return await axiosClient.post('/experiment/validate-ground-truth', formData,
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
-export async function sendODM (odm: ODM): Promise<any> {
-  /**
-     * Sends the selected ODM to the back-end. Returns a promise, encapsulating
-     * a JSON with info on whether sending the ODM was successful or not, then containing an error key
-     */
-  try {
-    return await axiosClient.post('/experiment/validate-ground-truth', { odm: odm.toJSON() },
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
 export async function sendExperiment (experiment: Experiment): Promise<any> {
   /**
      * Sends the experiment creation data to the back-end. Returns a promise, encapsulating

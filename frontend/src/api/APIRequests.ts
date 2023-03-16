@@ -3,6 +3,8 @@ import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
 import { type Experiment } from '../models/experiment/Experiment'
 import axiosClient from './AxiosClient'
+import storage from './Storage'
+import store from '../store'
 
 async function handleRequestError (error: any): Promise<any> {
   /**
@@ -127,11 +129,13 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
 
   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   const url = '/experiment/download-result/' + experiment.id
+
   axiosClient.get(
     url,
     {
       responseType: 'blob', // important
       headers: authHeader()
+      // @ts-expect-error
     }).then((response) => {
     // create file link in browser's memory
     const href = URL.createObjectURL(response.data)
@@ -149,6 +153,7 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
     document.body.removeChild(link)
     URL.revokeObjectURL(href)
   },
+  // @ts-expect-error
   async (error) => {
     await handleRequestError(error)
   }

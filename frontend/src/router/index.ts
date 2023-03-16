@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from '../components/views/LandingPageView.vue'
 import store from '../store'
-import { storage } from '../api/APIRequests'
 import { initialValidityCheck } from '../api/AuthServices'
+import storage from '../api/Storage'
 const routes = [
   {
     path: '/',

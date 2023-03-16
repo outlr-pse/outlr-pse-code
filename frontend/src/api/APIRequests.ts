@@ -208,3 +208,20 @@ export async function requestAllExperiments (): Promise<any> {
     return errorOther
   }
 }
+
+export async function requestExperimentCount (): Promise<any> {
+  /**
+   * Sens request to back-end to respond with the number of experiments
+   */
+  try {
+    return await axiosClient.get('/experiment/count', { headers: authHeader() })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const serverError = error as AxiosError
+      if (serverError?.response != null) {
+        return serverError.response.data
+      }
+    }
+    return errorOther
+  }
+}

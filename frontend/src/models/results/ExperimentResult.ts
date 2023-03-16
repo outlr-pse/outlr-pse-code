@@ -4,7 +4,7 @@ import { type Outlier } from './Outlier'
 /**
  * This class represents an experiment result.
  */
-export class ExperimentResult{
+export class ExperimentResult {
   accuracy: number
   executionDate: Date
   executionTime: number

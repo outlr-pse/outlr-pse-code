@@ -3,10 +3,6 @@
         <Topbar />
         <RouterView class="routerView" />
     </div>
-  <div id="app">
-    <Topbar />
-    <RouterView class="routerView" />
-  </div>
 </template>
 
 <script lang="ts">
@@ -16,7 +12,6 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import { onBeforeMount } from 'vue'
 import store from './store'
 import { initialValidityCheck } from './api/AuthServices'
-import { mapState } from 'vuex'
 
 export default {
   setup () {

@@ -39,7 +39,7 @@ export class ExperimentResult implements JSONSerializable {
      */
   static fromJSONObject (jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): ExperimentResult {
     let resultSpace
-    if (jsonObject.result_space != undefined) {
+    if (jsonObject.result_space !== undefined) {
       resultSpace = Subspace.fromJSONObject(jsonObject.result_space, outlierMap)
     }
 

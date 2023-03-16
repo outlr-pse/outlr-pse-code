@@ -1,7 +1,6 @@
-import { requestTokenIdentity, storage } from './APIRequests'
-import { errorOther } from './ErrorOther'
+import storage from './Storage'
 
-export function authHeader () {
+export function authHeader (): any {
   /**
      * Generates the header used for sending the token provided with http requests to the backend. If
      * no token is in the local storage it is a empty JSON.

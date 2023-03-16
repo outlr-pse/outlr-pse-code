@@ -16,7 +16,7 @@
         <UploadFileField style="margin-bottom: 15px" :input-name="$t('message.experimentCreate.groundtruth')"
                          @file-uploaded="setGroundtruth"/>
       </Card>
-      <Button :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
+      <ButtonComponent :button-type="buttonType" style="margin-top: 45px;" class="button" text="Create Experiment"
               :size="[350,70]" :text-size="[22,600]" @buttonClick="createExperiment"/>
     </div>
     <div class="right-half">
@@ -28,26 +28,23 @@
 </template>
 
 <script lang="ts">
-import Card from "../../basic/Card.vue";
-import {defineComponent} from "vue";
-import Dropdown from "../../basic/Dropdown.vue";
-import UploadFileField from "./Component/UploadFileField.vue";
-import HyperParametersField from "./Component/HyperParametersSection.vue";
-import {Hyperparameter} from "../../../models/odm/Hyperparameter";
-import {validateHyperparameterType} from "../../../models/odm/HyperparameterType";
-import ODMSection from "./Component/InputSection.vue";
-import {ODM} from "../../../models/odm/ODM";
-import {requestODM, requestODMNames, sendExperiment} from "../../../api/APIRequests";
-import Button from "../../basic/button/Button.vue";
-import InputSection from "./Component/InputSection.vue";
-import {ButtonType} from "../../basic/button/ButtonType";
-import {SubspaceLogic} from "../../../models/subspacelogic/SubspaceLogic";
-import {Experiment} from "../../../models/experiment/Experiment";
+import Card from '../../basic/Card.vue'
+import { defineComponent } from 'vue'
+import UploadFileField from './Component/UploadFileField.vue'
+import { Hyperparameter } from '../../../models/odm/Hyperparameter'
+import { validateHyperparameterType } from '../../../models/odm/HyperparameterType'
+import { ODM } from '../../../models/odm/ODM'
+import { requestODM, requestODMNames, sendExperiment } from '../../../api/APIRequests'
+import ButtonComponent from '../../basic/button/ButtonComponent.vue'
+import { ButtonType } from '../../basic/button/ButtonType'
+import { SubspaceLogic } from '../../../models/subspacelogic/SubspaceLogic'
+import { Experiment } from '../../../models/experiment/Experiment'
+import InputSection from './Component/InputSection.vue'
 
 export default defineComponent({
-  name: "CreateExperimentView",
-  components: {InputSection, Button, ODMSection, HyperParametersField, UploadFileField, Dropdown, Card},
-  data() {
+  name: 'CreateExperimentView',
+  components: { InputSection, ButtonComponent, UploadFileField, Card },
+  data () {
     return {
       editableName: 'new Experiment',
       experimentName: 'new Experiment',
@@ -55,72 +52,71 @@ export default defineComponent({
       hyperparameters: [] as Hyperparameter[],
       buttonType: ButtonType.DISABLED,
 
-
       selectedODM: null as ODM | null,
       dataset: null as File | null,
       groundtruth: null as File | null,
-      subspaceLogic: null as SubspaceLogic | null,
+      subspaceLogic: null as SubspaceLogic | null
 
     }
   },
   methods: {
-    onExperimentInput(event: any) {
-      this.experimentName = event.target.textContent;
+    onExperimentInput (event: any) {
+      this.experimentName = event.target.textContent
     },
-    async onODMSelection(odm: ODM) {
-      let response = await requestODM(odm.id)
+    async onODMSelection (odm: ODM) {
+      const response = await requestODM(odm.id)
       this.hyperparameters = []
-      for (let param of response.data) {
+      for (const param of response.data) {
         this.hyperparameters.push(Hyperparameter.fromJSON(param))
       }
       this.selectedODM = odm
       this.selectedODM.hyperParameters = this.hyperparameters
       this.checkRequiredData()
     },
-    setDataset(dataset: File) {
+    setDataset (dataset: File) {
       this.dataset = dataset
       this.checkRequiredData()
     },
-    setGroundtruth(groundtruth: File) {
+    setGroundtruth (groundtruth: File) {
       this.groundtruth = groundtruth
     },
-    setSubspaceLogic(subspaceLogic: SubspaceLogic) {
+    setSubspaceLogic (subspaceLogic: SubspaceLogic) {
       this.subspaceLogic = subspaceLogic
       this.checkRequiredData()
     },
-    checkRequiredData() {
+    checkRequiredData () {
       if (this.selectedODM === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log("no odm selected")
+        console.log('no odm selected')
         return
       }
-      for (let param of this.selectedODM.hyperParameters) {
-        if (!param.optional && param.value === "") {
+      for (const param of this.selectedODM.hyperParameters) {
+        if (!param.optional && param.value === '') {
           this.buttonType = ButtonType.DISABLED
-          console.log("no value for " + param.name)
+          console.log('no value for ' + param.name)
           return
         }
-        if (!validateHyperparameterType(param) && param.value !== "") {
+        if (!validateHyperparameterType(param) && param.value !== '') {
           this.buttonType = ButtonType.DISABLED
-          console.log("wrong type for " + param.name)
+          console.log('wrong type for ' + param.name)
           return
         }
       }
       if (this.dataset === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log("no dataset")
+        console.log('no dataset')
         return
       }
       if (this.subspaceLogic === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log("no subspace logic")
+        console.log('no subspace logic')
         return
       }
       this.buttonType = ButtonType.ACTIVE
     },
-    async createExperiment() {
-      let experiment = new Experiment(
-          this.experimentName,
+    async createExperiment () {
+      const experiment = new Experiment(
+        this.experimentName,
           this.dataset?.name as string,
           this.dataset as File,
           this.groundtruth as File,
@@ -129,16 +125,14 @@ export default defineComponent({
       )
 
       sendExperiment(experiment).then()
-      console.log("experiment created")
+      console.log('experiment created')
       this.$router.push('/dashboard')
-
-
     }
   },
-  async mounted() {
-    let response = await requestODMNames()
-    let odms = []
-    for (let odm of response.data) {
+  async mounted () {
+    const response = await requestODMNames()
+    const odms = []
+    for (const odm of response.data) {
       odms.push(ODM.fromJSON(odm))
     }
     this.odms = odms
@@ -151,7 +145,6 @@ export default defineComponent({
   display: flex;
   height: 100%;
 }
-
 
 .left-half {
   height: 100%;

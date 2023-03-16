@@ -7,6 +7,9 @@ import {Outlier} from "./Outlier";
  */
 export class ExperimentResult implements JSONSerializable {
     accuracy: number;
+    auc: number;
+    fpr: number[];
+    tpr: number[];
     executionDate: Date;
     executionTime: number;
     subspaces: Subspace[];
@@ -14,12 +17,18 @@ export class ExperimentResult implements JSONSerializable {
     resultSpace: Subspace | undefined
 
     constructor(accuracy: number,
+                auc: number,
+                fpr: number[],
+                tpr: number[],
                 executionDate: Date,
                 executionTime: number,
                 subspaces: Subspace[],
                 outliers: Outlier[],
                 resultSpace?: Subspace) {
         this.accuracy = accuracy;
+        this.auc = auc;
+        this.fpr = fpr;
+        this.tpr = tpr;
         this.executionDate = executionDate;
         this.executionTime = executionTime;
         this.subspaces = subspaces;
@@ -45,6 +54,9 @@ export class ExperimentResult implements JSONSerializable {
 
         return new ExperimentResult(
             jsonObject.accuracy,
+            jsonObject.auc,
+            jsonObject.fpr,
+            jsonObject.tpr,
             new Date(jsonObject.execution_date),
             jsonObject.execution_time,
             Array.from(subspaceMap.values()),

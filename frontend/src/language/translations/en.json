@@ -27,6 +27,7 @@
         "summary": "Summary",
         "odm": "ODM",
         "accuracy": "Accuracy",
+        "auc": "AUC",
         "executionDate": "Execution Date",
         "executionTime": "Execution Time",
         "detectedOutliers": "Number of detected outliers"

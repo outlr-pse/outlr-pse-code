@@ -1,19 +1,25 @@
 <template>
   <div v-if="experiment" class="summary">
-    <ExperimentSummaryCard :experiment="experiment"/>
+    <div class="card">
+      <ExperimentSummaryCard :experiment="experiment"/>
+    </div>
+    <div class="roc">
+      <ROCCurve :experiment="experiment"/>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import ExperimentSummaryCard from "./components/ExperimentSummaryCard.vue";
 import {useRoute} from "vue-router";
-import {requestExperimentResult, } from "../../../api/APIRequests";
+import {requestExperimentResult,} from "../../../api/APIRequests";
 import {Experiment} from "../../../models/experiment/Experiment";
 import {defineComponent} from "vue";
+import ROCCurve from "./components/ROCCurve.vue";
 
-export default defineComponent( {
+export default defineComponent({
   name: "ExperimentResultView",
-  components: {ExperimentSummaryCard},
+  components: {ROCCurve, ExperimentSummaryCard},
   data() {
     return {
       experiment: null as Experiment | null,
@@ -33,11 +39,20 @@ export default defineComponent( {
 
 <style scoped>
 .summary {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+
+.card {
+  padding-right: 5vw;
+  justify-self: right;
+}
+
+.roc {
+  padding-left: 7vw;
+  justify-self: left;
+  height: 45%;
 }
 </style>

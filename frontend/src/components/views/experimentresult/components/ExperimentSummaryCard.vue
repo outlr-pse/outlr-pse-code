@@ -26,6 +26,14 @@
       </div>
       <div class="row">
         <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.auc') + ":" }}
+        </div>
+        <div>
+          {{ experiment.experimentResult?.auc != null ? experiment.experimentResult?.auc : "No GT" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
           {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') + ":" }}
         </div>
         <div>

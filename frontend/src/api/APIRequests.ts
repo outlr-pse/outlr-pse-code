@@ -1,13 +1,8 @@
 import axios, { type AxiosError } from 'axios'
 import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
-import { type ODM } from '../models/odm/ODM'
 import { type Experiment } from '../models/experiment/Experiment'
-
-export const axiosClient = axios.create({
-  baseURL: 'http://127.0.0.1:1337/api'
-})
-export const storage = localStorage
+import axiosClient from './AxiosClient'
 
 export async function sendLogout (): Promise<any> {
   /**
@@ -21,7 +16,7 @@ export async function sendLogout (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -43,7 +38,7 @@ export async function sendLoginData (username: string, password: string): Promis
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -65,7 +60,7 @@ export async function sendRegisterData (username: string, password: string): Pro
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -84,68 +79,7 @@ export async function requestTokenIdentity (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
-export async function sendDataset (dataset: File): Promise<any> {
-  /**
-     * Sends request to back-end to validate the dataset passed in form data of the http request.
-     * In case of an error, the error JSON, as defined in backend, is returned.
-     */
-  try {
-    const formData = new FormData()
-    formData.append('file', dataset, dataset.name)
-    return await axiosClient.post('/experiment/validate-dataset', formData,
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
-export async function sendGroundTruth (groundTruth: File): Promise<any> {
-  /**
-     * Sends request to back-end to validate the ground truth passed in form data of the http request.
-     * In case of an error, the error JSON, as defined in backend, is returned.
-     */
-  try {
-    const formData = new FormData()
-    formData.append('file', groundTruth, groundTruth.name)
-    return await axiosClient.post('/experiment/validate-ground-truth', formData,
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
-  }
-}
-
-export async function sendODM (odm: ODM): Promise<any> {
-  /**
-     * Sends the selected ODM to the back-end. Returns a promise, encapsulating
-     * a JSON with info on whether sending the ODM was successful or not, then containing an error key
-     */
-  try {
-    return await axiosClient.post('/experiment/validate-ground-truth', { odm: odm.toJSON() },
-      { headers: authHeader() })
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -171,7 +105,7 @@ export async function sendExperiment (experiment: Experiment): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -188,7 +122,7 @@ export async function requestExperimentResult (experimentId: number): Promise<an
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -200,8 +134,8 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
   /**
      * Sends request to back-end to respond with the result of the experiment with id = experimentId.
      */
-  axiosClient.get(
-    '/experiment/download-result/' + experiment.id,
+  await axiosClient.get(
+    `/experiment/download-result/${experiment.id}`,
     {
       responseType: 'blob', // important
       headers: authHeader()
@@ -233,7 +167,7 @@ export async function requestODMNames (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -250,7 +184,7 @@ export async function requestODM (odmId: number): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }
@@ -267,7 +201,7 @@ export async function requestAllExperiments (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError && (serverError.response != null)) {
+      if (serverError?.response != null) {
         return serverError.response.data
       }
     }

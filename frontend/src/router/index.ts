@@ -56,16 +56,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
+  const isAuthenticated: boolean = store.getters['auth/isAuthenticated']
+  if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
     next('/')
     return
   }
-
-  if (to.matched.some(record => record.meta.requiresAuth) && !store.getters['auth/isAuthenticated']) {
+  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
     next('/login')
     return
   }
-
   next()
 })
 

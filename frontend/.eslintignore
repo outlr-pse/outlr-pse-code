@@ -1,3 +1,6 @@
 node_modules
 dist
 public
+test
+vite.config.ts
+```

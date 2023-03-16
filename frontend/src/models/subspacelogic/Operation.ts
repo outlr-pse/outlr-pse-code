@@ -52,7 +52,7 @@ export class Operation implements SubspaceLogic {
   /**
      * Converts Operation to a json object
      */
-  public toJSON () {
+  public toJSON (): any {
     return {
       operation: {
         operator: this.operator,

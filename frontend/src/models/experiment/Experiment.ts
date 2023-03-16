@@ -77,7 +77,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     const subspaceMap = new Map<number, Subspace>()
     const outlierMap = new Map<number, Outlier>()
 
-    if (json.error_json === undefined) {
+    if (json.error_json !== undefined) {
       this.failed = true
     }
     if (json.subspace_logic != null) {

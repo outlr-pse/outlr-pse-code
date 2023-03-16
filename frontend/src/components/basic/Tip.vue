@@ -2,7 +2,10 @@
   <Card v-if="show">
     <div class="tip">
       {{ text }}
-      <span class="material-icons md-dark icon" @click="show = !show"> close </span>
+      <span
+        class="material-icons md-dark icon"
+        @click="show = !show"
+      > close </span>
     </div>
   </Card>
 </template>
@@ -14,15 +17,15 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'Tip',
   components: { Card },
-  data () {
-    return {
-      show: true
-    }
-  },
   props: {
     text: {
       type: String,
       required: true
+    }
+  },
+  data () {
+    return {
+      show: true
     }
   }
 })

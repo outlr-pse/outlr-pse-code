@@ -49,7 +49,7 @@ export class Literal implements SubspaceLogic {
   /**
      * Converts Literal to a json object
      */
-  public toJSON () {
+  public toJSON (): any {
     return { literal: { subspace: this.subspace } }
     // Possible issue: If a subspace appears multiple times in the subspace logic (which might be the case)
     // every appearance of the subspace is in the json completely.

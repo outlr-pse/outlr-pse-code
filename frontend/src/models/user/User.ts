@@ -27,7 +27,7 @@ export class User implements JSONSerializable, JSONDeserializable {
      * This method returns the user as a JSON object.
      * It is called by the JSON.stringify() method.
      */
-  toJSON () {
+  toJSON (): any {
     return {
       username: this.username,
       password: this.password

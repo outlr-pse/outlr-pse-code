@@ -87,7 +87,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     } else {
       this.subspaceLogic = null
     }
-    if (json.experiment_result !== null) {
+    if (json.experiment_result !== null && json.experiment_result !== undefined) {
       this.experimentResult = ExperimentResult.fromJSONObject(json.experiment_result, subspaceMap, outlierMap)
       this.running = false
     } else {

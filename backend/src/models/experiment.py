@@ -6,7 +6,7 @@ Because of the relations between the classes in the database it is easier if all
 from datetime import datetime, timedelta
 from typing import Optional
 
-from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint
+from sqlalchemy import Column, Table, Integer, JSON, ARRAY, ForeignKey, ForeignKeyConstraint, Float
 from sqlalchemy.orm import mapped_column, Mapped, relationship
 
 import models
@@ -71,6 +71,7 @@ class Subspace(Base):
     )
 
     outlier_array = None
+    scores_array = None
 
     def to_json(self) -> dict:
         """
@@ -89,7 +90,6 @@ class Subspace(Base):
             "name": self.name,
             "columns": self.columns if self.columns is not None else [],
             "outliers": [outlier.index for outlier in self.outliers],
-            "roc_curve": None
         }
 
     @staticmethod
@@ -154,6 +154,10 @@ class ExperimentResult(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     accuracy: Mapped[Optional[float]]
+    auc: Mapped[Optional[float]]
+    fpr = Column(ARRAY(Float))
+    tpr = Column(ARRAY(Float))
+    thresholds = Column(ARRAY(Float))
     execution_date: Mapped[datetime]
     execution_time: Mapped[timedelta]
     user_id: Mapped[int] = mapped_column()
@@ -185,6 +189,9 @@ class ExperimentResult(Base):
             {
                 "id": 12,
                 "accuracy": 0.89,
+                "auc": 0.5,
+                "fpr": [0.0, 0.1, 0.2, 0.3, 1],
+                "tpr": [0.0, 0.1, 0.2, 0.3, 1]
                 "execution_date": "2023-02-05T21:54:02.038308",     # ISO 8601 format
                 "execution_time": 120000000,                        # in μs (microseconds)
                 "result_space": {
@@ -192,12 +199,15 @@ class ExperimentResult(Base):
                     "name": "result"
                     "columns": [],
                     "outliers": [1, 2, 3]
-                }
+                },
             }
         """
         result = {
             "id": self.id,
             "accuracy": self.accuracy,
+            "auc": self.auc,
+            "fpr": self.fpr,
+            "tpr": self.tpr,
             "execution_date": self.execution_date.isoformat(),  # ISO 8601 format
             "execution_time": ExperimentResult.microseconds(self.execution_time),  # in μs (microseconds)
         }

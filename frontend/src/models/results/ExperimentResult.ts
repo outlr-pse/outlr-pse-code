@@ -6,24 +6,37 @@ import { type Outlier } from './Outlier'
  */
 export class ExperimentResult {
   accuracy: number
+  auc: number
+  fpr: number[]
+  tpr: number[]
   executionDate: Date
   executionTime: number
   subspaces: Subspace[]
   outliers: Outlier[]
   resultSpace: Subspace | undefined
+  hasGtFile: boolean
 
   constructor (accuracy: number,
+    auc: number,
+    fpr: number[],
+    tpr: number[],
     executionDate: Date,
     executionTime: number,
     subspaces: Subspace[],
     outliers: Outlier[],
-    resultSpace?: Subspace) {
+    hasGTFile: boolean,
+    resultSpace?: Subspace
+  ) {
     this.accuracy = accuracy
+    this.auc = auc
+    this.fpr = fpr
+    this.tpr = tpr
     this.executionDate = executionDate
     this.executionTime = executionTime
     this.subspaces = subspaces
     this.outliers = outliers
     this.resultSpace = resultSpace
+    this.hasGtFile = hasGTFile
   }
 
   /**
@@ -40,10 +53,14 @@ export class ExperimentResult {
 
     return new ExperimentResult(
       jsonObject.accuracy,
+      jsonObject.auc,
+      jsonObject.fpr,
+      jsonObject.tpr,
       new Date(jsonObject.execution_date),
       jsonObject.execution_time,
       Array.from(subspaceMap.values()),
       Array.from(outlierMap.values()),
+      jsonObject.auc != null,
       resultSpace
     )
   }

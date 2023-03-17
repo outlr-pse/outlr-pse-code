@@ -8,6 +8,9 @@ exp = Experiment(id=123)
 res = ExperimentResult(
     id=12,
     accuracy=0.89,
+    auc=0.9,
+    fpr=[0, 0, 1],
+    tpr=[0, 1, 1],
     execution_date=datetime.now(),
     execution_time=timedelta(minutes=2),
     experiment=exp
@@ -91,17 +94,17 @@ class TestResultModels(unittest.TestCase):
 
     def test_subspace_json(self):
         self.assertEqual(
-            {"id": 23, "name": None, "columns": [0, 1, 3], "outliers": [3], "roc_curve": None},
+            {"id": 23, "name": None, "columns": [0, 1, 3], "outliers": [3]},
             sub1.to_json()
         )
 
         self.assertEqual(
-            {"id": 123, "name": None, "columns": [32], "outliers": [3, 4], "roc_curve": None},
+            {"id": 123, "name": None, "columns": [32], "outliers": [3, 4]},
             sub2.to_json()
         )
 
         self.assertEqual(
-            {"id": 2343, "name": "result", "columns": [], "outliers": [], "roc_curve": None},
+            {"id": 2343, "name": "result", "columns": [], "outliers": []},
             res_space.to_json()
         )
 
@@ -110,6 +113,9 @@ class TestResultModels(unittest.TestCase):
             {
                 "id": 12,
                 "accuracy": 0.89,
+                "auc": 0.9,
+                "fpr": [0, 0, 1],
+                "tpr": [0, 1, 1],
                 "execution_date": res.execution_date.isoformat(),
                 "execution_time": 2 * 1000000 * 60,
                 "result_space": res_space.to_json()  # This is already tested by test_subspace_json()

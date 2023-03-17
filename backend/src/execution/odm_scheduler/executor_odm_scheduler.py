@@ -22,5 +22,6 @@ class ExecutorODMScheduler(ODMScheduler):
         """
         self.executor = executor
 
-    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> futures.Future[NDArray]:
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any],
+                 dataset: pd.DataFrame) -> futures.Future[(NDArray, NDArray)]:
         return self.executor.submit(odm.run_odm, dataset, hyperparams)

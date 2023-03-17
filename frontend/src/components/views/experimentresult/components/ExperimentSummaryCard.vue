@@ -1,9 +1,9 @@
 <template>
   <Card>
     <div class="summary">
-      <h3 class="header">
-        {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
-      </h3>
+      <h4 class="header">
+        {{ experiment.name }}
+      </h4>
       <ButtonComponent
         text="Download"
         :button-type="ButtonType.CONTRAST"
@@ -27,6 +27,14 @@
         </div>
         <div>
           {{ experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy*100 + "%" : "No GT" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.auc') + ":" }}
+        </div>
+        <div>
+          {{ experiment.experimentResult?.hasGtFile ? experiment.experimentResult?.auc : "No GT" }}
         </div>
       </div>
       <div class="row">

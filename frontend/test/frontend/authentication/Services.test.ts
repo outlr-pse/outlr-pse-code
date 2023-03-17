@@ -1,32 +1,16 @@
 /**
  * @jest-environment jsdom
  */
-import { errorOther } from "../../../src/api/ErrorOther";
-import {
-    requestAllExperiments,
-    requestExperimentResult,
-    requestODM,
-    requestODMNames,
-    requestTokenIdentity,
-    sendExperiment,
-    sendLoginData,
-    sendLogout,
-    sendRegisterData
-} from "../../../src/api/APIRequests";
-import { authHeader } from "../../../src/api/DataRetrievalService";
-import { Experiment } from "../../../src/models/experiment/Experiment";
-import { ODM } from "../../../src/models/odm/ODM";
-import {validateUsername} from "../../../src/api/AuthServices";
+import {errorOther} from "../../../src/api/ErrorOther";
+import storage from "../../../src/api/Storage";
+import {initialValidityCheck, login, logout, register} from "../../../src/api/AuthServices";
+import store from "../../../src/store";
+import {defaultUsername} from "../../../src/store/modules/auth";
 import axios from "axios";
+import {sendRegisterData} from "../../../src/api/APIRequests";
 
-jest.mock("../../../src/api/DataRetrievalService", () => ({
-    authHeader: jest.fn(() => {
-        return { Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k" };
-    })
-}));
-
-let mockError = false;
-
+let mockError = false
+let currentUsername = defaultUsername
 jest.mock("../../../src/api/AxiosClient", () => {
     return {
         post: jest.fn().mockImplementation((url: string, data?: any, config?: any) => {
@@ -35,9 +19,7 @@ jest.mock("../../../src/api/AxiosClient", () => {
                     if (data.username == null || data.password == null || mockError) {
                         throw new Error()
                     }
-                    if (!validateUsername(data.username)) {
-                        throw new axios.AxiosError('Request failed')
-                    }
+                    currentUsername = data.username
                     return {
                         data: {
                             username: data.username,
@@ -46,6 +28,7 @@ jest.mock("../../../src/api/AxiosClient", () => {
                         status: 200
             };
         case "/user/login":
+            if (data.username) currentUsername = data.username
             return {
                 data: {
                     username: data.username,
@@ -61,11 +44,6 @@ jest.mock("../../../src/api/AxiosClient", () => {
             } else {
                 return errorOther;
             }
-        case "/user/get-token-identity":
-            return {
-                username: data.username,
-                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
-            };
         case "/experiment/upload-files":
             return {
                 status: 200,
@@ -84,12 +62,23 @@ jest.mock("../../../src/api/AxiosClient", () => {
     get: jest.fn().mockImplementation((url: string, config?: any) => {
         switch (url) {
             case "/user/get-token-identity":
+                if (mockError) {
+                    return {
+                        message: "Request failed with status code 401",
+                        data: {
+                            error: "token_not_valid",
+                            message: "The provided token is not valid or no token provided",
+                            status: 401
+                        },
+                        status: 401
+                    }
+                }
                 return {
                     data: {
-                        username: "Ud0",
+                        username: currentUsername,
                         access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3ODkyMDU1MiwianRpIjoiOWRiZjUzZWItYmJlYi00NGU4LTg4ZGUtYmMwMTY2M2JkNTY2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6NCwibmJmIjoxNjc4OTIwNTUyLCJleHAiOjE2Nzg5MjE0NTJ9.mW_UKL69SIR7NA60PFcVZxl3evPkVVYE8WCWA3rsr1k"
                     },
-                    status: 200
+                    status: 202
                 };
             case "/odm/get-all":
                 return {
@@ -551,30 +540,40 @@ jest.mock("../../../src/api/AxiosClient", () => {
 })
 ;
 
-describe("API Requests test", () => {
-    test("sendLoginData test", async () => {
-        const username = "Ud0";
-        const password = "Test01!";
-        const response = await sendLoginData(username, password);
-        expect(response.data).toBeDefined();
-        expect(response.data.username).toBeDefined();
-        expect(response.data.username).toEqual(username);
-    });
-    test("sendRegisterData test", async () => {
-        const username = "Ud0";
-        const password = "Test01!";
-        const response = await sendRegisterData(username, password);
-        expect(response.data).toBeDefined();
-        expect(response.data.username).toBeDefined();
-        expect(response.data.username).toEqual(username);
-    });
-    test("sendRegisterData no success test", async () => {
+
+describe("Tests DataRetrievalService", () => {
+    test("Logging in when valid data passed is mocked", async () => {
+        const username = "Ud0"
+        const password = "Test01!"
+        await login(username, password)
+        expect(storage.getItem("access_token")).toBeDefined()
+        expect(store.getters["auth/username"]).toEqual(username)
+        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+
+        await store.dispatch("auth/unsetAuthenticated")
+        storage.clear()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        currentUsername = defaultUsername
+    })
+    test("Registering with valid data passed is mocked", async () => {
+        const username = "Ud1"
+        const password = "Test01!"
+        await register(username, password)
+        expect(storage.getItem("access_token")).toBeDefined()
+        const usernameInStore = store.getters["auth/username"]
+        const authState = store.getters["auth/isAuthenticated"]
+        expect(usernameInStore).toEqual(username)
+        expect(authState).toEqual(true)
+        currentUsername = defaultUsername
+    })
+    test("Register fails as mocked to do that", async () => {
         mockError = true;
         const username = "Ud0";
         const password = "Test01!";
         let response
         try {
-            response = await sendRegisterData(username, password);
+            response = await register(username, password);
         }
         catch(error) {
             response = error
@@ -582,120 +581,43 @@ describe("API Requests test", () => {
         expect(response.status).not.toEqual(200)
         expect(response.error).toBeDefined()
         expect(response.message).toBeDefined()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
         mockError = false;
-    });
-    test("sendRegisterData but no valid username provided", async () => {
-        const username = "Ud";
-        const password = "Test01&"
-        let response
-        try {
-            response = await sendRegisterData(username, password);
-        } catch (error) {
-            response = error
-        }
-        expect(response.status).not.toEqual(200)
-        expect(response.error).toBeDefined()
-        expect(response.message).toBeDefined()
     })
-    test("sendLogout test", async () => {
-        const response = await sendLogout();
-        expect(response.status).toEqual(200);
-    });
-    test("authHeader now returns a header with access token no matter what since mocked", () => {
-        const response = authHeader();
-        expect(response.Authorization).toBeDefined();
-    });
-    test("requestTokenIdentity mock test", async () => {
-        const responseData = await requestTokenIdentity();
-        expect(responseData).toBeDefined();
-        expect(responseData.username).toBeDefined();
-        expect(responseData.access_token).toBeDefined();
-    });
-    test("sendExperiment mock test", async () => {
-        const response = await sendExperiment(new Experiment("", "", null, null, new ODM(1, "", [])));
-        expect(response.data).toBeDefined();
-        expect(response.data).toEqual("OK");
-        expect(response.status).toEqual(200);
-    });
-    test("Request Experiment result", async () => {
-        const response = await requestExperimentResult(3);
-        expect(response.status).toEqual(200);
-        expect(response.data).toBeDefined();
-        expect(response.data.id).toBeDefined();
-        expect(response.data.name).toBeDefined();
-        expect(response.data.dataset_name).toBeDefined();
-        expect(response.data.odm).toBeDefined();
-        expect(response.data.odm_params).toBeDefined();
-        expect(response.data.subspace_logic).toBeDefined();
-        expect(response.data.experiment_result).toBeDefined();
-        expect(response.data.error_json).toBeDefined();
-    });
-    test("Request Experiment result", async () => {
-        const response = await requestExperimentResult(3);
-        expect(response.status).toEqual(200);
-        expect(response.data).toBeDefined();
-        expect(response.data.id).toBeDefined();
-        expect(response.data.name).toBeDefined();
-        expect(response.data.dataset_name).toBeDefined();
-        expect(response.data.odm).toBeDefined();
-        expect(response.data.odm_params).toBeDefined();
-        expect(response.data.subspace_logic).toBeDefined();
-        expect(response.data.experiment_result).toBeDefined();
-        expect(response.data.error_json).toBeDefined();
-    });
-    test("Request ODM names result", async () => {
-        const response = await requestODMNames();
-        expect(response.status).toEqual(200);
-        expect(response.data).toBeDefined();
-        for (const [key, value] of Object.entries(response.data)) {
-            // @ts-ignore
-            expect(Object.keys(value).length).toBeDefined();
-            // @ts-ignore
-            expect(Object.keys(value).length).toEqual(2);
-            // @ts-ignore
-            expect(value.id).toBeDefined();
-            // @ts-ignore
-            expect(value.name).toBeDefined();
-        }
-    });
-    test("Request ODM", async () => {
-        const response = await requestODM(2);
-        expect(response.status).toEqual(200);
-        expect(response.data).toBeDefined();
-        for (const [key, value] of Object.entries(response.data)) {
-            // @ts-ignore
-            expect(Object.keys(value).length).toBeDefined();
-            // @ts-ignore
-            expect(Object.keys(value).length).toEqual(4);
-            // @ts-ignore
-            expect(value.id).toBeDefined();
-            // @ts-ignore
-            expect(value.name).toBeDefined();
-            // @ts-ignore
-            expect(value.optional).toBeDefined();
-            // @ts-ignore
-            expect(value.type).toBeDefined();
-        }
-    });
-    test("Request all experiments", async () => {
-        const response = await requestAllExperiments();
-        expect(response.status).toEqual(200);
-        expect(response.data).toBeDefined();
-        for (const [key, value] of Object.entries(response.data)) {
-            // @ts-ignore
-            expect(value.id).toBeDefined();
-            // @ts-ignore
-            expect(value.name).toBeDefined();
-            // @ts-ignore
-            expect(value.dataset_name).toBeDefined();
-            // @ts-ignore
-            expect(value.odm).toBeDefined();
-            // @ts-ignore
-            expect(value.odm_params).toBeDefined();
-            // @ts-ignore
-            expect(value.experiment_result).toBeDefined();
-            // @ts-ignore
-            expect(value.error_json).toBeDefined();
-        }
-    });
-});
+    test("Logging in and then logging out", async () => {
+        const username = "Ud0"
+        const password = "Test01!"
+        await login(username, password)
+        expect(storage.getItem("access_token")).toBeDefined()
+        expect(store.getters["auth/username"]).toEqual(username)
+        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+
+        const response = await logout()
+        expect(response.status).toBeDefined()
+        expect(response.status).toEqual(200)
+        expect(response.message).toBeDefined()
+        expect(storage.getItem("access_token")).toBeNull()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        currentUsername = defaultUsername
+    })
+    test("Initial validity check", async () => {
+        await initialValidityCheck()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).toEqual(true)
+
+        await store.dispatch("auth/unsetAuthenticated")
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+    })
+    test("Initial validity check but no valid token in storage", async () => {
+        mockError = true
+        await initialValidityCheck()
+        expect(storage.getItem("access_token")).toBeNull()
+        expect(store.getters["auth/username"]).toEqual(defaultUsername)
+        expect(store.getters["auth/isAuthenticated"]).not.toEqual(true)
+        mockError =false
+    })
+
+})

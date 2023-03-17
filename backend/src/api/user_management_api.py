@@ -21,12 +21,19 @@ password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6
 
 
 def generate_password_hash(password) -> bytes:
+    """
+       Generates a salted hash of the password provided as parameter, which is returned by the method
+    """
     password_bytes = password.encode('utf-8')
     salt = bcrypt.gensalt(rounds=14)
     return bcrypt.hashpw(password_bytes, salt)
 
 
 def check_password_hash(actual_password, password) -> bool:
+    """
+        Compares the password provided with the password hash it should correspond to and returns whether
+        they are the same.
+    """
     password_bytes = password.encode('utf-8')
     hashed_password = actual_password.encode('utf-8')
     return bcrypt.checkpw(password_bytes, hashed_password)

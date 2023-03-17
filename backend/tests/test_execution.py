@@ -1,6 +1,7 @@
 import math
 import unittest
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
+from datetime import datetime
 
 import pandas as pd
 from pyod.utils import generate_data
@@ -58,6 +59,7 @@ class TestEventLoopScheduler(unittest.TestCase):
                 name="Expeeriment",
                 user_id=self.user.id,
                 dataset=self.dataset,
+                creation_date=datetime.now(),
                 subspaces=[self.sub1, self.sub2, self.sub3],
                 odm=self.odm,
                 param_values={'contamination': 0.1, 'n_neighbors': math.ceil(self.n_train / 2), 'method': 'fast'},

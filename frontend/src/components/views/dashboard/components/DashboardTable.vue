@@ -12,16 +12,10 @@
         <template #body>
           <tr v-for="row in filteredData" class="tableData" v-bind:key="row[0]" @click="rowClick(row)">
             <td v-for="cell in row[1]" v-bind:key="cell[1]"
-                v-bind:class="[{'running': row[1][4][0] === Infinity},
-                {'failed': row[1][4][0] === -1},
-                {'notRunning': row[1][4][0] >= 0 && row[1][4][0] < Infinity }]">
-              <div v-if="row[1][4][0] === Infinity ">
-                {{ cell[1] }}
-              </div>
-              <div v-else-if="row[1][4][0] === -1" >
-                {{ cell[1] }}
-              </div>
-              <div v-else>
+                v-bind:class="[{'running': row[1][3][0] === -2},
+                {'failed': row[1][3][0] === -1},
+                {'notRunning': row[1][3][0] >= 0 && row[1][4][0] < Infinity }]">
+              <div>
                 {{ cell[1] }}
               </div>
             </td>
@@ -128,18 +122,18 @@ export default defineComponent({
               cell = [experiment.odm.name, experiment.odm.name]
               break
             case DashboardSortColumn.HYPERPARAMETER:
-              cell = [shownParams, shownParamString]
-              break
-            case DashboardSortColumn.DATE:
-              console.log(experiment)
               if (experiment.failed) {
                 cell = [-1, 'Failed :(']
               } else if (experiment.running) {
-                cell = [Infinity, 'Running ...']
+                cell = [-2, 'Running ...']
               } else {
-                const date = dateCalculation(experiment.experimentResult?.executionDate)
-                cell = [experiment.experimentResult?.executionDate, date]
+                cell = [shownParams, shownParamString]
               }
+              break
+            case DashboardSortColumn.DATE:
+              console.log(experiment.creationDate)
+              cell = [experiment.creationDate,
+                dateCalculation(experiment.creationDate ? experiment.creationDate : new Date())]
               break
             case DashboardSortColumn.ACCURACY:
               if (experiment.running || experiment.failed) {

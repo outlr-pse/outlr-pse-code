@@ -5,7 +5,7 @@ from models.experiment import ExperimentResult, Experiment, Subspace, Outlier
 from models.subspacelogic.literal import Literal
 from models.odm.pyodm import PyODM
 
-exp = Experiment(id=123)
+exp = Experiment(id=123, creation_date=datetime.now())
 res = ExperimentResult(
     id=12,
     accuracy=0.89,

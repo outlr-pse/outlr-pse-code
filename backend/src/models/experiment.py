@@ -249,6 +249,7 @@ class Experiment(Base):
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
     error_json: Mapped[Optional[dict]] = mapped_column(JSON)
+    creation_date: Mapped[datetime]
 
     odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
     odm: Mapped['ODM'] = relationship()
@@ -311,6 +312,7 @@ class Experiment(Base):
             'id': self.id,
             'name': self.name,
             'dataset_name': self.dataset_name,
+            'creation_date': self.creation_date.isoformat(),  # ISO 8601 format
             'odm': self.odm.to_json(),
             'odm_params': self.param_values,
             'error_json': self.error_json,
@@ -332,4 +334,6 @@ class Experiment(Base):
             dataset_name=json.get('dataset_name'),
         )
         exp.subspaces = list(subspaces.values())
+        if (creation_date_iso := json.get('creation_date')) is not None:
+            exp.creation_date = datetime.fromisoformat(creation_date_iso)
         return exp

@@ -21,6 +21,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
   running: boolean = false
   failed: boolean = false
   error: string | null = null
+  creationDate: Date | null
 
   constructor (name: string,
     datasetName: string,
@@ -37,6 +38,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     this.subspaceLogic = subspaceLogic !== undefined ? subspaceLogic : null
     this.experimentResult = null
     this.running = false
+    this.creationDate = null
   }
 
   /**
@@ -51,6 +53,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
       ground_truth: this.groundTruth,
       odm: this.odm,
       subspace_logic: this.subspaceLogic
+      // creation_date: this.creationDate?.toISOString(),  // backend might not be compatible with this iso date format
     }
   }
 
@@ -74,6 +77,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
     this.name = json.name
     this.datasetName = json.dataset_name
     this.odm = ODM.fromJSON(json.odm, json.odm_params)
+    this.creationDate = new Date(json.creation_date)
 
     const subspaceMap = new Map<number, Subspace>()
     const outlierMap = new Map<number, Outlier>()

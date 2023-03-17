@@ -25,8 +25,8 @@ export class ExperimentResult {
     subspaces: Subspace[],
     outliers: Outlier[],
     hasGTFile: boolean,
-    resultSpace?: Subspace,
-               ) {
+    resultSpace?: Subspace
+  ) {
     this.accuracy = accuracy
     this.auc = auc
     this.fpr = fpr

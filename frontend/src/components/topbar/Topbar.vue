@@ -75,8 +75,8 @@ export default defineComponent({
     }
   },
   methods: {
-    logoClick() {
-      if(this.isAuthenticated){
+    logoClick () {
+      if (this.isAuthenticated) {
         this.$router.push('/dashboard')
       } else {
         this.$router.push('/')

@@ -16,7 +16,6 @@ import {
   Legend
 } from 'chart.js'
 import {Line} from 'vue-chartjs'
-import {ButtonType} from "../../../basic/button/ButtonType";
 
 ChartJS.register(
     CategoryScale,

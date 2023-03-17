@@ -1,9 +1,9 @@
 <template>
   <Card>
     <div class="summary">
-      <h3 class="header">
+      <h4 class="header">
         {{ experiment.name }}
-      </h3>
+      </h4>
       <ButtonComponent
         text="Download"
         :button-type="ButtonType.CONTRAST"
@@ -34,7 +34,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.auc') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult?.auc != null ? experiment.experimentResult?.auc : "No GT" }}
+          {{ experiment.experimentResult.hasGtFile ? experiment.experimentResult?.auc : "No GT" }}
         </div>
       </div>
       <div class="row">

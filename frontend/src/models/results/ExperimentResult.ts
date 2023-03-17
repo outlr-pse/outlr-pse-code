@@ -14,6 +14,7 @@ export class ExperimentResult {
   subspaces: Subspace[]
   outliers: Outlier[]
   resultSpace: Subspace | undefined
+  hasGtFile: boolean
 
   constructor (accuracy: number,
     auc: number,
@@ -23,7 +24,9 @@ export class ExperimentResult {
     executionTime: number,
     subspaces: Subspace[],
     outliers: Outlier[],
-    resultSpace?: Subspace) {
+    hasGTFile: boolean,
+    resultSpace?: Subspace,
+               ) {
     this.accuracy = accuracy
     this.auc = auc
     this.fpr = fpr
@@ -33,6 +36,7 @@ export class ExperimentResult {
     this.subspaces = subspaces
     this.outliers = outliers
     this.resultSpace = resultSpace
+    this.hasGtFile = hasGTFile
   }
 
   /**
@@ -56,6 +60,7 @@ export class ExperimentResult {
       jsonObject.execution_time,
       Array.from(subspaceMap.values()),
       Array.from(outlierMap.values()),
+      jsonObject.auc != null,
       resultSpace
     )
   }

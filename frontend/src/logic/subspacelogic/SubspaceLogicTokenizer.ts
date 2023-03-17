@@ -1,10 +1,31 @@
 
 export const enum TokenType {
-  BeginLit, EndLit, BeginScope, EndScope, Text, Cols
+  /** Begin of a literal */
+  BeginLit,
+
+  /** End of a literal */
+  EndLit,
+
+  /** Begin of a scope */
+  BeginScope,
+
+  /** End of a scope */
+  EndScope,
+
+  /** text (used for operators), value is a string */
+  Text,
+
+  /** Comma seperated list of column indices, value is an int list */
+  Cols
 }
 
+/** A token consists of a type and an optional value. */
 export type Token = [TokenType, any?]
 
+/**
+ * Converts an expression into a list of tokens, that represent the expression.
+ * @throws Error if the expression cannot be tokenized
+ */
 export function tokenize(expression: string): Token[] {
   let tokens: Token[] = []
   let i = 0
@@ -30,6 +51,13 @@ export function tokenize(expression: string): Token[] {
   return tokens
 }
 
+/**
+ * Tokenizes an expression that describes a literal
+ * @param expression Expression that describes a literal
+ * @param begin Index of the first character of the literal (does not include the opening bracket)
+ * @param tokens Token list to append the tokens to
+ * @returns Index of the first character after the closing bracket of the literal
+ */
 function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): number {
   tokens.push([TokenType.BeginLit, undefined])
   let end = expression.indexOf(']', begin)
@@ -51,6 +79,13 @@ function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): nu
   return end + 1
 }
 
+/**
+ * Tokenizes a text token
+ * @param expression Text expression
+ * @param begin Index of the first character of the text
+ * @param tokens Token list to append the tokens to
+ * @returns Index of the first character after the text
+ */
 function tokenizeText(expression: string, begin: number, tokens: Token[]): number {
   let end = begin + 1
   while (end < expression.length && letterRegex.test(expression.charAt(end))) {

@@ -1,8 +1,8 @@
 stages:          # List of stages for jobs, and their order of execution
-  - build
-  - test
+  - Building
+  - Testing
   - deploy
-  - lint
+  - Linting
 #
 #services:
 #  - docker:dind
@@ -30,8 +30,8 @@ stages:          # List of stages for jobs, and their order of execution
 #    - docker build -t testfront .
 #    - docker run -p 8080:8080 --rm --name frontend testfront
 
-setup_db:
-  stage: build
+setup_database:
+  stage: Building
   image: postgres:12.4
   services:
     - postgres:12.4
@@ -44,7 +44,7 @@ setup_db:
 
 
 frontend-build:
-    stage: build
+    stage: Building
     image: node:19
     script:
         - cd frontend
@@ -54,7 +54,7 @@ frontend-build:
 
 backend-test:
   image: python:3.10-bullseye
-  stage: test
+  stage: Testing
   services:
     - postgres:12.4
   # Change pip's cache directory to be inside the project directory since we can
@@ -93,7 +93,7 @@ backend-test:
     - python3 -m coverage report -m
 
 frontend-test:
-  stage: test
+  stage: Testing
   services:
     - postgres:12.4
   coverage: /All\sfiles.*?\s+(\d+.\d+)/
@@ -132,8 +132,8 @@ frontend-test:
   dependencies:
     - backend-test
 
-lint-test:   # This job also runs in the test stage.
-  stage: lint    # It can run at the same time as unit-test-job (in parallel).
+backend-linter:   # This job also runs in the test stage.
+  stage: Linting    # It can run at the same time as unit-test-job (in parallel).
   image: python:3.10-alpine
   script:
     - cd backend
@@ -141,8 +141,8 @@ lint-test:   # This job also runs in the test stage.
     - flake8 --ignore=E501,F401 --statistics --count .
 
 
-frontend-lint:
-    stage: lint
+frontend-linter:
+    stage: Linting
     image: node:19
     script:
         - cd frontend

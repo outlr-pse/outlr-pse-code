@@ -17,23 +17,23 @@
 
 <script lang="ts">
 import ExperimentSummaryCard from './components/ExperimentSummaryCard.vue'
-import {useRoute} from 'vue-router'
-import {requestExperimentResult} from '../../../api/APIRequests'
-import {Experiment} from '../../../models/experiment/Experiment'
-import {defineComponent} from 'vue'
+import { useRoute } from 'vue-router'
+import { requestExperimentResult } from '../../../api/APIRequests'
+import { Experiment } from '../../../models/experiment/Experiment'
+import { defineComponent } from 'vue'
 import Card from '../../basic/Card.vue'
 import ROCCurve from './components/ROCCurve.vue'
 
 export default defineComponent({
   name: 'ExperimentResultView',
-  components: {ROCCurve, Card, ExperimentSummaryCard},
-  data() {
+  components: { ROCCurve, Card, ExperimentSummaryCard },
+  data () {
     return {
       experiment: null as Experiment | null,
       dataReady: false
     }
   },
-  async mounted() {
+  async mounted () {
     const route = useRoute()
     const response = await requestExperimentResult(+route.params.expId)
     if (response.status === 200) {

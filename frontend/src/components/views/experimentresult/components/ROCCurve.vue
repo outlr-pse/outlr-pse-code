@@ -1,10 +1,12 @@
 <template>
-  <Line :data="data" :options="options"/>
+  <Card>
+      <Line :data="data" :options="options"/>
+  </Card>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import {Experiment} from "../../../../models/experiment/Experiment";
+import { defineComponent } from 'vue'
+import { Experiment } from '../../../../models/experiment/Experiment'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,29 +17,31 @@ import {
   Tooltip,
   Legend
 } from 'chart.js'
-import {Line} from 'vue-chartjs'
+import { Line } from 'vue-chartjs'
+import Card from '../../../basic/Card.vue'
 
 ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
 )
 
 export default defineComponent({
-  name: "ROCCurve",
-  components: {Line},
+  name: 'ROCCurve',
+  // eslint-disable-next-line vue/no-reserved-component-names
+  components: { Line, Card },
   props: {
     experiment: {
       type: Experiment,
       required: true
     }
   },
-  data() {
-    const experimentResult = this.experiment.experimentResult;
+  data () {
+    const experimentResult = this.experiment.experimentResult
     return {
       data: {
         labels: experimentResult ? experimentResult.fpr : [],
@@ -55,16 +59,16 @@ export default defineComponent({
         scales: {
           y: {
             beginAtZero: true,
-            type: 'linear',
+            type: 'linear'
           },
           x: {
             beginAtZero: true,
-            type: 'linear',
+            type: 'linear'
           }
         },
         aspectRatio: 1,
         pointRadius: 0,
-        events: [],
+        events: []
       }
     }
   }

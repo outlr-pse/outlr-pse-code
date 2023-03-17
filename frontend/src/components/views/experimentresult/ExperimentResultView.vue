@@ -1,17 +1,17 @@
 <template>
-  <div v-if="experiment" class="summary">
-    <div v-if="experiment.failed">
+  <div v-if="experiment">
+    <div v-if="experiment.failed" class="failed">
       <Card>
         <h1>Experiment failed</h1>
         <p style="color: var(--color-close-button)">Reason: {{ experiment.error }}</p>
       </Card>
     </div>
-    <div v-else>
+    <div v-else class="summary">
       <div class="card">
         <ExperimentSummaryCard :experiment="experiment"/>
       </div>
       <div class="roc">
-        <ROCCurve :experiment="experiment"/>
+          <ROCCurve :experiment="experiment"/>
       </div>
     </div>
   </div>
@@ -24,8 +24,7 @@ import { requestExperimentResult } from '../../../api/APIRequests'
 import { Experiment } from '../../../models/experiment/Experiment'
 import { defineComponent } from 'vue'
 import Card from '../../basic/Card.vue'
-import ROCCurve from "./components/ROCCurve.vue";
-
+import ROCCurve from './components/ROCCurve.vue'
 
 export default defineComponent({
   name: 'ExperimentResultView',
@@ -36,7 +35,7 @@ export default defineComponent({
       dataReady: false
     }
   },
-  async mounted() {
+  async mounted () {
     const route = useRoute()
     const response = await requestExperimentResult(+route.params.expId)
     if (response.status === 200) {
@@ -49,19 +48,27 @@ export default defineComponent({
 
 <style scoped>
 .summary {
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: center;
-  grid-template-columns: 1fr 1fr;
+  height: 100%;
+  width: 100%;
 }
 
 .card {
-  padding-right: 5vw;
-  justify-self: right;
+  padding-right: 3vw;
+  justify-self: center;
 }
 
 .roc {
-  padding-left: 7vw;
-  justify-self: left;
+  padding-left: 3vw;
+  justify-self: center;
+}
+.failed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
 }
 </style>

@@ -50,5 +50,12 @@ export abstract class SubspaceLogic implements JSONSerializable {
     }
   }
 
+  /**
+   * Returns the expression represented by this subspace logic
+   * The expression is not necessarily exactly the same as the one that was used to parse the subspace logic
+   * @returns The expression represented by this subspace logic as a string
+   */
+  public abstract toExpression (): string
+
   public abstract serialize (): string
 }

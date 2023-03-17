@@ -1,13 +1,22 @@
 <template>
-  <div v-if="experiment" class="summary">
-    <div v-if="experiment.failed">
+  <div v-if="experiment">
+    <div v-if="experiment.failed" class="failed">
       <Card>
         <h1>Experiment failed</h1>
         <p style="color: var(--color-close-button)">Reason: {{ experiment.error }}</p>
       </Card>
     </div>
-    <div v-else>
-       <ExperimentSummaryCard :experiment="experiment"/>
+    <div v-else-if="!experiment.experimentResult?.hasGtFile" class="summary">
+        <ExperimentSummaryCard :experiment="experiment"/>
+    </div>
+    <div v-else class="summary">
+      <div class="card">
+        <ExperimentSummaryCard :experiment="experiment"/>
+      </div>
+      <div class="curve">
+        <ROCCurve :experiment="experiment"/>
+      </div>
+
     </div>
   </div>
 </template>
@@ -19,10 +28,11 @@ import { requestExperimentResult } from '../../../api/APIRequests'
 import { Experiment } from '../../../models/experiment/Experiment'
 import { defineComponent } from 'vue'
 import Card from '../../basic/Card.vue'
+import ROCCurve from './components/ROCCurve.vue'
 
 export default defineComponent({
   name: 'ExperimentResultView',
-  components: { Card, ExperimentSummaryCard },
+  components: { ROCCurve, Card, ExperimentSummaryCard },
   data () {
     return {
       experiment: null as Experiment | null,
@@ -43,7 +53,22 @@ export default defineComponent({
 <style scoped>
 .summary {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.card {
+  padding-right: 3vw;
+}
+
+.curve {
+  padding-left: 3vw;
+}
+
+.failed {
+  display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;

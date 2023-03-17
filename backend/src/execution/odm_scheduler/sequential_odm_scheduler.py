@@ -16,7 +16,8 @@ class SequentialODMScheduler(ODMScheduler):
     This is implemented using coroutines, but since the coroutine never awaits, the execution is sequential.
     """
 
-    def schedule(self, odm: ODM, hyperparams: dict[str, Any], dataset: pd.DataFrame) -> futures.Future[NDArray]:
+    def schedule(self, odm: ODM, hyperparams: dict[str, Any],
+                 dataset: pd.DataFrame) -> futures.Future[(NDArray, NDArray)]:
         # Run the outlier detection method sequentially and wrap its result in a future
         future = futures.Future()
         try:

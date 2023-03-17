@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from numpy.typing import ArrayLike
+from numpy.typing import NDArray
 
 from models.json_error import JSONError
 from models.experiment import Subspace
@@ -20,15 +20,28 @@ class SubspaceLogic(ABC):
         pass
 
     @abstractmethod
-    def evaluate(self) -> ArrayLike:
+    def evaluate_labels(self) -> NDArray:
         """
-        Evaluates the subspace logic.
+        Evaluates the subspace logic on the labels.
         It is required that all subspaces contained in this subspace logic have their result in the
         ``Subspace.outlier_array`` attribute. See SubspaceLogic.get_subspaces
 
         Returns:
             A numpy array where the element at index i is 1 if and only if the datapoint at index i in the dataset
             is considered an outlier using the subspace logic.
+        """
+        pass
+
+    @abstractmethod
+    def evaluate_scores(self) -> NDArray:
+        """
+        Evaluates the subspace logic.
+        It is required that all subspaces contained in this subspace logic have their result in the
+        ``Subspace.outlier_array`` attribute. See SubspaceLogic.get_subspaces
+
+        Returns:
+            A numpy array where the element at index i is the score of the datapoint at index i in the dataset
+            using the subspace logic.
         """
         pass
 

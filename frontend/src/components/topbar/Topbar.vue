@@ -1,6 +1,6 @@
 <template>
   <div class="TopBar">
-    <img alt="Outlr logo" @click="$router.push('/')" class="logo" src="../../assets/OutlrLogo.svg"
+    <img alt="Outlr logo" @click="logoClick()" class="logo" src="../../assets/OutlrLogo.svg"
          width="125"/>
     <h1> {{ topbarMessage }} </h1>
     <div style="justify-self: end">
@@ -72,6 +72,15 @@ export default defineComponent({
         msg = '. __ .'
       }
       return msg
+    }
+  },
+  methods: {
+    logoClick () {
+      if (this.isAuthenticated) {
+        this.$router.push('/dashboard')
+      } else {
+        this.$router.push('/')
+      }
     }
   }
 })

@@ -46,6 +46,6 @@ class ODM(Base):
             if repr(type(args[param.name])) != param.param_type:
                 return False
 
-    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> NDArray:
+    def run_odm(self, subspace: pd.DataFrame, hyper_params: dict[str, Any]) -> (NDArray, NDArray):
         """Runs the ODM on the given subspace"""
         raise NotImplementedError

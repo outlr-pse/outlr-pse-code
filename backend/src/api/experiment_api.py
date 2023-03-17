@@ -130,7 +130,7 @@ def upload_files() -> (Response, int):
 
 @experiment_api.route('/create', methods=['POST'])
 @jwt_required()
-def create() -> (Response, int):
+def create() -> (str, int):
     """
     Requires a jwt access token. Expects an experiment encoded as json in
     the request. Inserts the experiment in the database and runs it.
@@ -159,9 +159,9 @@ def create() -> (Response, int):
 
     def write_result_to_db(future):
         #  This closure captures exp
-        with db.Session() as session1:
-            session1.add(exp)  # Subspace logic does not need to be updated so db.add_experiment is not needed
-            session1.commit()
+        with db.Session() as s:
+            s.add(exp)  # Subspace logic does not need to be updated so db.add_experiment is not needed
+            s.commit()
 
     _experiment_scheduler.schedule(exp).add_done_callback(write_result_to_db)
 

@@ -59,7 +59,7 @@ class TestExperimentApi(unittest.TestCase):
         access_token = response.get_json().get("access_token")
 
         self.client.environ_base['HTTP_AUTHORIZATION'] = 'Bearer ' + access_token
-        #looking for abod.ABOD
+        # looking for abod.ABOD
         odm_name = "abod.ABOD"
         odm_id: int
         odm: ODM

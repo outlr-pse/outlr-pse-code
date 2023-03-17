@@ -24,7 +24,6 @@ class TestExperimentApi(unittest.TestCase):
         self.client.environ_base['HTTP_AUTHORIZATION'] = ""
         _experiment_scheduler.stop()
 
-
     def test_get_result_when_no_exp(self):
         # Account creation
         username = "GetResultNoExp1"
@@ -34,11 +33,6 @@ class TestExperimentApi(unittest.TestCase):
         assert response.status_code == 200
         access_token = response.get_json().get("access_token")
         self.client.environ_base['HTTP_AUTHORIZATION'] = 'Bearer ' + access_token
-        user_id: int
-        with db.Session(expire_on_commit=False) as session:
-            user = db.get_user(session, username)
-            user_id = user.id
-
         with self.client as c:
             response = c.get("/api/experiment/get-result/2")
             assert response.status_code == 404
@@ -56,7 +50,6 @@ class TestExperimentApi(unittest.TestCase):
         user_id: int
         with db.Session(expire_on_commit=False) as session:
             user = db.get_user(session, username)
-            user_id = user.id
 
         # uploading files
         this_dir = Path(__file__).parent

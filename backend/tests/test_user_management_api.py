@@ -5,7 +5,7 @@ from api import app
 from api.user_management_api import validate_username, validate_password
 from models.base import Base
 import database.database_access as db
-from api.experiment_api import  _experiment_scheduler
+from api.experiment_api import _experiment_scheduler
 
 
 def setUpModule() -> None:
@@ -110,14 +110,14 @@ class TestUserManagementAPI(unittest.TestCase):
         response_dict = response.get_json()
         assert response_dict.get("error") == error.no_data_provided.get("error")
 
-    def test_login_no_username(self):
+    def test_login_no_data(self):
 
         response = self.client.post("/api/user/login",
                                     json={})
         response_dict = response.get_json()
         assert response_dict.get("error") == error.no_data_provided.get("error")
 
-    def test_login_no_password(self):
+    def test_login_no_username(self):
         password = "ValidPassword01!"
         response = self.client.post("/api/user/login",
                                     json={'password': password})

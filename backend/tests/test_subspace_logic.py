@@ -7,6 +7,7 @@ from models.subspacelogic.literal import Literal
 from models.subspacelogic.operation import Operation
 from models.subspacelogic.operator import Operator
 from models.experiment import ExperimentResult, Subspace, Outlier
+from models.json_error import JSONError
 
 
 # don't modify these variables
@@ -192,3 +193,23 @@ class TestSubspaceLogic(unittest.TestCase):
         self.assertEqual(_level1.to_database_json(), level1_json)
         self.assertEqual(_level2.to_database_json(), level2_json)
         self.assertEqual(_level3.to_database_json(), level3_json)
+
+    def test_from_database_json_fail(self):
+        self.assertRaises(
+            JSONError,
+            SubspaceLogic.from_database_json, {}, {}
+        )
+        self.assertRaises(
+            JSONError,
+            SubspaceLogic.from_database_json, {"i": {}}, {}
+        )
+
+    def test_from_client_json_fail(self):
+        self.assertRaises(
+            JSONError,
+            SubspaceLogic.from_database_json, {}, {}
+        )
+        self.assertRaises(
+            JSONError,
+            SubspaceLogic.from_database_json, {"invalid": {}}, {}
+        )

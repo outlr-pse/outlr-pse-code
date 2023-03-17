@@ -1,10 +1,10 @@
 <template>
-Page not found!
+  Page not found!
 </template>
 
 <script lang="ts">
 export default {
-  name: "PageNotFound"
+  name: 'PageNotFound'
 }
 </script>
 

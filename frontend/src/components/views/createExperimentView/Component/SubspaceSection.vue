@@ -2,42 +2,55 @@
   <div class="header">
     <h2>
       {{ $t('message.experimentCreate.subspaceLogic') }}
-      <span class="material-icons md-dark icon" @mouseenter="showTip = true" @mouseleave="showTip = false">
+      <span
+        class="material-icons md-dark icon"
+        @mouseenter="showTip = true"
+        @mouseleave="showTip = false"
+      >
         info
-    </span>
+      </span>
     </h2>
     <transition name="fade">
-      <Card class="card" v-if="showTip" @mouseleave="showTip = false" @mouseenter="showTip = true">
-        {{ $t('message.experimentCreate.logicHint') }}
+      <Card
+        v-if="showTip"
+        class="card"
+        @mouseleave="showTip = false"
+        @mouseenter="showTip = true"
+      >
+        <div v-html="$t('message.experimentCreate.logicHint')"></div>
       </Card>
     </transition>
-    <div style="border: 1px solid var(--color-lines); width: 17vw;"/>
+    <div style="border: 1px solid var(--color-lines); width: 17vw;" />
   </div>
   <div class="subspaceLogic">
-    <textarea id="editing" class="inputField" placeholder="Enter Subspace Logic" v-model="value"/>
+    <textarea
+      id="editing"
+      v-model="value"
+      class="inputField"
+      placeholder="Enter Subspace Logic"
+    />
   </div>
-
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
-import Card from "../../../basic/Card.vue";
+import { defineComponent } from 'vue'
+import Card from '../../../basic/Card.vue'
 
 export default defineComponent({
-  name: "SubspaceSection",
-  components: {Card},
-  data() {
+  name: 'SubspaceSection',
+  components: { Card },
+  emits: ['onInputChange'],
+  data () {
     return {
-      value: "",
+      value: '',
       showTip: false
     }
   },
   watch: {
     value: function () {
-      this.$emit("onInputChange", this.value)
+      this.$emit('onInputChange', this.value)
     }
-  },
-  emits: ["onInputChange"]
+  }
 })
 </script>
 
@@ -105,6 +118,5 @@ export default defineComponent({
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
-
 
 </style>

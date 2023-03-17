@@ -1,18 +1,18 @@
 <template>
-      <input type="text" :placeholder="placeholder" v-model="value" class="field">
+  <input
+    v-model="value"
+    type="text"
+    :placeholder="placeholder"
+    class="field"
+  >
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "ParameterInputField",
-  data() {
-    return {
-      value: "",
-    }
-  },
-  props:{
+  name: 'ParameterInputField',
+  props: {
     placeholder: {
       type: String,
       required: true
@@ -20,34 +20,39 @@ export default defineComponent({
     parameterId: {
       type: Number,
       default: null
-  },
+    },
     optional: {
       type: Boolean,
       default: false
     }
   },
-  methods: {
-    wrongInput() {
-      this.$el.style.border = "1px solid var(--color-close-button)";
-    },
-    correctInput() {
-      this.$el.style.border = "1px solid var(--color-stroke)";
-    },
-    optionalInput() {
-      this.$el.style.border = "1px solid var(--color-input-optional)";
-    },
-    checkData(){
-      this.$emit("check-data")
+  data () {
+    return {
+      value: ''
     }
   },
   watch: {
     value: function () {
-      this.$emit("input-change", this.value, this.parameterId)
+      this.$emit('input-change', this.value, this.parameterId)
     }
   },
-  mounted() {
-    if(!this.optional){
+  mounted () {
+    if (!this.optional) {
       this.optionalInput()
+    }
+  },
+  methods: {
+    wrongInput () {
+      this.$el.style.border = '1px solid var(--color-close-button)'
+    },
+    correctInput () {
+      this.$el.style.border = '1px solid var(--color-stroke)'
+    },
+    optionalInput () {
+      this.$el.style.border = '1px solid var(--color-input-optional)'
+    },
+    checkData () {
+      this.$emit('check-data')
     }
   }
 })

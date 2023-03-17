@@ -6,23 +6,23 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: "UploadFileField",
+  name: 'UploadFileField',
   methods: {
-    onFileChange(e: any) {
-      const file = e.target.files[0];
-      this.$emit("file-uploaded", file)
-    },
+    onFileChange (e: any) {
+      const file = e.target.files[0]
+      this.$emit('file-uploaded', file)
+    }
   },
   props: {
     inputName: {
       type: String,
-      default: "Upload a file",
+      default: 'Upload a file',
       required: false
     }
-  },
+  }
 
 })
 </script>

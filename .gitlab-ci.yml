@@ -2,6 +2,7 @@ stages:          # List of stages for jobs, and their order of execution
   - build
   - test
   - deploy
+  - lint
 #
 #services:
 #  - docker:dind
@@ -44,11 +45,12 @@ setup_db:
 
 frontend-build:
     stage: build
-    image: node:latest
+    image: node:19
     script:
         - cd frontend
         - npm install
         - npm run build
+
 
 backend-test:
   image: python:3.10-bullseye
@@ -87,7 +89,8 @@ backend-test:
       - cd backend
       - pip3 install -r requirements.txt
   script:
-    - python3 -m unittest discover tests
+    - python3 -m coverage run -m unittest discover tests
+    - python3 -m coverage report -m
 
 frontend-test:
   stage: test
@@ -130,13 +133,21 @@ frontend-test:
     - backend-test
 
 lint-test:   # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
+  stage: lint    # It can run at the same time as unit-test-job (in parallel).
   image: python:3.10-alpine
   script:
     - cd backend
     - pip install flake8
     - flake8 --ignore=E501,F401 --statistics --count .
 
+
+frontend-lint:
+    stage: lint
+    image: node:19
+    script:
+        - cd frontend
+        - npm install
+        - npm run lint
 
 #deploy-job:      # This job runs in the deploy stage.
 #  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.

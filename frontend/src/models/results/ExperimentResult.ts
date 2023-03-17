@@ -1,20 +1,19 @@
-import {JSONSerializable} from "../JSONSerializable";
-import {Subspace} from "./Subspace";
-import {Outlier} from "./Outlier";
+import { Subspace } from './Subspace'
+import { type Outlier } from './Outlier'
 
 /**
  * This class represents an experiment result.
  */
-export class ExperimentResult implements JSONSerializable {
-    accuracy: number;
-    auc: number;
+export class ExperimentResult {
+  accuracy: number
+  auc: number;
     fpr: number[];
     tpr: number[];
-    executionDate: Date;
-    executionTime: number;
-    subspaces: Subspace[];
-    outliers: Outlier[];
-    resultSpace: Subspace | undefined
+    executionDate: Date
+  executionTime: number
+  subspaces: Subspace[]
+  outliers: Outlier[]
+  resultSpace: Subspace | undefined
 
     constructor(accuracy: number,
                 auc: number,
@@ -36,25 +35,21 @@ export class ExperimentResult implements JSONSerializable {
         this.resultSpace = resultSpace;
     }
 
-    serialize(): string {
-        return JSON.stringify(this);
-    }
-
-    /**
+  /**
      * This method creates an experiment result from a JSON object.
      * @param jsonObject The JSON object.
      * @param subspaceMap The map of all subspaces that the experiment holds.
      * @param outlierMap The map of  all outliers that the experiment holds.
      */
-    static fromJSONObject(jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): ExperimentResult {
-        let resultSpace = undefined;
-        if (jsonObject.result_space != undefined) {
-           resultSpace  = Subspace.fromJSONObject(jsonObject.result_space, outlierMap)
-        }
+  static fromJSONObject (jsonObject: any, subspaceMap: Map<number, Subspace>, outlierMap: Map<number, Outlier>): ExperimentResult {
+    let resultSpace
+    if (jsonObject.result_space !== undefined) {
+      resultSpace = Subspace.fromJSONObject(jsonObject.result_space, outlierMap)
+    }
 
-        return new ExperimentResult(
-            jsonObject.accuracy,
-            jsonObject.auc,
+    return new ExperimentResult(
+      jsonObject.accuracy,
+      jsonObject.auc,
             jsonObject.fpr,
             jsonObject.tpr,
             new Date(jsonObject.execution_date),
@@ -62,7 +57,6 @@ export class ExperimentResult implements JSONSerializable {
             Array.from(subspaceMap.values()),
             Array.from(outlierMap.values()),
             resultSpace
-    );
-
-    }
+    )
+  }
 }

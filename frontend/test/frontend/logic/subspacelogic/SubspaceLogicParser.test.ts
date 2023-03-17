@@ -1,9 +1,9 @@
-import {parseSubspaceLogic, parseSubspaceLogicTokens} from   '../../../../src/logic/subspacelogic/SubspaceLogicParser  '
-import {TokenType, Token} from   '../../../../src/logic/subspacelogic/SubspaceLogicTokenizer  '
-import {Operation} from   '../../../../src/models/subspacelogic/Operation  '
-import {Literal} from   '../../../../src/models/subspacelogic/Literal  '
-import {Subspace} from   '../../../../src/models/results/Subspace  ';
-import {Operator} from   '../../../../src/models/subspacelogic/Operator  ';
+import {parseSubspaceLogic, parseSubspaceLogicTokens} from   '../../../../src/logic/subspacelogic/SubspaceLogicParser'
+import {TokenType, Token} from   '../../../../src/logic/subspacelogic/SubspaceLogicTokenizer'
+import {Operation} from   '../../../../src/models/subspacelogic/Operation'
+import {Literal} from   '../../../../src/models/subspacelogic/Literal'
+import {Subspace} from   '../../../../src/models/results/Subspace'
+import {Operator} from   '../../../../src/models/subspacelogic/Operator'
 
 
 function makeLiteral(cols: number[]): Literal {

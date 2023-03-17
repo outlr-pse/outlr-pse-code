@@ -138,7 +138,6 @@ class TestUserManagementAPI(unittest.TestCase):
                                     json={'username': username, 'password': password})
         response_dict = response.get_json()
         assert response_dict.get("error") == error.provided_credentials_wrong.get("error")
-        
     def test_login_invalid_data(self):
         """Tests logging in with false credentials"""
         username = "InvalidLoginUser1"

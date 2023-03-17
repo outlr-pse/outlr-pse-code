@@ -119,8 +119,6 @@ class TestExperimentApi(unittest.TestCase):
         assert response.status_code == 200
         assert response_data == b"OK"
 
-        saved_dataset_filename = 'dataset.csv'
-        saved_groundtruth_filename = 'ground_truth.csv'
         assert os.path.exists(data_path(user_id, "dataset")) is True
         assert os.path.exists(data_path(user_id, "ground_truth")) is False
         # removing the files from the path
@@ -230,10 +228,6 @@ class TestExperimentApi(unittest.TestCase):
         assert response.status_code == 200
         access_token = response.get_json().get("access_token")
         self.client.environ_base['HTTP_AUTHORIZATION'] = 'Bearer ' + access_token
-        user_id: int
-        with db.Session(expire_on_commit=False) as session:
-            user = db.get_user(session, username)
-            user_id = user.id
 
         # uploading files
         this_dir = Path(__file__).parent

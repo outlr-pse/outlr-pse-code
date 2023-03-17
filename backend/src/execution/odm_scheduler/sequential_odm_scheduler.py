@@ -6,6 +6,7 @@ from numpy.typing import NDArray
 
 from models.odm.odm import ODM
 from execution.odm_scheduler import ODMScheduler
+from execution.execution_error import ExecutionError
 from execution.execution_error.odm_failure_error import ODMFailureError
 
 
@@ -21,6 +22,8 @@ class SequentialODMScheduler(ODMScheduler):
         try:
             result = odm.run_odm(dataset, hyperparams)
             future.set_result(result)
+        except ODMFailureError as e:
+            future.set_exception(e)
         except Exception as e:
-            future.set_exception(ODMFailureError(str(e)))
+            future.set_exception(ExecutionError(str(e)))
         return future

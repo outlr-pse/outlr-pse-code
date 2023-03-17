@@ -2,7 +2,7 @@ import { type AuthModuleState } from './auth.state'
 import { type ActionContext } from 'vuex'
 import { requestTokenIdentity } from '../../api/APIRequests'
 
-const defaultUsername = 'Not logged in'
+export const defaultUsername = 'Not logged in'
 const hasValidAuthToken: boolean = false
 const username: string = defaultUsername
 

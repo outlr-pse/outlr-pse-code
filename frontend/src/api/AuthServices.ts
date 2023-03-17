@@ -1,8 +1,7 @@
-import { requestTokenIdentity, sendLoginData, sendLogout, sendRegisterData } from './APIRequests'
+import { requestTokenIdentity, sendLoginData, sendRegisterData } from './APIRequests'
 import store from '../store'
 import { errorOther } from './ErrorOther'
 import storage from './Storage'
-
 export async function initialValidityCheck (): Promise<void> {
   const responseJson = await requestTokenIdentity()
 
@@ -10,7 +9,25 @@ export async function initialValidityCheck (): Promise<void> {
     await store.dispatch('auth/setAuthenticated', responseJson.username)
   } else {
     storage.clear()
+
+    await store.dispatch('auth/unsetAuthenticated')
   }
+}
+
+async function handleAuthenticationResponse (response: any): Promise<any> {
+  if (response.error != null) {
+    return response
+  }
+
+  const userJson = response.data
+  if (userJson == null) {
+    return errorOther
+  }
+
+  storage.removeItem('access_token')
+  storage.setItem('access_token', userJson.access_token)
+  await store.dispatch('auth/setAuthenticated', userJson.username, userJson.access_token)
+  return response.data
 }
 
 export function validateUsername (username: string): boolean {
@@ -24,9 +41,6 @@ export function validateUsername (username: string): boolean {
      *
      * @param username the username, the user provided
      */
-  if (username == null) {
-    return false
-  }
   const usernameRegex = /^[A-Za-z][A-Za-z0-9_]{2,29}$/
   return usernameRegex.test(username)
 }
@@ -45,10 +59,6 @@ export function validatePassword (password: string): boolean {
      *
      * @param password the password, the user provided
      */
-  if (password == null) {
-    return false
-  }
-
   const passwordRegex = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})/
   return passwordRegex.test(password)
 }
@@ -66,19 +76,7 @@ export async function login (username: string, password: string): Promise<any> {
      */
   try {
     const response = await sendLoginData(username, password)
-    if (response.error != null) {
-      return response
-    }
-
-    const userJson = response.data
-    if (userJson == null) {
-      return errorOther
-    }
-
-    storage.removeItem('access_token')
-    storage.setItem('access_token', userJson.access_token)
-    await store.dispatch('auth/setAuthenticated', userJson.username, userJson.access_token)
-    return response.data
+    return await handleAuthenticationResponse(response)
   } catch (error) {
     return errorOther
   }
@@ -97,19 +95,7 @@ export async function register (username: string, password: string): Promise<any
      */
   try {
     const response = await sendRegisterData(username, password)
-    if (response.error != null) {
-      return response
-    }
-
-    const userJson = response.data
-    if (userJson == null) {
-      return errorOther
-    }
-
-    storage.removeItem('access_token')
-    storage.setItem('access_token', userJson.access_token)
-    await store.dispatch('auth/setAuthenticated', userJson.username, userJson.access_token)
-    return response.data
+    return await handleAuthenticationResponse(response)
   } catch (error) {
     return errorOther
   }
@@ -125,19 +111,7 @@ export async function logout (): Promise<any> {
      * @param username the username, the user provided
      * @param password the password, the user provided
      */
-  try {
-    const response = await sendLogout()
-    if (response.error != null) {
-      storage.removeItem('access_token')
-      await store.dispatch('auth/unsetAuthenticated')
-      return response
-    }
-
-    storage.removeItem('access_token')
-    await store.dispatch('auth/unsetAuthenticated')
-    return response.data
-  } catch (error) {
-    storage.removeItem('access_token')
-    return errorOther
-  }
+  storage.removeItem('access_token')
+  await store.dispatch('auth/unsetAuthenticated')
+  return { message: 'success', status: 200 }
 }

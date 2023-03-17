@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LandingPageView from '../components/views/LandingPageView.vue'
 import store from '../store'
+import { initialValidityCheck } from '../api/AuthServices'
+import storage from '../api/Storage'
 const routes = [
   {
     path: '/',
@@ -55,13 +57,19 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated: boolean = store.getters['auth/isAuthenticated']
-  if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
-    next('/')
+router.beforeEach(async (to, from, next) => {
+  // eslint-disable-next-line
+  if ((to.path === '/login' || to.path === '/register') && store.getters['auth/isAuthenticated']) {
+    await initialValidityCheck()
+    // eslint-disable-next-line
+    if (store.getters['auth/isAuthenticated']) {
+      next('/')
+    }
     return
   }
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+
+  // eslint-disable-next-line
+  if (to.matched.some((record => record.meta.requiresAuth)) && (!storage.getItem("access_token") || !store.getters['auth/isAuthenticated'])) {
     next('/login')
     return
   }

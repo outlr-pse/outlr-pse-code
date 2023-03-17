@@ -3,6 +3,29 @@ import { authHeader } from './DataRetrievalService'
 import { errorOther } from './ErrorOther'
 import { type Experiment } from '../models/experiment/Experiment'
 import axiosClient from './AxiosClient'
+import storage from './Storage'
+import store from '../store'
+
+async function handleRequestError (error: any): Promise<any> {
+  /**
+     * This method handles the case that a request sent to the backend fails, that is throws an error. This is done
+     * by returning the response containing an error key. In the case that authentication was an issue (401) the Vuex
+     * authentication state is set accordingly.
+     */
+  if (axios.isAxiosError(error)) {
+    const serverError = error as AxiosError
+    if (serverError?.response != null) {
+      if (serverError.response.status === 401) {
+        storage.clear()
+        await store.dispatch('auth/unsetAuthenticated')
+      }
+
+      return serverError.response.data
+    }
+  }
+  await store.dispatch('auth/unsetAuthenticated')
+  return errorOther
+}
 
 export async function sendLogout (): Promise<any> {
   /**
@@ -14,13 +37,7 @@ export async function sendLogout (): Promise<any> {
       {},
       { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -36,13 +53,7 @@ export async function sendLoginData (username: string, password: string): Promis
       { username, password },
       { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -58,13 +69,7 @@ export async function sendRegisterData (username: string, password: string): Pro
       { username, password },
       { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -79,9 +84,7 @@ export async function requestTokenIdentity (): Promise<any> {
   } catch (error) {
     if (axios.isAxiosError(error)) {
       const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
+      if (serverError?.response != null) return serverError.response.data
     }
     return errorOther
   }
@@ -103,13 +106,7 @@ export async function sendExperiment (experiment: Experiment): Promise<any> {
     return await axiosClient.post('/experiment/create', experiment.toJSON(),
       { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -120,13 +117,7 @@ export async function requestExperimentResult (experimentId: number): Promise<an
   try {
     return await axiosClient.get(`/experiment/get-result/${experimentId}`, { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -134,8 +125,12 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
   /**
      * Sends request to back-end to respond with the result of the experiment with id = experimentId.
      */
-  await axiosClient.get(
-    `/experiment/download-result/${experiment.id}`,
+
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+  const url = '/experiment/download-result/' + experiment.id
+
+  axiosClient.get(
+    url,
     {
       responseType: 'blob', // important
       headers: authHeader()
@@ -155,7 +150,11 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
     // clean up "a" element & remove ObjectURL
     document.body.removeChild(link)
     URL.revokeObjectURL(href)
-  })
+  },
+  async (error) => {
+    await handleRequestError(error)
+  }
+  )
 }
 
 export async function requestODMNames (): Promise<any> {
@@ -165,13 +164,7 @@ export async function requestODMNames (): Promise<any> {
   try {
     return await axiosClient.get('/odm/get-all', { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -182,13 +175,7 @@ export async function requestODM (odmId: number): Promise<any> {
   try {
     return await axiosClient.get(`/odm/get-parameters/${odmId}`, { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 
@@ -199,13 +186,7 @@ export async function requestAllExperiments (): Promise<any> {
   try {
     return await axiosClient.get('/experiment/get-all', { headers: authHeader() })
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      const serverError = error as AxiosError
-      if (serverError?.response != null) {
-        return serverError.response.data
-      }
-    }
-    return errorOther
+    return await handleRequestError(error)
   }
 }
 

@@ -1,4 +1,4 @@
-import {parseSubspaceLogic} from "../../../../src/logic/subspacelogic/SubspaceLogicParser"
+import {parseSubspaceLogic, parseSubspaceLogicTokens} from "../../../../src/logic/subspacelogic/SubspaceLogicParser"
 import {TokenType, Token} from "../../../../src/logic/subspacelogic/SubspaceLogicTokenizer"
 import {Operation} from "../../../../src/models/subspacelogic/Operation"
 import {Literal} from "../../../../src/models/subspacelogic/Literal"
@@ -56,14 +56,24 @@ const nestedTernaryOperationExpected = new Operation(Operator.AND, [literal1Expe
 
 describe("SubspaceLogicParser", () => {
 
+    it("Tokenize and parse binary operation", () => {
+        const actual = parseSubspaceLogic("[1,2,3] and [4,5,6]")
+        expect(actual).toEqual(binaryOperationExpected)
+    })
+
+    it("Tokenize and parse ternary operation in parenthesis", () => {
+        const actual = parseSubspaceLogic("([1,2,3] and [4,5,6] and [7,8,9])")
+        expect(actual).toEqual(ternaryOperationExpected)
+    })
+
     it("Parse literal", () => {
-        const actual = parseSubspaceLogic(literal1)
+        const actual = parseSubspaceLogicTokens(literal1)
         expect(actual).toEqual(literal1Expected)
     })
 
     it("Parse binary operation with and", () => {
-        const actual = parseSubspaceLogic(binaryOperation)
-        const actualUnwrapped = parseSubspaceLogic(unwrapFromScope(binaryOperation))
+        const actual = parseSubspaceLogicTokens(binaryOperation)
+        const actualUnwrapped = parseSubspaceLogicTokens(unwrapFromScope(binaryOperation))
         expect(actual).toEqual(binaryOperationExpected)
         expect(actualUnwrapped).toEqual(binaryOperationExpected)
     })
@@ -75,30 +85,30 @@ describe("SubspaceLogicParser", () => {
             ...literal3
         ])
         const expected = new Operation(Operator.OR, [makeLiteral([1, 2, 3]), makeLiteral([7, 8, 9])])
-        const actual = parseSubspaceLogic(operation)
-        const actualUnwrapped = parseSubspaceLogic(unwrapFromScope(operation))
+        const actual = parseSubspaceLogicTokens(operation)
+        const actualUnwrapped = parseSubspaceLogicTokens(unwrapFromScope(operation))
         expect(actual).toEqual(expected)
         expect(actualUnwrapped).toEqual(expected)
     })
 
     it("Parse ternary operation", () => {
-        const actual = parseSubspaceLogic(ternaryOperation)
-        const actualUnwrapped = parseSubspaceLogic(unwrapFromScope(ternaryOperation))
+        const actual = parseSubspaceLogicTokens(ternaryOperation)
+        const actualUnwrapped = parseSubspaceLogicTokens(unwrapFromScope(ternaryOperation))
         expect(actual).toEqual(ternaryOperationExpected)
         expect(actualUnwrapped).toEqual(ternaryOperationExpected)
     })
 
     it("Parse nested operation", () => {
-        const actual = parseSubspaceLogic(nestedTernaryOperation)
-        const actualUnwrapped = parseSubspaceLogic(unwrapFromScope(nestedTernaryOperation))
+        const actual = parseSubspaceLogicTokens(nestedTernaryOperation)
+        const actualUnwrapped = parseSubspaceLogicTokens(unwrapFromScope(nestedTernaryOperation))
         expect(actual).toEqual(nestedTernaryOperationExpected)
         expect(actualUnwrapped).toEqual(nestedTernaryOperationExpected)
     })
 
     it("Parse empty operation", () => {
-        expect(() => parseSubspaceLogic(wrapInScope([])))
+        expect(() => parseSubspaceLogicTokens(wrapInScope([])))
             .toThrow("SubspaceLogicParser: Unexpected end of scope")
-        expect(() => parseSubspaceLogic([]))
+        expect(() => parseSubspaceLogicTokens([]))
             .toThrow("SubspaceLogicParser: Unexpected end of tokens")
     })
 
@@ -112,21 +122,21 @@ describe("SubspaceLogicParser", () => {
         const endWithText: Token[] = [...literal1, [TokenType.Text, "and"]]
         const endWithCols: Token[] = [...literal1, [TokenType.Cols, [1, 2, 3]]]
 
-        expect(() => parseSubspaceLogic(startWithEndScope))
+        expect(() => parseSubspaceLogicTokens(startWithEndScope))
             .toThrow("SubspaceLogicParser: Unexpected end of scope")
-        expect(() => parseSubspaceLogic(startWithEndLit))
+        expect(() => parseSubspaceLogicTokens(startWithEndLit))
             .toThrow("SubspaceLogicParser: Unexpected token type for operand: " + TokenType.EndLit)
-        expect(() => parseSubspaceLogic(startWithText))
+        expect(() => parseSubspaceLogicTokens(startWithText))
             .toThrow("SubspaceLogicParser: Unexpected token type for operand: " + TokenType.Text)
-        expect(() => parseSubspaceLogic(startWithCols))
+        expect(() => parseSubspaceLogicTokens(startWithCols))
             .toThrow("SubspaceLogicParser: Unexpected token type for operand: " + TokenType.Cols)
-        expect(() => parseSubspaceLogic(endWithBeginScope))
+        expect(() => parseSubspaceLogicTokens(endWithBeginScope))
             .toThrow("SubspaceLogicParser: Expected operator, got " + TokenType.BeginScope)
-        expect(() => parseSubspaceLogic(endWithBeginLit))
+        expect(() => parseSubspaceLogicTokens(endWithBeginLit))
             .toThrow("SubspaceLogicParser: Expected operator, got " + TokenType.BeginLit)
-        expect(() => parseSubspaceLogic(endWithText))
+        expect(() => parseSubspaceLogicTokens(endWithText))
             .toThrow("SubspaceLogicParser: Unexpected end of tokens")
-        expect(() => parseSubspaceLogic(endWithCols))
+        expect(() => parseSubspaceLogicTokens(endWithCols))
             .toThrow("SubspaceLogicParser: Expected operator, got " + TokenType.Cols)
     })
 
@@ -140,8 +150,8 @@ describe("SubspaceLogicParser", () => {
             new Operation(Operator.OR, [makeLiteral([7, 8, 9]), makeLiteral([4, 5, 6])]),
             new Operation(Operator.OR, [makeLiteral([1, 2, 3]), makeLiteral([4, 5, 6])])
         ])
-        const actual = parseSubspaceLogic(operation)
-        const actualWrapped = parseSubspaceLogic(wrapInScope(operation))
+        const actual = parseSubspaceLogicTokens(operation)
+        const actualWrapped = parseSubspaceLogicTokens(wrapInScope(operation))
         expect(actual).toEqual(expected)
         expect(actualWrapped).toEqual(expected)
     })

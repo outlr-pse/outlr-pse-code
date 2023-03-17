@@ -1,11 +1,24 @@
 import {SubspaceLogic} from "../../models/subspacelogic/SubspaceLogic";
-import {Token, TokenType} from "./SubspaceLogicTokenizer";
+import {Token, tokenize, TokenType} from "./SubspaceLogicTokenizer";
 import {Subspace} from "../../models/results/Subspace";
 import {Operator} from "../../models/subspacelogic/Operator";
 import {Operation} from "../../models/subspacelogic/Operation";
 import {Literal} from "../../models/subspacelogic/Literal";
 
-export function parseSubspaceLogic(tokens: Token[]): SubspaceLogic {
+/**
+ * Parses a subspace logic expression
+ * The expression must follow this grammar:
+ *  Logic -> (Logic) | Literal | Logic Operator Logic Operator Logic ...
+ *      where each Operator must be the same
+ *  Operator -> and | or
+ *  Literal -> [ comma separated list of integers ]
+ * @throws Error if the expression cannot be tokenized or parsed
+ */
+export function parseSubspaceLogic(expression: string): SubspaceLogic {
+    return parseSubspaceLogicTokens(tokenize(expression))
+}
+
+export function parseSubspaceLogicTokens(tokens: Token[]): SubspaceLogic {
     const [logic, _] = parse(tokens, 0, false)
     // maybe check end here?
     return logic

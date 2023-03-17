@@ -7,7 +7,8 @@ export type Token = [TokenType, any?]
 
 export function tokenize(expression: string): Token[] {
     let tokens: Token[] = []
-    for (let i = 0; i < expression.length; i++) {
+    let i = 0
+    while (i < expression.length) {
         const firstChar = expression.charAt(i)
         if (firstChar == '[') {
             i = tokenizeLiteral(expression, i + 1, tokens)
@@ -31,19 +32,23 @@ export function tokenize(expression: string): Token[] {
 
 function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): number {
     tokens.push([TokenType.BeginLit, undefined])
-    let end = expression.indexOf(']', begin) + 1
-    if (end == 0) {
+    let end = expression.indexOf(']', begin)
+    if (end == -1) {
         throw new Error("SubspaceLogicTokenizer: Missing closing bracket ']'")
     }
-    let cols = expression.substring(begin, end - 1)
+    const split = expression.substring(begin, end)
         .split(',')
-        .map(s => parseInt(s))
-    if (cols.some(isNaN)) {
-        throw new Error("SubspaceLogicTokenizer: Column indices of literals must be integers")
-    }
+        .map(str => str.trim())
+    if (split.length == 1 && !nonWhitespaceRegex.test(split[0]))
+        throw new Error("SubspaceLogicTokenizer: Column indices of literals must not be empty")
+
+    const cols = split.map(str => parseInt(str))
+    if (cols.some(isNaN))
+        throw new Error("SubspaceLogicTokenizer: Column indices of literals must be integers: " + cols)
+
     tokens.push([TokenType.Cols, cols])
     tokens.push([TokenType.EndLit, undefined])
-    return end
+    return end + 1
 }
 
 function tokenizeText(expression: string, begin: number, tokens: Token[]): number {
@@ -58,3 +63,4 @@ function tokenizeText(expression: string, begin: number, tokens: Token[]): numbe
 
 const letterRegex = /[a-zA-Z]/
 const whitespaceRegex = /\s/ // Matches space, tab, newline
+const nonWhitespaceRegex = /\S/ // Matches anything except space, tab, newline

@@ -24,6 +24,7 @@
     },
     "experimentResultView": {
       "experimentSummaryCard": {
+        "datasetName": "Dataset",
         "summary": "Summary",
         "odm": "ODM",
         "accuracy": "Accuracy",

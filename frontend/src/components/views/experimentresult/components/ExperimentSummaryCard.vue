@@ -15,6 +15,14 @@
     <div class="content">
       <div class="row">
         <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.datasetName') + ":" }}
+        </div>
+        <div>
+          {{ experiment.datasetName }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
           {{ $t('message.experimentResultView.experimentSummaryCard.odm') + ":" }}
         </div>
         <div>

@@ -106,7 +106,13 @@ class TestEventLoopScheduler(unittest.TestCase):
 
     def test_sequential_odm_failure(self):
         self.experiment.param_values['method'] = 'invalid'
-        self.run_test_with_odm_scheduler(SequentialODMScheduler())
+        self.experiment_scheduler.odm_scheduler = SequentialODMScheduler()
+        self.experiment_scheduler.schedule(self.experiment).result()
+        self.assertIsNot(self.experiment.error_json, None, msg="Execution error is missing")
+        self.assertEqual(
+            list(self.experiment.error_json.keys()), ["ODMFailureError"],
+            msg="Execution error has wrong type"
+        )
 
     def test_odm_failure(self):
         self.experiment.param_values['method'] = 'invalid'  # This is no a valid hyperparameter value

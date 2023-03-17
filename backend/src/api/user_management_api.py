@@ -31,7 +31,7 @@ def generate_password_hash(password) -> bytes:
 
 def check_password_hash(actual_password, password) -> bool:
     """
-        Compares the password provided with the password hash it should correspond to and returns whether
+        Compares password provided with the password hash it should correspond to and returns whether
         they are the same.
     """
     password_bytes = password.encode('utf-8')

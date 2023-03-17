@@ -34,7 +34,7 @@ import UploadFileField from './Component/UploadFileField.vue'
 import { Hyperparameter } from '../../../models/odm/Hyperparameter'
 import { validateHyperparameterType } from '../../../models/odm/HyperparameterType'
 import { ODM } from '../../../models/odm/ODM'
-import { requestODM, requestODMNames, sendExperiment } from '../../../api/APIRequests'
+import { requestExperimentCount, requestODM, requestODMNames, sendExperiment } from '../../../api/APIRequests'
 import ButtonComponent from '../../basic/button/ButtonComponent.vue'
 import { ButtonType } from '../../basic/button/ButtonType'
 import { SubspaceLogic } from '../../../models/subspacelogic/SubspaceLogic'
@@ -46,8 +46,8 @@ export default defineComponent({
   components: { InputSection, ButtonComponent, UploadFileField, Card },
   data () {
     return {
-      editableName: 'new Experiment',
-      experimentName: 'new Experiment',
+      editableName: 'Experiment',
+      experimentName: 'Experiment',
       odms: [] as ODM[],
       hyperparameters: [] as Hyperparameter[],
       buttonType: ButtonType.DISABLED,
@@ -136,6 +136,9 @@ export default defineComponent({
       odms.push(ODM.fromJSON(odm))
     }
     this.odms = odms
+    const experimentCount = await requestExperimentCount()
+    this.experimentName = 'Experiment #' + (experimentCount.data.amount + 1)
+    this.editableName = this.experimentName
   }
 })
 </script>

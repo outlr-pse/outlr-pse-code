@@ -51,6 +51,9 @@ class PyODScraper(ODMProvider):
                 if param.default != inspect.Parameter.empty:
                     hyper_param.param_type = repr(type(param.default))
                     hyper_param.optional = True
+                elif param.name == 'kwargs':
+                    hyper_param.param_type = 'Any'
+                    hyper_param.optional = True
                 else:
                     hyper_param.param_type = 'Any'
                     hyper_param.optional = False

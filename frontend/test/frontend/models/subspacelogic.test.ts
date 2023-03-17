@@ -68,4 +68,22 @@ describe("SubspaceLogic", () => {
     it("multiple keys", () => {
         expect(() => SubspaceLogic.fromJSON(invalidLogicJSON2)).toThrow("Tries to read SubspaceLogic from JSON where a node had multiple keys")
     })
+
+    it("literal to expression", () => {
+        expect(logicJustLiteral.toExpression()).toEqual('[2, 3, 4]')
+    })
+
+    it("binary operation to expression", () => {
+        expect(logicOneLayer.toExpression()).toEqual('([1] and [2, 3, 4])')
+    })
+
+    it("logic two layer to expression", () => {
+        expect(logicTwoLayer.toExpression()).toEqual('(([1] and [2, 3, 4]) and [2, 3, 4] and [1])')
+    })
+
+    it("logic three layer to expression", () => {
+        expect(logicThreeLayer.toExpression())
+            .toEqual('(([1] and [2, 3, 4]) and (([1] and [2, 3, 4]) and [2, 3, 4] and [1]) and [1])')
+    })
+
 })

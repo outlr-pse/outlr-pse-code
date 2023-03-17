@@ -56,6 +56,10 @@ export class Literal implements SubspaceLogic {
     // The JSON could get very big potentially, because the subspace json can also contain an ROC curve
   }
 
+  toExpression (): string {
+    return '[' + this.subspace.columns.map(col => `${col}`).join(', ') + ']'
+  }
+
   public serialize (): string {
     return JSON.stringify(this)
   }

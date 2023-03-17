@@ -61,6 +61,10 @@ export class Operation implements SubspaceLogic {
     }
   }
 
+  toExpression (): string {
+    return '(' + this.operands.map(operand => operand.toExpression()).join(` ${this.operator} `) + ')'
+  }
+
   serialize (): string {
     return JSON.stringify(this)
   }

@@ -42,4 +42,4 @@ class PyODM(ODM):
             return pyodm.labels_
 
         except Exception as e:
-            raise ODMFailureError(str(e)) from e
+            raise ODMFailureError(str(e), self.name) from e

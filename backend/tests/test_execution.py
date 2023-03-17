@@ -104,6 +104,10 @@ class TestEventLoopScheduler(unittest.TestCase):
     def test_coroutine_sequential_scheduler(self):
         self.run_test_with_odm_scheduler(SequentialODMScheduler())
 
+    def test_sequential_odm_failure(self):
+        self.experiment.param_values['method'] = 'invalid'
+        self.run_test_with_odm_scheduler(SequentialODMScheduler())
+
     def test_odm_failure(self):
         self.experiment.param_values['method'] = 'invalid'  # This is no a valid hyperparameter value
         self.experiment_scheduler = BackgroundThreadEventLoopExperimentScheduler(

@@ -23,6 +23,14 @@
       </div>
       <div class="row">
         <div class="textLeft">
+          {{ $t('message.experimentCreate.subspaceLogic') + ":" }}
+        </div>
+        <div>
+          {{ experiment.subspaceLogic?.toExpression() ?? "No Logic" }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
           {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') + ":" }}
         </div>
         <div>

@@ -65,7 +65,6 @@ export default defineComponent({
     parseSubspaceLogic (logic: string) {
       try {
         const subspaceLogic = parseSubspaceLogic(logic)
-        console.log(subspaceLogic)
         this.$emit('onSubspaceInput', subspaceLogic)
       } catch (e) {
         this.$emit('onSubspaceInput', null)

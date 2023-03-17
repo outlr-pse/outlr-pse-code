@@ -4,7 +4,7 @@
       <div class="content">
         <div class="header">
           <div class="title">{{ $t('message.register-view.title') }}
-            <span v-bind:class="{'errorInput':error}" class="material-icons md-dark icon" @mouseenter="showTip = true"
+            <span v-bind:class="{'errorInput':error, 'validInput':withValidInput[0] && withValidInput[1] && withValidInput[2]}" class="material-icons md-dark icon" @mouseenter="showTip = true"
                   @mouseleave="showTip = false"> info </span>
             <transition name="fade">
               <Card class="card" v-if="showTip" @mouseenter="showTip = true" @mouseleave="showTip = false">
@@ -259,11 +259,15 @@ input {
 }
 
 .valid {
-  border: 2px solid var(--color-running) !important;
+  border: 2px solid #07a303 !important;
+}
+
+.validInput {
+  color: #07a303 !important;
 }
 
 .validSubmit {
-  background: var(--color-running) !important;
+  background: #07a303 !important;
 }
 
 .login-form input {

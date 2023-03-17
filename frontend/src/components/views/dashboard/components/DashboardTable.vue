@@ -11,7 +11,7 @@
         </template>
         <template #body>
           <tr v-for="row in filteredData" class="tableData" v-bind:key="row[0]" @click="rowClick(row)">
-            <td v-for="cell in row[1]" v-bind:key="row[0]"
+            <td v-for="cell in row[1]" v-bind:key="cell[1]"
                 v-bind:class="[{'running': row[1][4][0] === Infinity},
                 {'failed': row[1][4][0] === -1},
                 {'notRunning': row[1][4][0] >= 0 && row[1][4][0] < Infinity }]">

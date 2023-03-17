@@ -15,6 +15,14 @@
     <div class="content">
       <div class="row">
         <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.datasetName') + ":" }}
+        </div>
+        <div>
+          {{ experiment.datasetName }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
           {{ $t('message.experimentResultView.experimentSummaryCard.odm') + ":" }}
         </div>
         <div>
@@ -39,10 +47,10 @@
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') + ":" }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') + ":" }}
         </div>
         <div>
-          {{ date }}
+          {{ experiment.experimentResult?.resultSpace?.outliers?.length }}
         </div>
       </div>
       <div class="row">
@@ -55,10 +63,18 @@
       </div>
       <div class="row">
         <div class="textLeft">
-          {{ $t('message.experimentResultView.experimentSummaryCard.detectedOutliers') + ":" }}
+          {{ $t('message.experimentResultView.experimentSummaryCard.executionDate') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult?.resultSpace?.outliers?.length }}
+          {{ date }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.creationDate') + ":" }}
+        </div>
+        <div>
+          {{ experiment.creationDate?.toLocaleString() ?? "No date" }}
         </div>
       </div>
     </div>

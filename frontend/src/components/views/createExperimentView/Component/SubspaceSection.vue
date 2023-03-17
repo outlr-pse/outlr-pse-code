@@ -50,6 +50,20 @@ export default defineComponent({
     value: function () {
       this.$emit('onInputChange', this.value)
     }
+  },
+  methods: {
+    wrongInput () {
+      const textArea = document.querySelector('textarea')
+      if (textArea) {
+        textArea.style.borderColor = 'var(--color-close-button)'
+      }
+    },
+    correctInput () {
+      const textArea = document.querySelector('textarea')
+      if (textArea) {
+        textArea.style.borderColor = 'var(--color-stroke)'
+      }
+    }
   }
 })
 </script>

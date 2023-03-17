@@ -1,0 +1,45 @@
+{
+  "name": "Experiment #3",
+  "dataset": {},
+  "dataset_name": "dataset.csv",
+  "ground_truth": {},
+  "odm": {
+    "id": 1,
+    "hyper_parameters": {
+      "method": "fast"
+    }
+  },
+  "subspace_logic": {
+    "operation": {
+      "operator": "and",
+      "operands": [
+        {
+          "literal": {
+            "subspace": {
+              "id": null,
+              "name": null,
+              "columns": [
+                0
+              ],
+              "outliers": [],
+              "roc_curve": null
+            }
+          }
+        },
+        {
+          "literal": {
+            "subspace": {
+              "id": null,
+              "name": null,
+              "columns": [
+                1
+              ],
+              "outliers": [],
+              "roc_curve": null
+            }
+          }
+        }
+      ]
+    }
+  }
+}

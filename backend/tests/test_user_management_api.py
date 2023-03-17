@@ -2,6 +2,7 @@ import unittest
 
 from api import error
 from api import app
+from api.user_management_api import validate_username, validate_password
 from models.base import Base
 import database.database_access as db
 from api.experiment_api import  _experiment_scheduler
@@ -102,6 +103,42 @@ class TestUserManagementAPI(unittest.TestCase):
         assert response_dict.get("username") == username
         assert "access_token" in response_dict
 
+    def test_login_invalid_credentials(self):
+
+        response = self.client.post("/api/user/login",
+                                    json={})
+        response_dict = response.get_json()
+        assert response_dict.get("error") == error.no_data_provided.get("error")
+
+    def test_login_no_username(self):
+
+        response = self.client.post("/api/user/login",
+                                    json={})
+        response_dict = response.get_json()
+        assert response_dict.get("error") == error.no_data_provided.get("error")
+
+    def test_login_no_password(self):
+        password = "ValidPassword01!"
+        response = self.client.post("/api/user/login",
+                                    json={'password': password})
+        response_dict = response.get_json()
+        assert response_dict.get("error") == error.no_username_provided.get("error")
+
+    def test_login_no_password(self):
+        username = "TestUser1"
+        response = self.client.post("/api/user/login",
+                                    json={'username': username})
+        response_dict = response.get_json()
+        assert response_dict.get("error") == error.no_password_provided.get("error")
+
+    def test_login_non_existent_user(self):
+        username = "DoesNotExist"
+        password = "Test01!"
+        response = self.client.post("/api/user/login",
+                                    json={'username': username, 'password': password})
+        response_dict = response.get_json()
+        assert response_dict.get("error") == error.provided_credentials_wrong.get("error")
+        
     def test_login_invalid_data(self):
         """Tests logging in with false credentials"""
         username = "InvalidLoginUser1"
@@ -180,3 +217,11 @@ class TestUserManagementAPI(unittest.TestCase):
         response_dict = response.get_json()
         assert "error" in response_dict
         assert response_dict.get("error") == error.token_not_valid.get("error")
+
+    def test_validate_username_none(self):
+        """Tests if the get token method returns None"""
+        assert validate_username(None) is False
+
+    def test_validate_password_none(self):
+        """Tests if the get token method returns None"""
+        assert validate_password(None) is False

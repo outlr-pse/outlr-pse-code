@@ -28,6 +28,7 @@
         "odm": "ODM",
         "accuracy": "Accuracy",
         "auc": "AUC",
+        "creationDate": "Creation Date",
         "executionDate": "Execution Date",
         "executionTime": "Execution Time",
         "detectedOutliers": "Number of detected outliers"

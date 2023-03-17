@@ -26,23 +26,23 @@ const literal3: Token[] = [[TokenType.BeginLit, undefined], [TokenType.Cols, [7,
 
 const binaryOperation: Token[] = wrapInScope([
   ...literal1,
-  [TokenType.Text,   'and  '],
+  [TokenType.Text,   'and'],
   ...literal2
 ])
 
 const ternaryOperation: Token[] = wrapInScope([
   ...literal1,
-  [TokenType.Text,   'and  '],
+  [TokenType.Text,   'and'],
   ...literal2,
-  [TokenType.Text,   'and  '],
+  [TokenType.Text,   'and'],
   ...literal3
 ])
 
 const nestedTernaryOperation: Token[] = wrapInScope([
   ...literal1,
-  [TokenType.Text,   'and  '],
+  [TokenType.Text,   'and'],
   ...binaryOperation,
-  [TokenType.Text,   'and  '],
+  [TokenType.Text,   'and'],
   ...literal3
 ])
 
@@ -71,17 +71,17 @@ describe(  'SubspaceLogicParser  ', () => {
     expect(actual).toEqual(literal1Expected)
   })
 
-  it(  'Parse binary operation with and  ', () => {
+  it(  'Parse binary operation with and', () => {
     const actual = parseSubspaceLogicTokens(binaryOperation)
     const actualUnwrapped = parseSubspaceLogicTokens(unwrapFromScope(binaryOperation))
     expect(actual).toEqual(binaryOperationExpected)
     expect(actualUnwrapped).toEqual(binaryOperationExpected)
   })
 
-  it(  'Parse binary operation with or  ', () => {
+  it(  'Parse binary operation with or', () => {
     const operation: Token[] = wrapInScope([
       ...literal1,
-      [TokenType.Text,   'or  '],
+      [TokenType.Text,   'or'],
       ...literal3
     ])
     const expected = new Operation(Operator.OR, [makeLiteral([1, 2, 3]), makeLiteral([7, 8, 9])])
@@ -115,11 +115,11 @@ describe(  'SubspaceLogicParser  ', () => {
   it(  'Parse invalid operations  ', () => {
     const startWithEndScope: Token[] = [[TokenType.EndScope, undefined], ...literal1]
     const startWithEndLit: Token[] = [[TokenType.EndLit, undefined], ...literal1]
-    const startWithText: Token[] = [[TokenType.Text,   'and  '], ...literal1]
+    const startWithText: Token[] = [[TokenType.Text,   'and'], ...literal1]
     const startWithCols: Token[] = [[TokenType.Cols, [1, 2, 3]], ...literal1]
     const endWithBeginScope: Token[] = [...literal1, [TokenType.BeginScope, undefined]]
     const endWithBeginLit: Token[] = [...literal1, [TokenType.BeginLit, undefined]]
-    const endWithText: Token[] = [...literal1, [TokenType.Text,   'and  ']]
+    const endWithText: Token[] = [...literal1, [TokenType.Text,   'and']]
     const endWithCols: Token[] = [...literal1, [TokenType.Cols, [1, 2, 3]]]
 
     expect(() => parseSubspaceLogicTokens(startWithEndScope))
@@ -142,9 +142,9 @@ describe(  'SubspaceLogicParser  ', () => {
 
   it(  'Parse (a or b) and (c or d)  ', () => {
     const operation: Token[] = [
-      [TokenType.BeginScope, undefined], ...literal3, [TokenType.Text,   'or  '], ...literal2, [TokenType.EndScope, undefined],
-      [TokenType.Text,   'and  '],
-      [TokenType.BeginScope, undefined], ...literal1, [TokenType.Text,   'or  '], ...literal2, [TokenType.EndScope, undefined]
+      [TokenType.BeginScope, undefined], ...literal3, [TokenType.Text,   'or'], ...literal2, [TokenType.EndScope, undefined],
+      [TokenType.Text,   'and'],
+      [TokenType.BeginScope, undefined], ...literal1, [TokenType.Text,   'or'], ...literal2, [TokenType.EndScope, undefined]
     ]
     const expected = new Operation(Operator.AND, [
       new Operation(Operator.OR, [makeLiteral([7, 8, 9]), makeLiteral([4, 5, 6])]),

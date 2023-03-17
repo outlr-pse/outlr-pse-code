@@ -26,17 +26,17 @@ export type Token = [TokenType, any?]
  * Converts an expression into a list of tokens, that represent the expression.
  * @throws Error if the expression cannot be tokenized
  */
-export function tokenize(expression: string): Token[] {
-  let tokens: Token[] = []
+export function tokenize (expression: string): Token[] {
+  const tokens: Token[] = []
   let i = 0
   while (i < expression.length) {
     const firstChar = expression.charAt(i)
-    if (firstChar == '[') {
+    if (firstChar === '[') {
       i = tokenizeLiteral(expression, i + 1, tokens)
-    } else if (firstChar == '(') {
+    } else if (firstChar === '(') {
       tokens.push([TokenType.BeginScope, undefined])
       i += 1
-    } else if (firstChar == ')') {
+    } else if (firstChar === ')') {
       tokens.push([TokenType.EndScope, undefined])
       i += 1
     } else if (letterRegex.test(firstChar)) {
@@ -45,7 +45,7 @@ export function tokenize(expression: string): Token[] {
       // Ignore
       i += 1
     } else {
-      throw new Error(  'SubspaceLogicTokenizer: Unexpected character:   ' + firstChar)
+      throw new Error('SubspaceLogicTokenizer: Unexpected character:   ' + firstChar)
     }
   }
   return tokens
@@ -58,21 +58,19 @@ export function tokenize(expression: string): Token[] {
  * @param tokens Token list to append the tokens to
  * @returns Index of the first character after the closing bracket of the literal
  */
-function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): number {
+function tokenizeLiteral (expression: string, begin: number, tokens: Token[]): number {
   tokens.push([TokenType.BeginLit, undefined])
-  let end = expression.indexOf(']', begin)
-  if (end == -1) {
-    throw new Error(  'SubspaceLogicTokenizer: Missing closing bracket \']\'  ')
+  const end = expression.indexOf(']', begin)
+  if (end === -1) {
+    throw new Error('SubspaceLogicTokenizer: Missing closing bracket \']\'  ')
   }
   const split = expression.substring(begin, end)
     .split(',')
     .map(str => str.trim())
-  if (split.length == 1 && !nonWhitespaceRegex.test(split[0]))
-    throw new Error(  'SubspaceLogicTokenizer: Column indices of literals must not be empty  ')
+  if (split.length === 1 && !nonWhitespaceRegex.test(split[0])) { throw new Error('SubspaceLogicTokenizer: Column indices of literals must not be empty  ') }
 
   const cols = split.map(str => parseInt(str))
-  if (cols.some(isNaN))
-    throw new Error(  'SubspaceLogicTokenizer: Column indices of literals must be integers:   ' + cols)
+  if (cols.some(isNaN)) { throw new Error('SubspaceLogicTokenizer: Column indices of literals must be integers') }
 
   tokens.push([TokenType.Cols, cols])
   tokens.push([TokenType.EndLit, undefined])
@@ -86,12 +84,12 @@ function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): nu
  * @param tokens Token list to append the tokens to
  * @returns Index of the first character after the text
  */
-function tokenizeText(expression: string, begin: number, tokens: Token[]): number {
+function tokenizeText (expression: string, begin: number, tokens: Token[]): number {
   let end = begin + 1
   while (end < expression.length && letterRegex.test(expression.charAt(end))) {
     end += 1
   }
-  let word = expression.substring(begin, end)
+  const word = expression.substring(begin, end)
   tokens.push([TokenType.Text, word])
   return end
 }

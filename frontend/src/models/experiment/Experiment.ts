@@ -52,7 +52,7 @@ export class Experiment implements JSONSerializable, JSONDeserializable {
       dataset_name: this.datasetName,
       ground_truth: this.groundTruth,
       odm: this.odm,
-      subspace_logic: this.subspaceLogic,
+      subspace_logic: this.subspaceLogic
       // creation_date: this.creationDate?.toISOString(),  // backend might not be compatible with this iso date format
     }
   }

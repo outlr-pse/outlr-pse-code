@@ -38,7 +38,7 @@ export function parseSubspaceLogicTokens (tokens: Token[]): SubspaceLogic {
  * @throws Error if the expression cannot be parsed
  */
 function parse (tokens: Token[], begin: number, expectEndScope: boolean): [SubspaceLogic, number] {
-  let operator: Operator | null = null
+  let operator: Operator
   const operands: SubspaceLogic[] = []
 
   let current = begin
@@ -96,7 +96,7 @@ function parse (tokens: Token[], begin: number, expectEndScope: boolean): [Subsp
   if (operator === null) {
     throw new Error('SubspaceLogicParser: Impossible state: operator is null')
   }
-  return [new Operation(operatorNotNull, operands), current] // operator is not null here
+  return [new Operation(operator, operands), current] // operator is not null here
 }
 
 /**

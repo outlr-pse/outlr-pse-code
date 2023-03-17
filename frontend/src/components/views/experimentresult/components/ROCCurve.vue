@@ -38,13 +38,14 @@ export default defineComponent({
     }
   },
   data() {
+    const experimentResult = this.experiment.experimentResult;
     return {
       data: {
-        labels: this.experiment.experimentResult?.fpr,
+        labels: experimentResult ? experimentResult.fpr : [],
         datasets: [
           {
             label: 'ROC Curve',
-            data: this.experiment.experimentResult?.tpr,
+            data: experimentResult ? experimentResult.tpr : [],
             backgroundColor: 'rgb(32,32,32)',
             borderColor: 'rgb(146,95,240)',
             borderWidth: 2

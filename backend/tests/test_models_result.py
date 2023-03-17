@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 from models.experiment import ExperimentResult, Experiment, Subspace, Outlier
 from models.subspacelogic.literal import Literal
+from models.odm.pyodm import PyODM
 
 exp = Experiment(id=123)
 res = ExperimentResult(
@@ -129,3 +130,41 @@ class TestResultModels(unittest.TestCase):
         exp.subspace_logic = Literal(sub1)
         self.assertIs(type(exp.subspace_logic), Literal)
         self.assertEqual(exp.subspace_logic.subspace.columns, sub1.columns)
+
+    def test_experiment_from_json(self):
+        exp_json = {
+            "name": "test",
+            "subspace_logic": {
+                "literal": {
+                    "subspace": {
+                        "id": 23,
+                        "name": None,
+                        "columns": [0, 1, 3],
+                        "outliers": [3],
+                        "roc_curve": None
+                    }
+                }
+            },
+            "odm": {
+                "id": 1,
+                "hyper_parameters": {
+                    "n_neighbors": 5
+                },
+            },
+            "dataset_name": "test",
+        }
+        _exp = Experiment.from_json(exp_json)
+        self.assertEqual(_exp.name, exp_json["name"])
+        self.assertEqual(len(_exp.subspaces), 1)
+        self.assertEqual(_exp.subspaces[0].columns, exp_json["subspace_logic"]["literal"]["subspace"]["columns"])
+        self.assertEqual(_exp.odm_id, exp_json["odm"]["id"])
+        self.assertEqual(_exp.param_values, exp_json["odm"]["hyper_parameters"])
+        self.assertEqual(_exp.dataset_name, exp_json["dataset_name"])
+
+    def test_experiment_to_json(self):
+        exp.odm = PyODM(id=1)
+        exp.param_values = {"n_neighbors": 5}
+        exp_json_without_outliers = exp.to_json(False)
+        self.assertEqual(exp_json_without_outliers["name"], exp.name)
+        self.assertEqual(exp_json_without_outliers["odm_params"], exp.param_values)
+        self.assertEqual(exp_json_without_outliers["dataset_name"], exp.dataset_name)

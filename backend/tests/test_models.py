@@ -3,6 +3,7 @@ import unittest
 from models.odm import ODM
 from models.odm import HyperParameter
 from models.user import User
+from models.json_error import JSONError
 
 
 # TODO: Add more tests for Experiment, ODM and User
@@ -54,3 +55,7 @@ class TestODM(unittest.TestCase):
         self.assertEqual(self.odm.id, 1)
         self.assertEqual(self.odm.name, 'test_odm')
         self.assertEqual(self.odm.deprecated, False)
+
+    def test_json_error(self):
+        error = JSONError("test error")
+        self.assertEqual(str(error), "Error while parsing JSON: test error")

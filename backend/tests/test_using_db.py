@@ -24,6 +24,7 @@ class TestDBAccess(unittest.TestCase):
         """Create an experiment with the given name and user_id."""
         exp = Experiment()
         exp.user_id = user_id
+        exp.creation_date = datetime.now()
         exp.name = name
         exp.odm_id = 1
         exp.odm_params = {"b": 2}
@@ -128,6 +129,7 @@ class TestExperimentWithResult(unittest.TestCase):
                 user_id=user_id,
                 name="Experiment #1203",
                 odm_id=1,
+                creation_date=datetime.now(),
             )
             self.res = ExperimentResult(
                 user_id=user_id,

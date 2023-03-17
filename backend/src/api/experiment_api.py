@@ -11,6 +11,7 @@ Endpoints defined:
 import os
 from os.path import exists as path_exists
 import concurrent.futures
+import datetime
 
 from flask import Blueprint, Response, jsonify, send_file, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -145,6 +146,7 @@ def create() -> (str, int):
             return error.no_dataset, error.no_dataset["status"]
 
         exp = Experiment.from_json(request.json)
+        exp.creation_date = datetime.datetime.now()
         exp.user_id = user_id  # User id is not in the json
         db.add_experiment(session, experiment=exp)
         exp.odm.__class__ = models.odm.PyODM  # TODO the ORM should do this automatically in the future

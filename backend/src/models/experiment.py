@@ -249,7 +249,7 @@ class Experiment(Base):
     _subspace_logic_json = mapped_column(JSON, nullable=True)  # must be nullable because it is written in a second step
     dataset_name: Mapped[Optional[str]]
     error_json: Mapped[Optional[dict]] = mapped_column(JSON)
-    creation_date: Mapped[datetime] = mapped_column(default_factory=datetime.now)
+    creation_date: Mapped[datetime]
 
     odm_id: Mapped[int] = mapped_column(ForeignKey(ODM.id))
     odm: Mapped['ODM'] = relationship()

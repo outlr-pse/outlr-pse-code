@@ -9,9 +9,7 @@
     <div v-else class="summary">
       <div class="card">
         <ExperimentSummaryCard :experiment="experiment"/>
-      </div>
-      <div class="roc">
-          <ROCCurve :experiment="experiment"/>
+        <ROCCurve :experiment="experiment"/>
       </div>
     </div>
   </div>
@@ -19,23 +17,23 @@
 
 <script lang="ts">
 import ExperimentSummaryCard from './components/ExperimentSummaryCard.vue'
-import { useRoute } from 'vue-router'
-import { requestExperimentResult } from '../../../api/APIRequests'
-import { Experiment } from '../../../models/experiment/Experiment'
-import { defineComponent } from 'vue'
+import {useRoute} from 'vue-router'
+import {requestExperimentResult} from '../../../api/APIRequests'
+import {Experiment} from '../../../models/experiment/Experiment'
+import {defineComponent} from 'vue'
 import Card from '../../basic/Card.vue'
 import ROCCurve from './components/ROCCurve.vue'
 
 export default defineComponent({
   name: 'ExperimentResultView',
-  components: { ROCCurve, Card, ExperimentSummaryCard },
-  data () {
+  components: {ROCCurve, Card, ExperimentSummaryCard},
+  data() {
     return {
       experiment: null as Experiment | null,
       dataReady: false
     }
   },
-  async mounted () {
+  async mounted() {
     const route = useRoute()
     const response = await requestExperimentResult(+route.params.expId)
     if (response.status === 200) {
@@ -51,19 +49,18 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   height: 100%;
   width: 100%;
 }
 
 .card {
-  padding-right: 3vw;
-  justify-self: center;
+  width: 55vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.roc {
-  padding-left: 3vw;
-  justify-self: center;
-}
 .failed {
   display: flex;
   align-items: center;

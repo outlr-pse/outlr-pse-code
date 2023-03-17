@@ -2,7 +2,7 @@
   <Card>
     <div class="summary">
       <h3 class="header">
-        {{ $t('message.experimentResultView.experimentSummaryCard.summary') }}
+        {{ experiment.name }}
       </h3>
       <ButtonComponent
         text="Download"

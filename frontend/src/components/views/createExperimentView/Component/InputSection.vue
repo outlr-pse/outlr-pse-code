@@ -26,7 +26,7 @@ import Dropdown from '../../../basic/Dropdown.vue'
 import { ODM } from '../../../../models/odm/ODM'
 import SubspaceSection from './SubspaceSection.vue'
 import HyperParametersSection from './HyperParametersSection.vue'
-import { parseSubspaceLogic } from '../../../../logic/subspace_logic_parser/SubspaceLogicParser'
+import { parseSubspaceLogic } from '../../../../logic/subspacelogic/SubspaceLogicParser'
 
 export default defineComponent({
   name: 'InputSection',

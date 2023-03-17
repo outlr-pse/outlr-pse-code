@@ -17,7 +17,7 @@
         @mouseleave="showTip = false"
         @mouseenter="showTip = true"
       >
-        {{ $t('message.experimentCreate.logicHint') }}
+        <div v-html="$t('message.experimentCreate.logicHint')"></div>
       </Card>
     </transition>
     <div style="border: 1px solid var(--color-lines); width: 17vw;" />

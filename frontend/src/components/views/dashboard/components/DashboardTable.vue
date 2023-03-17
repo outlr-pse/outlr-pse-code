@@ -10,16 +10,19 @@
           </tr>
         </template>
         <template #body>
-          <tr v-for="row in filteredData" @click="rowClick(row)" class="tableData" v-bind:key="row[0]">
-            <td v-for="cell in row[1]" v-bind:key="cell">
-              <div v-if="cell === 'Running . . .' " class="running">
-                {{ cell }}
+          <tr v-for="row in filteredData" class="tableData" v-bind:key="row[0]" @click="rowClick(row)">
+            <td v-for="cell in row[1]" v-bind:key="cell[1]"
+                v-bind:class="[{'running': row[1][4][0] === Infinity},
+                {'failed': row[1][4][0] === -1},
+                {'notRunning': row[1][4][0] >= 0 && row[1][4][0] < Infinity }]">
+              <div v-if="row[1][4][0] === Infinity ">
+                {{ cell[1] }}
               </div>
-              <div v-else-if="cell === 'Failed :(' " class="failed">
-                {{ cell }}
+              <div v-else-if="row[1][4][0] === -1" >
+                {{ cell[1] }}
               </div>
-              <div v-else class="notRunning">
-                {{ cell }}
+              <div v-else>
+                {{ cell[1] }}
               </div>
             </td>
           </tr>
@@ -36,14 +39,15 @@ import { Experiment } from '../../../../models/experiment/Experiment'
 import { requestAllExperiments } from '../../../../api/APIRequests'
 import { Hyperparameter } from '../../../../models/odm/Hyperparameter'
 import { DashboardSortColumn } from './DashboardSortColumn'
+import { dateCalculation } from './DashboardUtil'
 
 export default defineComponent({
   components: { BaseTable },
   data () {
     return {
       headers: [] as [string, DashboardSortColumn][],
-      data: [] as [number, string[]][],
-      filteredData: [] as [number, string[]][],
+      data: [] as [number, [any, string][]][],
+      filteredData: [] as [number, [any, string][]][],
       experiments: [] as Experiment[],
       shownParams: [] as Hyperparameter[],
       headerClasses: ['col-1', 'col-2', 'col-3', 'col-4', 'col-5', 'col-6'],
@@ -101,46 +105,54 @@ export default defineComponent({
         this.experiments.push(Experiment.fromJSON(experiment))
       }
       for (const experiment of this.experiments) {
-        let hyperParamString = ''
-        for (const param of experiment.odm.hyperParameters) {
-          hyperParamString += param.name + ': ' + param.value + ', '
+        const id = experiment.id
+        type TableCell = [any, string]; // [metaData for sorting, string representation]
+        type TableRow = [number, TableCell[]]; // [id, [TableCell]]
+        const row: TableRow = [id, []]
+
+        for (const header of this.headers) { // 6 headers
+          let cell: TableCell = [undefined, '']
+          const shownParams = experiment.odm.hyperParameters
+          const shownParamString = shownParams.map((param: { name: string; value: string; }) => {
+            return param.name + ': ' + param.value
+          }).join(', ')
+
+          switch (header[1]) {
+            case DashboardSortColumn.NAME:
+              cell = [experiment.name, experiment.name]
+              break
+            case DashboardSortColumn.DATASET:
+              cell = [experiment.datasetName, experiment.datasetName]
+              break
+            case DashboardSortColumn.ODM:
+              cell = [experiment.odm.name, experiment.odm.name]
+              break
+            case DashboardSortColumn.HYPERPARAMETER:
+              cell = [shownParams, shownParamString]
+              break
+            case DashboardSortColumn.DATE:
+              console.log(experiment)
+              if (experiment.failed) {
+                cell = [-1, 'Failed :(']
+              } else if (experiment.running) {
+                cell = [Infinity, 'Running ...']
+              } else {
+                const date = dateCalculation(experiment.experimentResult?.executionDate)
+                cell = [experiment.experimentResult?.executionDate, date]
+              }
+              break
+            case DashboardSortColumn.ACCURACY:
+              if (experiment.running || experiment.failed) {
+                cell = [undefined, '']
+              } else {
+                const accuracy = experiment.experimentResult?.accuracy ? experiment.experimentResult?.accuracy * 100 : -1
+                cell = [accuracy, accuracy !== -1 ? accuracy.toFixed(1) + '%' : 'No GT']
+              }
+              break
+          }
+          row[1].push(cell)
         }
-        if (experiment.failed) {
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              'Failed :(',
-              ''
-            ]
-          ])
-        } else if (experiment.running) {
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              'Running . . .',
-              ''
-            ]
-          ])
-        } else {
-          this.data.push([
-            experiment.id ? experiment.id : 0,
-            [
-              experiment.name,
-              experiment.datasetName,
-              experiment.odm.name,
-              hyperParamString,
-              experiment.experimentResult?.executionDate.toLocaleString() ?? 'Not yet executed',
-              experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy * 100 + '%' : 'No GT'
-            ]])
-        }
+        this.data.push(row)
       }
       this.filteredData = this.data
       this.tableSort()
@@ -150,8 +162,8 @@ export default defineComponent({
       this.currentSorting = header
       this.tableSort()
     },
-    rowClick (row: [number, string[]]) {
-      if (row[1][4] === 'Running . . .') {
+    rowClick (row: [number, [any, string][]]) {
+      if (row[1][4][0] === Infinity) {
         return
       }
       this.$router.push('/experiment/' + row[0])
@@ -159,7 +171,7 @@ export default defineComponent({
     tableSearch () {
       this.filteredData = this.data.filter((row) => {
         for (let i = 0; i < row[1].length - 2; i++) {
-          if (row[1][i].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
+          if (row[1][i][1].toLowerCase().includes(this.currentSearchTerm.toLowerCase())) {
             return true
           }
         }
@@ -169,27 +181,27 @@ export default defineComponent({
     tableSort () {
       if (this.currentSorting === DashboardSortColumn.NAME) {
         this.filteredData.sort((a, b) => {
-          return a[1][0].localeCompare(b[1][0])
+          return a[1][0][0].localeCompare(b[1][0][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATASET) {
         this.filteredData.sort((a, b) => {
-          return a[1][1].localeCompare(b[1][1])
+          return a[1][1][0].localeCompare(b[1][1][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.ODM) {
         this.filteredData.sort((a, b) => {
-          return a[1][2].localeCompare(b[1][2])
+          return a[1][2][0].localeCompare(b[1][2][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.HYPERPARAMETER) {
         this.filteredData.sort((a, b) => {
-          return a[1][3].localeCompare(b[1][3])
+          return a[1][3][0].localeCompare(b[1][3][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATE) {
         this.filteredData.sort((a, b) => {
-          return a[1][4].localeCompare(b[1][4])
+          return a[1][4][0] > b[1][4][0] ? -1 : 1
         })
       } else if (this.currentSorting === DashboardSortColumn.ACCURACY) {
         this.filteredData.sort((a, b) => {
-          return a[1][5].localeCompare(b[1][5])
+          return a[1][5][0] > b[1][5][0] ? -1 : 1
         })
       }
     }
@@ -231,7 +243,7 @@ tr {
 }
 
 tr td {
-  padding: 0.5em;
+   padding: 0.5rem;
 }
 
 td {
@@ -292,6 +304,9 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .failed {
   color: var(--color-close-button);
 }
+.notRunning {
+  color: var(--color-text);
+}
 
 .running:hover {
   cursor: default;
@@ -300,5 +315,7 @@ td:hover.col-1, :hover.col-2, :hover.col-3, :hover.col-4, :hover.col-5, :hover.c
 .notRunning:hover {
   cursor: pointer;
 }
-
+.failed:hover {
+  cursor: pointer;
+}
 </style>

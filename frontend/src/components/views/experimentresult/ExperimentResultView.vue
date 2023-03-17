@@ -6,7 +6,7 @@
         <p style="color: var(--color-close-button)">Reason: {{ experiment.error }}</p>
       </Card>
     </div>
-    <div v-else-if="!experiment.experimentResult.hasGtFile" class="summary">
+    <div v-else-if="!experiment.experimentResult?.hasGtFile" class="summary">
         <ExperimentSummaryCard :experiment="experiment"/>
     </div>
     <div v-else class="summary">

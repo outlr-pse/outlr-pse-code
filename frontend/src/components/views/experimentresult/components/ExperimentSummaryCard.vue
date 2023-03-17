@@ -34,7 +34,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.auc') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult.hasGtFile ? experiment.experimentResult?.auc : "No GT" }}
+          {{ experiment.experimentResult?.hasGtFile ? experiment.experimentResult?.auc : "No GT" }}
         </div>
       </div>
       <div class="row">

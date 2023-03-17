@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from concurrent.futures import Future
 
 import pandas as pd
-import numpy as np
 from sklearn import metrics
 
 from execution.execution_error import ExecutionError
@@ -108,13 +107,16 @@ class ExperimentScheduler(ABC):
 
         experiment_result.accuracy = metrics.accuracy_score(ground_truth, outlier_array)
 
-        if scores_array is not None:
-            fpr, tpr, thresholds = metrics.roc_curve(ground_truth, scores_array)
-            auc = metrics.auc(fpr, tpr)
-            experiment_result.fpr = fpr.tolist()
-            experiment_result.tpr = tpr.tolist()
-            experiment_result.thresholds = thresholds.tolist()
-            experiment_result.auc = auc
+        if scores_array is None:
+            return
+        ground_truth = ground_truth[~pd.isna(scores_array)]
+        scores_array = scores_array[~pd.isna(scores_array)]
+        fpr, tpr, thresholds = metrics.roc_curve(ground_truth, scores_array)
+        auc = metrics.auc(fpr, tpr)
+        experiment_result.fpr = fpr.tolist()
+        experiment_result.tpr = tpr.tolist()
+        experiment_result.thresholds = thresholds.tolist()
+        experiment_result.auc = auc
 
     @staticmethod
     def get_subspace(dataset: pd.DataFrame, columns: list[int]):

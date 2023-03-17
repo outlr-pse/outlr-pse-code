@@ -78,9 +78,9 @@ class TestSubspaceLogic(unittest.TestCase):
         self.assertEqual(len(subspaces), 3)
 
     def test_literals_evaluate(self):
-        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0]) == sub1.evaluate()).all())
-        self.assertTrue((np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0]) == sub2.evaluate()).all())
-        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 1]) == sub3.evaluate()).all())
+        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 0]) == sub1.evaluate_labels()).all())
+        self.assertTrue((np.array([0, 1, 0, 1, 0, 0, 0, 0, 0, 0]) == sub2.evaluate_labels()).all())
+        self.assertTrue((np.array([0, 0, 1, 1, 0, 0, 0, 0, 0, 1]) == sub3.evaluate_labels()).all())
 
     def test_client_json(self):
         # Check literals

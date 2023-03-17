@@ -14,7 +14,7 @@ import { Literal } from '../../models/subspacelogic/Literal'
  *  Literal -> [ comma separated list of integers ]
  * @throws Error if the expression cannot be tokenized or parsed
  */
-export function parseSubspaceLogic(expression: string): SubspaceLogic {
+export function parseSubspaceLogic (expression: string): SubspaceLogic {
   return parseSubspaceLogicTokens(tokenize(expression))
 }
 
@@ -24,7 +24,7 @@ export function parseSubspaceLogic(expression: string): SubspaceLogic {
  * @throws Error if the expression cannot be parsed
  */
 export function parseSubspaceLogicTokens(tokens: Token[]): SubspaceLogic {
-  const [logic, _] = parse (tokens, 0, false)
+  const [logic, ] = parse (tokens, 0, false)
   // maybe check end here?
   return logic
 }
@@ -47,20 +47,20 @@ function parse(tokens: Token[], begin: number, expectEndScope: boolean): [Subspa
     if (current >= tokens.length) {
       throw new Error('SubspaceLogicParser: Unexpected end of tokens')
     }
-    if (tokens[current][0] == TokenType.EndScope) {
+    if (tokens[current][0] === TokenType.EndScope) {
       throw new Error('SubspaceLogicParser: Unexpected end of scope')
     }
 
     // Read operand
-    let [operandType, ] = tokens[current]
+    const [operandType, ] = tokens[current]
     current += 1
-    if (operandType == TokenType.BeginScope) {
-      let [operand, end] = parse(tokens, current, true)
+    if (operandType === TokenType.BeginScope) {
+      const [operand, end] = parse(tokens, current, true)
       operands.push(operand)
       current = end
     }
-    else if (operandType == TokenType.BeginLit) {
-      let [literal, end] = parseLiteral(tokens, current)
+    else if (operandType === TokenType.BeginLit) {
+      const [literal, end] = parseLiteral(tokens, current)
       operands.push(literal)
       current = end
     }
@@ -73,26 +73,30 @@ function parse(tokens: Token[], begin: number, expectEndScope: boolean): [Subspa
       if (expectEndScope) throw new Error('SubspaceLogicParser: Missing end of scope')
       break
     }
-    else if (tokens[current][0] == TokenType.EndScope) {
+    else if (tokens[current][0] === TokenType.EndScope) {
       if (!expectEndScope) throw new Error('SubspaceLogicParser: Unexpected end of scope')
       current += 1
       break
     }
 
     // If not end, read operator
-    let [operatorToken, operatorValue] = tokens[current]
+    const [operatorToken, operatorValue] = tokens[current]
     current += 1
-    if (operatorToken != TokenType.Text)
+    if (operatorToken != TokenType.Text) {
       throw new Error('SubspaceLogicParser: Expected operator, got ' + operatorToken)
+    }
     const readOperator = parseOperator(operatorValue)
-    if (operator == null) // First time reading operator
+    if (operator === null) { // First time reading operator
       operator = readOperator
-    else if (operator != readOperator) // Operator different from previously read
+    }
+    else if (operator != readOperator) { // Operator different from previously read
       throw new Error('SubspaceLogicParser: Found different operators in one scope')
+    }
   }
 
-  if (operands.length == 1)
+  if (operands.length === 1) {
     return [operands[0], current]
+  }
   return [new Operation(operator!, operands), current] // operator is not null here
 }
 
@@ -105,10 +109,12 @@ function parse(tokens: Token[], begin: number, expectEndScope: boolean): [Subspa
  */
 function parseLiteral(tokens: Token[], begin: number): [Literal, number] {
   let [tokenType, tokenValue] = tokens[begin]
-  if (tokenType != TokenType.Cols)
+  if (tokenType != TokenType.Cols) {
     throw new Error('SubspaceLogicParser: Expected subspace columns, got ' + tokenType)
-  if (tokens[begin + 1][0] != TokenType.EndLit)
+  }
+  if (tokens[begin + 1][0] != TokenType.EndLit) {
     throw new Error('SubspaceLogicParser: Expected end of literal, got ' + tokens[begin + 1][0])
+  }
 
   // tokenValue is the list of column indices
   return [new Literal(newSubspace(tokenValue)), begin + 2] // 2 tokens were consumed

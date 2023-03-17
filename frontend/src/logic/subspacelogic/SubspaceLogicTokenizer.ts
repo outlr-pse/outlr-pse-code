@@ -45,7 +45,7 @@ export function tokenize(expression: string): Token[] {
       // Ignore
       i += 1
     } else {
-      throw new Error("SubspaceLogicTokenizer: Unexpected character: " + firstChar)
+      throw new Error(  'SubspaceLogicTokenizer: Unexpected character:   ' + firstChar)
     }
   }
   return tokens
@@ -62,17 +62,17 @@ function tokenizeLiteral(expression: string, begin: number, tokens: Token[]): nu
   tokens.push([TokenType.BeginLit, undefined])
   let end = expression.indexOf(']', begin)
   if (end == -1) {
-    throw new Error("SubspaceLogicTokenizer: Missing closing bracket ']'")
+    throw new Error(  'SubspaceLogicTokenizer: Missing closing bracket \']\'  ')
   }
   const split = expression.substring(begin, end)
     .split(',')
     .map(str => str.trim())
   if (split.length == 1 && !nonWhitespaceRegex.test(split[0]))
-    throw new Error("SubspaceLogicTokenizer: Column indices of literals must not be empty")
+    throw new Error(  'SubspaceLogicTokenizer: Column indices of literals must not be empty  ')
 
   const cols = split.map(str => parseInt(str))
   if (cols.some(isNaN))
-    throw new Error("SubspaceLogicTokenizer: Column indices of literals must be integers: " + cols)
+    throw new Error(  'SubspaceLogicTokenizer: Column indices of literals must be integers:   ' + cols)
 
   tokens.push([TokenType.Cols, cols])
   tokens.push([TokenType.EndLit, undefined])

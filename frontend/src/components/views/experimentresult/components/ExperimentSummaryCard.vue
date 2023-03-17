@@ -26,7 +26,7 @@
           {{ $t('message.experimentCreate.subspaceLogic') + ":" }}
         </div>
         <div>
-          {{ experiment.subspaceLogic.toExpression() }}
+          {{ experiment.subspaceLogic?.toExpression() ?? "No Logic" }}
         </div>
       </div>
       <div class="row">

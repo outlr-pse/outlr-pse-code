@@ -12,6 +12,8 @@ from models.subspacelogic.operator import Operator
 from models.user import User
 from models.odm.pyodm import PyODM
 import database.database_access as db
+from execution.execution_error.subspace_error import SubspaceError
+from execution.experiment_scheduler import ExperimentScheduler
 from execution.odm_scheduler import ODMScheduler
 from execution.odm_scheduler.sequential_odm_scheduler import SequentialODMScheduler
 from execution.odm_scheduler.executor_odm_scheduler import ExecutorODMScheduler
@@ -41,8 +43,10 @@ class TestEventLoopScheduler(unittest.TestCase):
             self.contamination = 0.4  # percentage of outliers
             self.n_train = 200  # number of training points
             self.n_test = 0
+            self.n_features = 3
             self.X_train, self.X_test, self.y_train, self.y_test = generate_data(
-                n_train=self.n_train, n_test=self.n_test, contamination=self.contamination, random_state=999, n_features=3)
+                n_train=self.n_train, n_test=self.n_test,
+                contamination=self.contamination, random_state=999, n_features=self.n_features)
 
             self.dataset = pd.DataFrame(self.X_train)
             self.ground_truth = self.y_train
@@ -56,7 +60,7 @@ class TestEventLoopScheduler(unittest.TestCase):
                 dataset=self.dataset,
                 subspaces=[self.sub1, self.sub2, self.sub3],
                 odm=self.odm,
-                param_values={'contamination': 0.1, 'n_neighbors': math.ceil(self.n_train / 4), 'method': 'fast'},
+                param_values={'contamination': 0.1, 'n_neighbors': math.ceil(self.n_train / 2), 'method': 'fast'},
                 ground_truth=self.ground_truth,
                 subspace_logic=Operation(
                     operator=Operator.LOGICAL_OR,
@@ -72,6 +76,12 @@ class TestEventLoopScheduler(unittest.TestCase):
     def tearDown(self) -> None:
         if isinstance(self.experiment_scheduler, EventLoopExperimentScheduler):
             self.experiment_scheduler.stop()  # Ensures that also on failing tests the loop is stopped
+
+    def test_subspace_slicing(self):
+        self.assertRaises(
+            SubspaceError,
+            ExperimentScheduler.get_subspace, self.experiment.dataset, [0, self.n_features]
+        )
 
     def run_test_with_odm_scheduler(self, odm_scheduler: ODMScheduler):
         self.experiment_scheduler.odm_scheduler = odm_scheduler
@@ -93,6 +103,16 @@ class TestEventLoopScheduler(unittest.TestCase):
 
     def test_coroutine_sequential_scheduler(self):
         self.run_test_with_odm_scheduler(SequentialODMScheduler())
+
+    def test_sequential_odm_failure(self):
+        self.experiment.param_values['method'] = 'invalid'
+        self.experiment_scheduler.odm_scheduler = SequentialODMScheduler()
+        self.experiment_scheduler.schedule(self.experiment).result()
+        self.assertIsNot(self.experiment.error_json, None, msg="Execution error is missing")
+        self.assertEqual(
+            list(self.experiment.error_json.keys()), ["ODMFailureError"],
+            msg="Execution error has wrong type"
+        )
 
     def test_odm_failure(self):
         self.experiment.param_values['method'] = 'invalid'  # This is no a valid hyperparameter value

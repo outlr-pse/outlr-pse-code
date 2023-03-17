@@ -13,7 +13,7 @@
       <HyperParametersSection :parameters="hyperparameters" @checkData="$emit('checkData')"/>
     </div>
     <div class="subspace">
-      <SubspaceSection @onInputChange="parseSubspaceLogic"></SubspaceSection>
+      <SubspaceSection @onInputChange="parseSubspaceLogic" ref="subspace"></SubspaceSection>
     </div>
   </Card>
 </template>
@@ -64,12 +64,12 @@ export default defineComponent({
     },
     parseSubspaceLogic (logic: string) {
       try {
+        (this.$refs.subspace as typeof SubspaceSection).correctInput()
         const subspaceLogic = parseSubspaceLogic(logic)
-        console.log(subspaceLogic)
         this.$emit('onSubspaceInput', subspaceLogic)
       } catch (e) {
+        (this.$refs.subspace as typeof SubspaceSection).wrongInput()
         this.$emit('onSubspaceInput', null)
-        console.log(e)
       }
     }
   }

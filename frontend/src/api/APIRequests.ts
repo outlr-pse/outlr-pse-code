@@ -141,7 +141,6 @@ export async function downloadExperiment (experiment: Experiment): Promise<any> 
     // create "a" HTML element with href to file & click
     const link = document.createElement('a')
     link.href = href
-    console.log(response)
     const expName = experiment.name
     link.setAttribute('download', expName + '-result.csv') // or any other extension
     document.body.appendChild(link)

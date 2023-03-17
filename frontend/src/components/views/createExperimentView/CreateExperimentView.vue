@@ -87,29 +87,24 @@ export default defineComponent({
     checkRequiredData () {
       if (this.selectedODM === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log('no odm selected')
         return
       }
       for (const param of this.selectedODM.hyperParameters) {
         if (!param.optional && param.value === '') {
           this.buttonType = ButtonType.DISABLED
-          console.log('no value for ' + param.name)
           return
         }
         if (!validateHyperparameterType(param) && param.value !== '') {
           this.buttonType = ButtonType.DISABLED
-          console.log('wrong type for ' + param.name)
           return
         }
       }
       if (this.dataset === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log('no dataset')
         return
       }
       if (this.subspaceLogic === null) {
         this.buttonType = ButtonType.DISABLED
-        console.log('no subspace logic')
         return
       }
       this.buttonType = ButtonType.ACTIVE
@@ -125,7 +120,6 @@ export default defineComponent({
       )
 
       sendExperiment(experiment).then()
-      console.log('experiment created')
       this.$router.push('/dashboard')
     }
   },

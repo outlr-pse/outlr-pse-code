@@ -32,7 +32,7 @@ class TestExperimentApi(unittest.TestCase):
             username = "ValidateDataset"
             password = 'TestPasswordValid0!'
             response = c.post("/api/user/register",
-                                        json={'username': username, 'password': password})
+                              json={'username': username, 'password': password})
             assert response.status_code == 200
             response_dict = response.get_json()
             access_token = response_dict.get("access_token")
@@ -46,7 +46,7 @@ class TestExperimentApi(unittest.TestCase):
             username = "ValididateGroundtruth"
             password = 'TestPasswordValid0!'
             response = c.post("/api/user/register",
-                                        json={'username': username, 'password': password})
+                              json={'username': username, 'password': password})
             assert response.status_code == 200
             response_dict = response.get_json()
             access_token = response_dict.get("access_token")
@@ -87,7 +87,7 @@ class TestExperimentApi(unittest.TestCase):
         groundtruth_path = data_path(user_id, "ground_truth")
         # dataset file existent, thus not just user_files/2 returned
         assert dataset_path == f"user_files/{user_id}/{saved_dataset_filename}"
-        #groundtruth file existent
+        # groundtruth file existent
         assert groundtruth_path == f"user_files/{user_id}/{saved_groundtruth_filename}"
         assert os.path.exists(data_path(user_id, "dataset")) is True
         assert os.path.exists(data_path(user_id, "ground_truth")) is True
@@ -97,36 +97,36 @@ class TestExperimentApi(unittest.TestCase):
         assert os.path.exists(data_path(user_id, "ground_truth")) is False
 
     def test_upload_experiment_files_no_groundtruth(self):
-            username = "NoGroundTruth"
-            password = 'TestPasswordValid0!'
-            response = self.client.post("/api/user/register",
-                                        json={'username': username, 'password': password})
-            assert response.status_code == 200
-            response_dict = response.get_json()
-            access_token = response_dict.get("access_token")
-            self.client.environ_base['HTTP_AUTHORIZATION'] = 'Bearer ' + access_token
-            user_id: int
-            with db.Session(expire_on_commit=False) as session:
-                user = db.get_user(session, username)
-                user_id = user.id
-            this_dir = Path(__file__).parent
-            test_files = this_dir.parent / 'test_files'
+        username = "NoGroundTruth"
+        password = 'TestPasswordValid0!'
+        response = self.client.post("/api/user/register",
+                                    json={'username': username, 'password': password})
+        assert response.status_code == 200
+        response_dict = response.get_json()
+        access_token = response_dict.get("access_token")
+        self.client.environ_base['HTTP_AUTHORIZATION'] = 'Bearer ' + access_token
+        user_id: int
+        with db.Session(expire_on_commit=False) as session:
+            user = db.get_user(session, username)
+            user_id = user.id
+        this_dir = Path(__file__).parent
+        test_files = this_dir.parent / 'test_files'
 
-            dataset_filename = 'dataset.csv'
-            files = {'dataset': open(test_files / dataset_filename, "rb")}
-            response = self.client.post("/api/experiment/upload-files", data=files)
-            response_data = response.get_data()
-            assert response.status_code == 200
-            assert response_data == b"OK"
+        dataset_filename = 'dataset.csv'
+        files = {'dataset': open(test_files / dataset_filename, "rb")}
+        response = self.client.post("/api/experiment/upload-files", data=files)
+        response_data = response.get_data()
+        assert response.status_code == 200
+        assert response_data == b"OK"
 
-            saved_dataset_filename = 'dataset.csv'
-            saved_groundtruth_filename = 'ground_truth.csv'
-            assert os.path.exists(data_path(user_id, "dataset")) is True
-            assert os.path.exists(data_path(user_id, "ground_truth")) is False
-            # removing the files from the path
-            remove_user_data(user_id)
-            assert os.path.exists(data_path(user_id, "dataset")) is False
-            assert os.path.exists(data_path(user_id, "ground_truth")) is False
+        saved_dataset_filename = 'dataset.csv'
+        saved_groundtruth_filename = 'ground_truth.csv'
+        assert os.path.exists(data_path(user_id, "dataset")) is True
+        assert os.path.exists(data_path(user_id, "ground_truth")) is False
+        # removing the files from the path
+        remove_user_data(user_id)
+        assert os.path.exists(data_path(user_id, "dataset")) is False
+        assert os.path.exists(data_path(user_id, "ground_truth")) is False
 
     def test_upload_experiment_files_no_dataset(self):
         username = "NoDataset"
@@ -197,7 +197,7 @@ class TestExperimentApi(unittest.TestCase):
         file_upload_response = self.client.post("/api/experiment/upload-files", data=files)
         assert file_upload_response.status_code == 200
 
-        with open(file=test_files/"create_experiment.json", mode="r") as create_exp_json:
+        with open(file=test_files / "create_experiment.json", mode="r") as create_exp_json:
             create_exp_data = json.load(create_exp_json)
             with self.client as c:
                 response = c.post("/api/experiment/create", json=create_exp_data)
@@ -254,7 +254,7 @@ class TestExperimentApi(unittest.TestCase):
                 assert response.status_code == 200
                 assert response.get_data() == b"OK"
 
-         # uploading files #2
+        # uploading files #2
         this_dir = Path(__file__).parent
         test_files = this_dir.parent / 'test_files'
         dataset_filename = 'dataset.csv'

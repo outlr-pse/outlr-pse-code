@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend/
+    image: outlr/pse:backend-latest
     command: gunicorn --bind 0.0.0.0:5000 manage:app
     expose:
       - 5000
@@ -17,7 +17,7 @@ services:
     env_file:
       - ./.env.db
   frontend:
-    build: ./frontend/
+    image: outlr/pse:frontend-latest
     ports:
       - 1337:80
     depends_on:

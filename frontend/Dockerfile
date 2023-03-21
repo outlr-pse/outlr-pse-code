@@ -4,17 +4,11 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY ./ .
+ARG API_URL
+RUN printf '{ "API_URL": "%s" }' "$API_URL" > src/config.json
 RUN npm run build
 
 # production stage
-
-
-#FROM nginx:stable-alpine as production-stage
-#COPY --from=build-stage /app/dist /usr/share/nginx/html
-#EXPOSE 8080
-#CMD ["nginx", "-g", "daemon off;"]
-
-
 FROM nginx:1.23-alpine as production-stage
 RUN mkdir /app
 COPY --from=build-stage /app/dist /app

@@ -17,11 +17,16 @@ services:
     env_file:
       - ./.env.db
   frontend:
-    build: ./frontend/
+    build:
+      context: ./frontend/
+      args:
+        API_URL: ${API_URL}
     ports:
-      - 1337:80
+      - "1337:80"
     depends_on:
       - backend
+    env_file:
+      - ./.env
 
 volumes:
   postgres_data_prod:

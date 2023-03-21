@@ -8,7 +8,7 @@ It contains the implementation of the project.
 
 # How to deploy
 1. Start the docker daemon
-2. Go to the latest rlease. Under Assests > Other download the `Docker-Compose files`
+2. Go to the latest release. Under Assests > Other download the `Docker-Compose files`
 3. Extract the files and go to the extracted folder
 5. Set a strong `JWT_SECRET_KEY` in the `.env` file
 4. Run the following command to start the app:

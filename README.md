@@ -3,36 +3,20 @@
 </div>
 
 # PSE Implementation
-
 This is the GitLab repository of group 2, "Outlr", for the subspace outlier detection project at the IPD Böhm institute.
 It contains the implementation of the project. 
 
-Unfortunately, deployment is not finished. To try the web application, please install PostgreSQL and Python 3.10 and Vue (npm with nodejs). Install python packages in backend/requirements.txt and run npm install in the frontend folder. 
-After setting up PostgreSQL create config.ini file and replace the url, with your PostgreSQL settings:
-```
-[jwt]
-secret_key = secret
-
-[database]
-url = postgresql://postgres:123@localhost:5432/outlr
-```
-Afterwards start the PostgresSQL server, and create a database outlr, and run init.py in the backend.
-Finally, you can run npm run dev in the pse-implementation/frontend directory.
-
 # How to deploy
-The project is deployed using Docker. To deploy the project, you need to have Docker installed on your machine.
-To deploy the project, run the following command in the root directory of the project:
-````commandline
-    docker-compose up --build
+1. Start the docker daemon
+2. Go to the latest release. Under Assests > Other download the `Docker-Compose files`
+3. Extract the files and go to the extracted folder
+5. Set a strong `JWT_SECRET_KEY` in the `.env` file
+4. Run the following command to start the app:
+````sh
+docker-compose up -d
 ````
-This will create three containers:
-- The database container
-- The backend container
-- The frontend container
-
-You can access the frontend at http://localhost:1337 and the backend at http://localhost:1337/api/.
-
-To stop the containers and delete all tables, run the following command in the root directory of the project:
-````commandline
-    docker-compose down -v
+5. Go to http://localhost:1337/
+6. To stop the app run:
+````sh
+docker-compose down
 ````

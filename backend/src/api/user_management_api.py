@@ -20,7 +20,7 @@ username_regex: str = "^[A-Za-z][A-Za-z0-9_]{2,29}$"
 password_regex: str = "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{6,})"
 
 
-def generate_password_hash(password) -> bytes:
+def generate_password_hash(password: str) -> bytes:
     """
        Generates a salted hash of the password provided as parameter, which is returned by the method
     """
@@ -29,14 +29,19 @@ def generate_password_hash(password) -> bytes:
     return bcrypt.hashpw(password_bytes, salt)
 
 
-def check_password_hash(actual_password, password) -> bool:
+def check_password_hash(actual_password_hash: str, password: str) -> bool:
     """
         Compares password provided with the password hash it should correspond to and returns whether
-        they are the same.
+        they are the same. password is expected to be of type string. First argument is the hash decoded with utf-8
     """
     password_bytes = password.encode('utf-8')
-    hashed_password = actual_password.encode('utf-8')
-    return bcrypt.checkpw(password_bytes, hashed_password)
+    hashed_password = actual_password_hash.encode('utf-8')
+    passwords_match: bool
+    try:
+        passwords_match = bcrypt.checkpw(password_bytes, hashed_password)
+    except ValueError:
+        passwords_match = False
+    return passwords_match
 
 
 def get_token() -> str | None:

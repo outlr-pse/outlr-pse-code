@@ -7,12 +7,16 @@ This is the GitLab repository of group 2, "Outlr", for the subspace outlier dete
 It contains the implementation of the project. 
 
 # How to deploy
+<<<<<<< HEAD
 ## Deploy on localhost from Docker Hub
+=======
+>>>>>>> dev
 1. Start the docker daemon
 2. Go to the latest release. Under Assests > Other download the `Docker-Compose files`
 3. Extract the files and go to the extracted folder
 5. Set a strong `JWT_SECRET_KEY` in the `.env` file
 4. Run the following command to start the app:
+<<<<<<< HEAD
 ```sh
 docker-compose up -d
 ```
@@ -34,3 +38,13 @@ docker-compose build
 ```sh
 docker-compose up -d
 ```
+=======
+````sh
+docker-compose up -d
+````
+5. Go to http://localhost:1337/
+6. To stop the app run:
+````sh
+docker-compose down
+````
+>>>>>>> dev

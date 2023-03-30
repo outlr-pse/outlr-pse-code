@@ -42,7 +42,7 @@
           {{ $t('message.experimentResultView.experimentSummaryCard.hyperparameters') + ":" }}
         </div>
         <div>
-          {{ this.parameterString }}
+          {{ parameterString }}
         </div>
       </div>
       <div class="row">

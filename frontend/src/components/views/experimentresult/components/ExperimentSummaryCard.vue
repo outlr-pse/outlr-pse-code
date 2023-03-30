@@ -5,13 +5,13 @@
         {{ experiment.name }}
       </h4>
       <ButtonComponent
-        text="Download"
-        :button-type="ButtonType.CONTRAST"
-        :size="[120,40]"
-        @buttonClick="download"
+          text="Download"
+          :button-type="ButtonType.CONTRAST"
+          :size="[120,40]"
+          @buttonClick="download"
       />
     </div>
-    <div style="border: 1px solid var(--color-stroke);" />
+    <div style="border: 1px solid var(--color-stroke);"/>
     <div class="content">
       <div class="row">
         <div class="textLeft">
@@ -39,10 +39,20 @@
       </div>
       <div class="row">
         <div class="textLeft">
+          {{ $t('message.experimentResultView.experimentSummaryCard.hyperparameters') + ":" }}
+        </div>
+        <div>
+          {{ parameterString }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="textLeft">
           {{ $t('message.experimentResultView.experimentSummaryCard.accuracy') + ":" }}
         </div>
         <div>
-          {{ experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy*100 + "%" : "No GT" }}
+          {{
+            experiment.experimentResult?.accuracy != null ? experiment.experimentResult?.accuracy * 100 + "%" : "No GT"
+          }}
         </div>
       </div>
       <div class="row">
@@ -128,6 +138,15 @@ export default defineComponent({
     },
     date () {
       return this.experiment.experimentResult?.executionDate.toLocaleString()
+    },
+    parameterString () {
+      if (this.experiment.odm.hyperParameters.length === 0) {
+        return 'No hyper parameters'
+      } else {
+        return this.experiment.odm.hyperParameters.map((param: { name: string; value: string; }) => {
+          return param.name + ': ' + param.value
+        }).join(', ')
+      }
     }
   },
   methods: {
@@ -155,7 +174,7 @@ export default defineComponent({
 
 .row {
   display: grid;
-  grid-template-columns: 37vh 1fr;
+  grid-template-columns: 37vh 20vh;
   text-align: left;
   padding-top: 0.5vh;
   padding-bottom: 0.5vh;

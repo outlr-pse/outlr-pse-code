@@ -14,7 +14,7 @@
             <td v-for="cell in row[1]" v-bind:key="cell[1]"
                 v-bind:class="[{'running': row[1][3][0] === -2},
                 {'failed': row[1][3][0] === -1},
-                {'notRunning': row[1][3][0] >= 0 && row[1][4][0] < Infinity }]">
+                {'notRunning': row[1][3][0] !== -2 && row[1][4][0] !== -1 }]">
               <div>
                 {{ cell[1] }}
               </div>
@@ -131,7 +131,6 @@ export default defineComponent({
               }
               break
             case DashboardSortColumn.DATE:
-              console.log(experiment.creationDate)
               cell = [experiment.creationDate,
                 dateCalculation(experiment.creationDate ? experiment.creationDate : new Date())]
               break
@@ -173,31 +172,34 @@ export default defineComponent({
       })
     },
     tableSort () {
+      const sortedData = this.data
+
       if (this.currentSorting === DashboardSortColumn.NAME) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][0][0].localeCompare(b[1][0][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATASET) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][1][0].localeCompare(b[1][1][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.ODM) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][2][0].localeCompare(b[1][2][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.HYPERPARAMETER) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][3][0].localeCompare(b[1][3][0])
         })
       } else if (this.currentSorting === DashboardSortColumn.DATE) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][4][0] > b[1][4][0] ? -1 : 1
         })
       } else if (this.currentSorting === DashboardSortColumn.ACCURACY) {
-        this.filteredData.sort((a, b) => {
+        sortedData.sort((a, b) => {
           return a[1][5][0] > b[1][5][0] ? -1 : 1
         })
       }
+      this.filteredData = sortedData
     }
   }
 })

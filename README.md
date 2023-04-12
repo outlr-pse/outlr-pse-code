@@ -1,6 +1,18 @@
+<a href="https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/-/commits/dev"><img alt="pipeline status" src="https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/badges/dev/pipeline.svg" /></a>
+
+
+<a href="https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/-/commits/dev"><img alt="coverage report" src="https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/badges/dev/coverage.svg" /></a>
+
+
+[![Latest Release](https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/-/badges/release.svg)](https://git.scc.kit.edu/ipd-boehm/pse/ipd-pse-2022-ws/subspace-outlier-profiling/team-2/pse-implementation/-/releases)
+
+
+
 <div style="text-align:center; height: 50%">
   <img src="./Logo.png" style="width:25%; height:25%;"  alt="Outlr-Logo"/>
 </div>
+
+
 
 # PSE Implementation
 This is the GitLab repository of group 2, "Outlr", for the subspace outlier detection project at the IPD Böhm institute.

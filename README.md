@@ -13,7 +13,21 @@ You are free to use everything in this repo.
 
 # How to deploy
 
+## Build and deploy from source
+Note: The backend IP is hardcorded in the frontend. To change it, you can follow these steps:
+1. Download the source code
+2. Change the `baseURL` in `frontend/src/api/AxiosClient.ts` to the new IP of the backend
+3. Go to the root folder of the project and rebuild it:
+```sh
+docker-compose build
+```
+4. Start the app:
+```sh
+docker-compose up -d
+```
+
 ## Deploy on localhost from Docker Hub
+<span style="color: red">**This deployment method is not available on GitHub**</span>
 1. Start the docker daemon
 2. Go to the latest release. Under Assests > Other download the `Docker-Compose files`
 3. Extract the files and go to the extracted folder
@@ -28,15 +42,3 @@ docker-compose up -d
 docker-compose down
 ```
 
-## Build and deploy from source
-Note: The backend IP is hardcorded in the frontend. To change it, you can follow these steps:
-1. Download the source code
-2. Change the `baseURL` in `frontend/src/api/AxiosClient.ts` to the new IP of the backend
-3. Go to the root folder of the project and rebuild it:
-```sh
-docker-compose build
-```
-4. Start the app:
-```sh
-docker-compose up -d
-```
